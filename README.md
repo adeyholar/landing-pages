@@ -186,5 +186,16 @@ deterministic headless Chrome capture:
   555-01xx range and ZIP codes are `00000`.
 - **Legal texts**: these are samples, written to fill the layout. Have a lawyer
   review them before any real use.
-- **Photos**: some sites use a few stock-style photos as placeholders. Replace
-  them with licensed images before shipping.
+- **Photos**: the JPEG photos in `public/images/` are third-party placeholders.
+  Replace them with images you hold the rights to before shipping.
+
+## License
+
+The code is released under the [MIT License](LICENSE).
+
+The MIT License does not cover the following:
+
+- **Fonts**: the files in each `app/fonts/` folder are under the SIL Open Font
+  License 1.1. Each font's license text sits next to it.
+- **Photos**: the JPEG photos in `public/images/` are third-party images, used
+  here as placeholders.
