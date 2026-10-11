@@ -1,201 +1,92 @@
 # Landing pages
 
-Four complete marketing sites for four **fictional** gift-delivery apps. They
-share one brief and take four different art directions. Each site is a
-standalone Next.js project in its own folder, with its home page, merchant
-page, application form, FAQ, legal pages and share image, all written in
-American English.
+A collection of landing pages and marketing sites. Each one is a standalone
+project in its own folder, with its own art direction, stack and README, and a
+short showcase video.
 
-| | |
-|:-:|:-:|
-| [![Ficelle](showcase/ficelle.jpg)](showcase/ficelle.mp4)<br>**[Ficelle](ficelle)** · gift parcel · [video](showcase/ficelle.mp4) | [![Passeline](showcase/passeline.jpg)](showcase/passeline.mp4)<br>**[Passeline](passeline)** · illustrated · [video](showcase/passeline.mp4) |
-| [![Aparté](showcase/aparte.jpg)](showcase/aparte.mp4)<br>**[Aparté](aparte)** · photo and emotion · [video](showcase/aparte.mp4) | [![Écrin](showcase/ecrin.jpg)](showcase/ecrin.mp4)<br>**[Écrin](ecrin)** · immersive and animated · [video](showcase/ecrin.mp4) |
+## Projects
 
-Click a preview to watch its showcase video (1920×1080, 60 fps, about 40 s).
+| Preview | Project | What it is | Stack |
+| --- | --- | --- | --- |
+| [![Ficelle](showcase/ficelle.jpg)](showcase/ficelle.mp4) | **[Ficelle](ficelle)**<br>[video](showcase/ficelle.mp4) | Gift-delivery app, "gift parcel" direction: kraft paper, shipping labels, stamps and receipts | Next.js 16, Tailwind CSS v4, shadcn/ui |
+| [![Passeline](showcase/passeline.jpg)](showcase/passeline.mp4) | **[Passeline](passeline)**<br>[video](showcase/passeline.mp4) | Gift-delivery app, illustrated direction: hand-drawn SVG town, from morning to night | Next.js 16, Tailwind CSS v4, shadcn/ui |
+| [![Aparté](showcase/aparte.jpg)](showcase/aparte.mp4) | **[Aparté](aparte)**<br>[video](showcase/aparte.mp4) | Gift-delivery app, editorial direction: magazine layout, Bodoni, photos | Next.js 16, Tailwind CSS v4, shadcn/ui |
+| [![Écrin](showcase/ecrin.jpg)](showcase/ecrin.mp4) | **[Écrin](ecrin)**<br>[video](showcase/ecrin.mp4) | Gift-delivery app, immersive direction: dark, CSS 3D gift box, springy motion | Next.js 16, Tailwind CSS v4, shadcn/ui, Motion |
 
-## The brief
+Click a preview to watch its showcase video.
 
-Each site sells the same kind of product: an app that gets a gift across one
-town, either handed over in person by a vetted courier or held nearby until the
-recipient picks it up. It also recruits couriers, the people or shops who hold
-parcels, and local merchants.
+### About the gift-delivery series
 
-The four sites share these constraints:
+Ficelle, Passeline, Aparté and Écrin answer the same brief: four art directions
+for fictional gift-delivery apps set in made-up US towns. They share a color
+palette (teal, deep teal, gold, ink and cream) and the same set of pages:
 
-- **Palette**: teal `#1A7971`, deep teal `#123F3B`, gold `#C59940`, light gold
-  `#E3BE6B`, ink `#0F2324`, cream `#F9F6ED`.
-- **Fonts and layout**: free for each direction.
-- **Components**: shadcn/ui (Base UI), restyled to match each direction.
+- home;
+- a merchant page with a 5-step application form;
+- a searchable FAQ;
+- six sample legal pages;
+- app link fallbacks and a 404.
 
-Everything is invented: brands, towns, founders, shops, companies, prices,
-rules and legal texts.
+Everything in them is invented: brands, places, people, prices and legal
+texts. External links point to [lndev.me](http://lndev.me/). Each project's
+README covers its product rules, art direction and files.
 
-## The four directions
-
-### [Ficelle](ficelle): gift parcel
-
-The page looks like a parcel being packed:
-
-- kraft paper with drawn fibers, shipping labels, teal ink stamps, receipts and
-  tape;
-- the hero is a shipping label;
-- the delivery picker prints a live receipt;
-- on the merchant page, the application form is a shipping slip.
-
-**Type:** Archivo, extra condensed, plus IBM Plex Mono.
-**Motion:** the code types itself in and a scanner beam sweeps the barcode,
-stamps thunk down as you scroll, shipping tags swing on hover, and the receipt
-reprints when the price changes.
-**Setting:** Bellmere, Oregon.
-
-### [Passeline](passeline): illustrated
-
-One gift crosses town in hand-drawn SVG scenes:
-
-- a gold dotted route links the scenes, and the gift follows it as you scroll;
-- the page moves from morning to night;
-- the merchant page lights up a shop window.
-
-**Type:** Bricolage Grotesque.
-**Motion:** the streetcar rolls in, the Ferris wheel turns, the route draws
-itself and the town lights up in waves at night.
-**Setting:** Wrenhaven, Vermont.
-
-### [Aparté](aparte): photo and emotion
-
-An editorial magazine:
-
-- a Bodoni cover, running heads with page numbers, a drop cap and a pull quote;
-- an address book with dotted leaders;
-- the merchant page is a "special issue" with an application form;
-- a shop front and a gift card are drawn in code.
-
-**Type:** Bodoni Moda plus Hanken Grotesk.
-**Motion:** slow and quiet. Rules unroll, quotes appear like ink, the
-storefront globes flicker on, and the gift card slides out of its envelope.
-**Setting:** Larch Harbor, Washington.
-
-### [Écrin](ecrin): immersive and animated
-
-A dark launch site:
-
-- a CSS 3D gift box that opens as you scroll and releases the three promises;
-- an interactive price demo;
-- on the merchant page, the box becomes a display case.
-
-**Type:** Unbounded plus Geist.
-**Motion:** springy and fluid, built with Motion for React. The box leans
-toward the cursor, buttons are magnetic, totals roll and a light follows the
-cursor.
-**Setting:** Vantry, Ohio.
-
-## What every site includes
-
-| Route | Content |
-| --- | --- |
-| `/` | Home: how it works, the two delivery modes with a price estimate, shops, couriers, FAQ |
-| `/for-merchants` | Merchant landing page and a 5-step application form (`#form`) |
-| `/faq` | Searchable FAQ with a deep link to each question |
-| `/terms`, `/privacy`, `/legal`, `/delete-account`, `/courier-agreement`, `/merchant-agreement` | Sample legal documents |
-| `/shop`, `/product`, `/chip-in/…`, `/join/…` | Fallback pages for the app's universal links |
-| any other path | 404 page |
-
-Each site also ships:
-
-- `sitemap.xml` and `robots.txt`;
-- `/.well-known/apple-app-site-association`;
-- a generated share image (`app/opengraph-image.png`);
-- Organization JSON-LD.
-
-The merchant form has these features:
-
-- per-step validation with zod;
-- a US state combobox, plus ZIP and optional EIN checks;
-- photo upload with preview and compression;
-- a Server Action that posts the application to `PARTNER_WEBHOOK_URL`.
-
-Every site respects `prefers-reduced-motion`, has visible keyboard focus and
-uses local fonts. They are responsive from 360 px to wide screens with no
-horizontal scroll.
-
-## Stack
-
-- Next.js 16 (App Router, Turbopack) and React 19.
-- Tailwind CSS v4.
-- shadcn/ui on Base UI, every component restyled per direction.
-- Hugeicons and zod.
-- Motion for React, in Écrin only. The other three animate with CSS and the
-  Web Animations API.
-
-## Structure
+## Repository layout
 
 ```
 landing-pages/
-├── ficelle/      Next.js project, gift parcel
-├── passeline/    Next.js project, illustrated
-├── aparte/       Next.js project, photo and emotion
-├── ecrin/        Next.js project, immersive and animated
-└── showcase/     showcase videos (.mp4) and their posters (.jpg)
+├── <project>/    one standalone project per landing page (own package.json and README)
+├── showcase/     one showcase video (.mp4) and poster (.jpg) per project
+├── LICENSE
+└── README.md
 ```
 
-Each project has its own `README.md`, which covers the product rules, art
-direction, files and checks.
+Projects share nothing at the root: each folder installs, builds and deploys
+on its own, with whatever stack it needs.
 
-## Run a site
+## Run a project
 
-Requires Node 20+ and pnpm.
+Each project's README lists its requirements, commands and environment
+variables. For the current projects (Next.js, pnpm, Node 20+):
 
 ```bash
-cd ficelle          # or passeline, aparte, ecrin
+cd ficelle        # or any project folder
 pnpm install
-pnpm dev            # http://localhost:3000
+pnpm dev
 ```
 
-Checks: `pnpm exec tsc --noEmit`, `pnpm exec eslint app components lib`,
-`pnpm build`.
+## Deploy
 
-### Environment
+Deploy each folder as its own site. On Vercel, import this repository once per
+project and set **Root Directory** to the project's folder.
 
-| Variable | Use |
-| --- | --- |
-| `PARTNER_WEBHOOK_URL` | Optional. The merchant form posts each application there (`multipart/form-data`, fields and photo); without it, applications are only logged on the server. |
+## Add a landing page
 
-### Deploy
-
-Each folder deploys on its own. On Vercel, import the repository once per site
-and set **Root Directory** to `ficelle`, `passeline`, `aparte` or `ecrin`.
+1. Create a folder named after the project (lowercase, no spaces, for example
+   `my-product/`). It must be self-contained, with its own dependencies, its
+   own lockfile and its own `.gitignore`.
+2. Write its `README.md`: what it is, art direction, stack, how to run it,
+   environment variables, and anything fictional or placeholder.
+3. Add its showcase files to `showcase/`:
+   - `my-product.mp4`, Full HD, kept small enough for GitHub;
+   - `my-product.jpg`, the poster, about 1600 px wide.
+4. Add a row to the **Projects** table above.
 
 ## Showcase videos
 
-The `showcase/` folder holds one MP4 per site (H.264, 1920×1080, 60 fps) and a
-poster image. Each video was filmed from the production build with a
-deterministic headless Chrome capture:
-
-- the page sits in a framed browser window;
-- the scroll pace adapts to the content;
-- a cursor hovers the interactive elements and makes safe clicks (delivery
-  mode, distance slider, FAQ);
-- the camera zooms gently onto the element in use.
-
-## Notes
-
-- **External links**: every link that leaves a site (App Store buttons, QR
-  codes, merchant portal, driver app) points to [lndev.me](http://lndev.me/).
-  These links are set in each project's `lib/site.ts`.
-- **Placeholders**: domains end in `.example`, phone numbers use the fictional
-  555-01xx range and ZIP codes are `00000`.
-- **Legal texts**: these are samples, written to fill the layout. Have a lawyer
-  review them before any real use.
-- **Photos**: the JPEG photos in `public/images/` are third-party placeholders.
-  Replace them with images you hold the rights to before shipping.
+The `showcase/` folder holds Full HD versions (1920×1080, 60 fps, H.264), which
+are small enough for the repository. Higher-resolution masters, such as 2K
+(2560×1440), are kept out of version control: put them in `showcase/2k/`,
+which is ignored.
 
 ## License
 
 The code is released under the [MIT License](LICENSE).
 
-The MIT License does not cover the following:
+The MIT License does not cover:
 
-- **Fonts**: the files in each `app/fonts/` folder are under the SIL Open Font
-  License 1.1. Each font's license text sits next to it.
-- **Photos**: the JPEG photos in `public/images/` are third-party images, used
-  here as placeholders.
+- **Fonts**: bundled fonts keep their own licenses, mostly the SIL Open Font
+  License. The license text sits next to the font files, in each project's
+  `app/fonts/` folder.
+- **Third-party images used as placeholders**: in the current projects, these
+  are the JPEG photos in `public/images/`.
