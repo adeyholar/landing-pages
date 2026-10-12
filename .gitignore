@@ -3,4 +3,5 @@ node_modules/
 .next/
 .vercel
 *.log
-showcase/2k/
+# showcase videos stay local
+showcase/**/*.mp4

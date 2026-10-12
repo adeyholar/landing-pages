@@ -2,18 +2,18 @@
 
 A collection of landing pages and marketing sites. Each one is a standalone
 project in its own folder, with its own art direction, stack and README, and a
-short showcase video.
+live deployment.
 
 ## Projects
 
 | Preview | Project | What it is | Stack |
 | --- | --- | --- | --- |
-| [![Ficelle](showcase/ficelle.jpg)](showcase/ficelle.mp4) | **[Ficelle](ficelle)**<br>[video](showcase/ficelle.mp4) | Gift-delivery app, "gift parcel" direction: kraft paper, shipping labels, stamps and receipts | Next.js 16, Tailwind CSS v4, shadcn/ui |
-| [![Passeline](showcase/passeline.jpg)](showcase/passeline.mp4) | **[Passeline](passeline)**<br>[video](showcase/passeline.mp4) | Gift-delivery app, illustrated direction: hand-drawn SVG town, from morning to night | Next.js 16, Tailwind CSS v4, shadcn/ui |
-| [![Aparté](showcase/aparte.jpg)](showcase/aparte.mp4) | **[Aparté](aparte)**<br>[video](showcase/aparte.mp4) | Gift-delivery app, editorial direction: magazine layout, Bodoni, photos | Next.js 16, Tailwind CSS v4, shadcn/ui |
-| [![Écrin](showcase/ecrin.jpg)](showcase/ecrin.mp4) | **[Écrin](ecrin)**<br>[video](showcase/ecrin.mp4) | Gift-delivery app, immersive direction: dark, CSS 3D gift box, springy motion | Next.js 16, Tailwind CSS v4, shadcn/ui, Motion |
+| [![Ficelle](showcase/ficelle.jpg)](https://ficelle-lndev.vercel.app) | **[Ficelle](ficelle)**<br>[live site](https://ficelle-lndev.vercel.app) | Gift-delivery app, "gift parcel" direction: kraft paper, shipping labels, stamps and receipts | Next.js 16, Tailwind CSS v4, shadcn/ui |
+| [![Passeline](showcase/passeline.jpg)](https://passeline-lndev.vercel.app) | **[Passeline](passeline)**<br>[live site](https://passeline-lndev.vercel.app) | Gift-delivery app, illustrated direction: hand-drawn SVG town, from morning to night | Next.js 16, Tailwind CSS v4, shadcn/ui |
+| [![Aparté](showcase/aparte.jpg)](https://aparte-lndev.vercel.app) | **[Aparté](aparte)**<br>[live site](https://aparte-lndev.vercel.app) | Gift-delivery app, editorial direction: magazine layout, Bodoni, photos | Next.js 16, Tailwind CSS v4, shadcn/ui |
+| [![Écrin](showcase/ecrin.jpg)](https://ecrin-lndev.vercel.app) | **[Écrin](ecrin)**<br>[live site](https://ecrin-lndev.vercel.app) | Gift-delivery app, immersive direction: dark, CSS 3D gift box, springy motion | Next.js 16, Tailwind CSS v4, shadcn/ui, Motion |
 
-Click a preview to watch its showcase video.
+Click a preview to open the live site.
 
 ### About the gift-delivery series
 
@@ -36,7 +36,7 @@ README covers its product rules, art direction and files.
 ```
 landing-pages/
 ├── <project>/    one standalone project per landing page (own package.json and README)
-├── showcase/     one showcase video (.mp4) and poster (.jpg) per project
+├── showcase/     one preview image (.jpg) per project
 ├── LICENSE
 └── README.md
 ```
@@ -67,17 +67,17 @@ project and set **Root Directory** to the project's folder.
    own lockfile and its own `.gitignore`.
 2. Write its `README.md`: what it is, art direction, stack, how to run it,
    environment variables, and anything fictional or placeholder.
-3. Add its showcase files to `showcase/`:
-   - `my-product.mp4`, Full HD, kept small enough for GitHub;
-   - `my-product.jpg`, the poster, about 1600 px wide.
-4. Add a row to the **Projects** table above.
+3. Deploy it (for example on Vercel, with the project's folder as **Root
+   Directory**) and add its preview image to `showcase/`: `my-product.jpg`,
+   about 1600 px wide.
+4. Add a row to the **Projects** table above, with the preview linking to the
+   live site.
 
 ## Showcase videos
 
-The `showcase/` folder holds Full HD versions (1920×1080, 60 fps, H.264), which
-are small enough for the repository. Higher-resolution masters, such as 2K
-(2560×1440), are kept out of version control: put them in `showcase/2k/`,
-which is ignored.
+Showcase videos are not versioned. Keep them next to the preview images in
+`showcase/` (for example `showcase/my-product.mp4`, or `showcase/2k/` for
+higher-resolution masters): git ignores every `.mp4` in that folder.
 
 ## License
 
