@@ -78,45 +78,111 @@
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   let paused = false;
   const featureStage = document.querySelector(".hero__display");
-  const featuredCards = [...featureStage.querySelectorAll(".feature-card")];
+  const featuredCards = [...featureStage.querySelectorAll(".feature-card")].filter(
+    (card, index) => {
+      card.hidden = !projects[index];
+      return !card.hidden;
+    },
+  );
   const featurePositions = ["front", "next", "back"];
   let featureIndex = 0;
   let featureTimer;
+  let featureSchedule = 0;
+  let featureTransition = null;
   let featureVisible = false;
   let featureHovered = false;
 
-  function scheduleFeature() {
-    clearTimeout(featureTimer);
-    if (
+  function setFeatureProject(card, project) {
+    card.href = `#${project.slug}`;
+    card.setAttribute("aria-label", `Explore ${project.name}`);
+    const image = card.querySelector("img");
+    image.src = project.image;
+    image.alt = `${project.name} — ${project.category}`;
+    card.querySelector("small").textContent = project.category.toUpperCase();
+    card.querySelector("strong").textContent = project.name;
+  }
+
+  function positionFeatureCards() {
+    featuredCards.forEach((card, index) => {
+      card.dataset.featurePosition = featurePositions[index];
+      card.inert = index !== 0;
+      card.tabIndex = index === 0 ? 0 : -1;
+      if (index === 0) card.removeAttribute("aria-hidden");
+      else card.setAttribute("aria-hidden", "true");
+    });
+  }
+
+  // The same three elements carry the entire collection, one project ahead.
+  function prepareNextFeature() {
+    const project =
+      projects[(featureIndex + featuredCards.length) % projects.length];
+    const image = new Image();
+    if (project) image.src = project.image;
+    return {
+      project,
+      ready: project ? image.decode().catch(() => {}) : Promise.resolve(),
+    };
+  }
+
+  featuredCards.forEach((card, index) => setFeatureProject(card, projects[index]));
+  positionFeatureCards();
+  let incomingFeature = prepareNextFeature();
+
+  function finishFeatureTransition() {
+    if (!featureTransition) return;
+    const { card, project } = featureTransition;
+    featureTransition = null;
+    setFeatureProject(card, project);
+    card.classList.remove("is-departing", "is-returning");
+  }
+
+  function canRotateFeature() {
+    return !(
       paused ||
       reduced.matches ||
       document.hidden ||
       !featureVisible ||
       featureHovered ||
       featureStage.contains(document.activeElement) ||
-      featuredCards.length < 2
-    )
-      return;
-    featureTimer = setTimeout(() => {
-      featuredCards[featureIndex].classList.add("is-departing");
-      featureIndex = (featureIndex + 1) % featuredCards.length;
-      featuredCards.forEach((card, index) => {
-        const position =
-          (index - featureIndex + featuredCards.length) % featuredCards.length;
-        card.dataset.featurePosition = featurePositions[position];
-        card.inert = position !== 0;
-        card.tabIndex = position === 0 ? 0 : -1;
-        if (position === 0) card.removeAttribute("aria-hidden");
-        else card.setAttribute("aria-hidden", "true");
-      });
+      projects.length < 2
+    );
+  }
+
+  function scheduleFeature() {
+    clearTimeout(featureTimer);
+    const schedule = ++featureSchedule;
+    if (!canRotateFeature()) return;
+    featureTimer = setTimeout(async () => {
+      await incomingFeature.ready;
+      if (schedule !== featureSchedule || !canRotateFeature()) return;
+      finishFeatureTransition();
+      const card = featuredCards.shift();
+      featuredCards.push(card);
+      featureIndex = (featureIndex + 1) % projects.length;
+      featureTransition = { card, project: incomingFeature.project };
+      card.classList.add("is-departing");
+      positionFeatureCards();
+      incomingFeature = prepareNextFeature();
       scheduleFeature();
     }, 5000);
   }
 
   featureStage.addEventListener("animationend", (event) => {
+    if (event.target !== featureTransition?.card) return;
     if (event.animationName === "feature-depart") {
+      // Swap only after the outgoing card is transparent, before it returns.
+      setFeatureProject(featureTransition.card, featureTransition.project);
       event.target.classList.remove("is-departing");
+      event.target.classList.add("is-returning");
+    } else if (event.animationName === "feature-return") {
+      finishFeatureTransition();
     }
+  });
+  featureStage.addEventListener("animationcancel", (event) => {
+    if (event.target !== featureTransition?.card) return;
+    const current =
+      event.animationName === "feature-depart" ? "is-departing" : "is-returning";
+    if (event.target.classList.contains(current)) finishFeatureTransition();
   });
   featureStage.addEventListener("pointerenter", (event) => {
     if (event.pointerType === "touch") return;
@@ -145,15 +211,18 @@
   } else {
     featureVisible = true;
   }
-  addEventListener("pagehide", () => clearTimeout(featureTimer));
+  addEventListener("pagehide", () => {
+    clearTimeout(featureTimer);
+    featureSchedule++;
+    finishFeatureTransition();
+  });
   addEventListener("pageshow", scheduleFeature);
   addEventListener("hashchange", scheduleFeature);
   const motionButton = document.querySelector(".motion-toggle");
   function syncMotion() {
     const still = paused || reduced.matches;
     root.dataset.motion = still ? "still" : "full";
-    if (still)
-      featuredCards.forEach((card) => card.classList.remove("is-departing"));
+    if (still) finishFeatureTransition();
     motionButton.setAttribute("aria-pressed", String(still));
     motionButton.setAttribute(
       "aria-label",
@@ -179,6 +248,7 @@
   reduced.addEventListener("change", syncMotion);
   syncMotion();
   document.addEventListener("visibilitychange", () => {
+    if (document.hidden) finishFeatureTransition();
     scheduleFeature();
     document.querySelector(".ticker__track").style.animationPlayState =
       document.hidden ? "paused" : "";

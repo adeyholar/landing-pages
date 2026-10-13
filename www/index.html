@@ -6,7 +6,7 @@
     <title>Landing Pages by LN — Different by design.</title>
     <meta
       name="description"
-      content="Eight distinct landing pages. One open-source collection. Explore original art directions, custom shadcn/ui components and playful interactions — then make them your own."
+      content="Open-source landing pages with a personality of their own. Built with Next.js and fully customized shadcn/ui."
     />
     <meta name="author" content="LN" />
     <meta name="robots" content="index,follow,max-image-preview:large" />
@@ -21,7 +21,7 @@
     />
     <meta
       property="og:description"
-      content="Eight landing pages with a personality of their own. Full source. Custom shadcn/ui. Made by LN."
+      content="Open-source landing pages with a personality of their own. Built with Next.js and fully customized shadcn/ui."
     />
     <meta
       property="og:image"
@@ -60,7 +60,7 @@
       crossorigin
     />
     <link rel="preload" as="image" href="showcase/fallow.jpg" />
-    <link rel="stylesheet" href="styles.css?v=8" />
+    <link rel="stylesheet" href="styles.css?v=9" />
     <script>
       try {
         var t = localStorage.getItem("theme");
@@ -145,6 +145,18 @@
                   "position": 5,
                   "item": {
                     "@type": "CreativeWork",
+                    "name": "Passeline",
+                    "url": "https://passeline-lndev.vercel.app",
+                    "description": "One gift crosses a hand-drawn SVG town: the quay, the streetcar, the town hall, the Ferris wheel. A gold dotted line links the scenes, and the page turns from morning to night as you scroll.",
+                    "image": "https://lp.lndev.me/showcase/passeline.jpg",
+                    "license": "https://opensource.org/licenses/MIT"
+                  }
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 6,
+                  "item": {
+                    "@type": "CreativeWork",
                     "name": "Ficelle",
                     "url": "https://ficelle-lndev.vercel.app",
                     "description": "The whole site is a parcel being packed and opened: kraft paper with generated fibers, shipping labels, teal ink stamps, a gold ribbon and receipts. The delivery picker prints a live receipt as you choose.",
@@ -154,25 +166,13 @@
                 },
                 {
                   "@type": "ListItem",
-                  "position": 6,
+                  "position": 7,
                   "item": {
                     "@type": "CreativeWork",
                     "name": "Aparté",
                     "url": "https://aparte-lndev.vercel.app",
                     "description": "A magazine on the web: Bodoni headlines, running heads and folios, a drop cap, pull quotes and an address book with dot leaders. One warm, grainy treatment for every photo.",
                     "image": "https://lp.lndev.me/showcase/aparte.jpg",
-                    "license": "https://opensource.org/licenses/MIT"
-                  }
-                },
-                {
-                  "@type": "ListItem",
-                  "position": 7,
-                  "item": {
-                    "@type": "CreativeWork",
-                    "name": "Passeline",
-                    "url": "https://passeline-lndev.vercel.app",
-                    "description": "One gift crosses a hand-drawn SVG town: the quay, the streetcar, the town hall, the Ferris wheel. A gold dotted line links the scenes, and the page turns from morning to night as you scroll.",
-                    "image": "https://lp.lndev.me/showcase/passeline.jpg",
                     "license": "https://opensource.org/licenses/MIT"
                   }
                 },
@@ -244,10 +244,10 @@
             ><span class="hero__asterisk" aria-hidden="true">✳</span>
           </h1>
           <p class="hero__lede">
-            Landing pages with a personality of their own.<br
+            Open-source landing pages with a personality of their own.<br
               class="desktop-break"
             />
-            Thoughtfully built. Fully open source. Yours to make something of.
+            Built with Next.js and fully customized shadcn/ui.
           </p>
           <div class="hero__actions">
             <a class="button" href="#work"
@@ -298,20 +298,20 @@
           >
           <a
             class="feature-card"
-            href="#maree"
+            href="#crux"
             data-feature-position="back"
-            aria-label="Explore Marée"
+            aria-label="Explore Crux"
             aria-hidden="true"
             tabindex="-1"
             inert
             ><img
-              src="showcase/maree.jpg"
+              src="showcase/crux.jpg"
               width="1600"
               height="900"
-              alt="Marée — coastal bath house"
+              alt="Crux — bouldering club"
             /><span class="feature-caption"
               ><span
-                ><small>COASTAL BATH HOUSE</small><strong>Marée</strong></span
+                ><small>BOULDERING CLUB</small><strong>Crux</strong></span
               ><span class="feature-arrow" aria-hidden="true">↗</span></span
             ></a
           >
@@ -404,6 +404,10 @@
                 <a href="https://maree-lndev.vercel.app">Marée</a> — A quieter
                 corner of the internet.
               </li>
+              <li id="passeline">
+                <a href="https://passeline-lndev.vercel.app">Passeline</a> — A
+                small town with a story to follow.
+              </li>
               <li id="ficelle">
                 <a href="https://ficelle-lndev.vercel.app">Ficelle</a> — A whole
                 identity, wrapped in kraft paper.
@@ -411,10 +415,6 @@
               <li id="aparte">
                 <a href="https://aparte-lndev.vercel.app">Aparté</a> — A
                 magazine you can click through.
-              </li>
-              <li id="passeline">
-                <a href="https://passeline-lndev.vercel.app">Passeline</a> — A
-                small town with a story to follow.
               </li>
               <li id="ecrin">
                 <a href="https://ecrin-lndev.vercel.app">Écrin</a> — A gift box
@@ -569,7 +569,7 @@ pnpm dev</code></pre>
       </div>
     </footer>
     <script src="/analytics.js" defer></script>
-    <script src="projects.js?v=8" defer></script>
-    <script src="script.js?v=8" defer></script>
+    <script src="projects.js?v=9" defer></script>
+    <script src="script.js?v=9" defer></script>
   </body>
 </html>

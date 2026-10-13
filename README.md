@@ -15,9 +15,9 @@ Browse the collection at **[lp.lndev.me](https://lp.lndev.me)**.
 | [![Offcut](www/showcase/offcut.jpg)](https://offcut-lndev.vercel.app) | **[Offcut](landing-pages/offcut)**<br>[live site](https://offcut-lndev.vercel.app) | Furniture atelier: butter yellow, plum, original wooden objects in Three.js, collection filters, a finish configurator and a local project brief | Next.js 16, Tailwind CSS 4, shadcn/ui, Three.js |
 | [![Crux](www/showcase/crux.jpg)](https://crux-lndev.vercel.app) | **[Crux](landing-pages/crux)**<br>[live site](https://crux-lndev.vercel.app) | Independent bouldering club: condensed italic typography, acid lime, chalk, an interactive circuit board and filterable sessions | Next.js 16, Tailwind CSS 4, shadcn/ui |
 | [![Marée](www/showcase/maree.jpg)](https://maree-lndev.vercel.app) | **[Marée](landing-pages/maree)**<br>[live site](https://maree-lndev.vercel.app) | Coastal bath house: sea green, linen, ocean photography, warm/cool/rest exploration and an optional breathing pause | Next.js 16, Tailwind CSS 4, shadcn/ui |
+| [![Passeline](www/showcase/passeline.jpg)](https://passeline-lndev.vercel.app) | **[Passeline](landing-pages/passeline)**<br>[live site](https://passeline-lndev.vercel.app) | Gift-delivery app, illustrated direction: a hand-drawn SVG town that changes from morning to night | Next.js 16, Tailwind CSS 4, shadcn/ui |
 | [![Ficelle](www/showcase/ficelle.jpg)](https://ficelle-lndev.vercel.app) | **[Ficelle](landing-pages/ficelle)**<br>[live site](https://ficelle-lndev.vercel.app) | Gift-delivery app, parcel direction: kraft paper, shipping labels, stamps and receipts | Next.js 16, Tailwind CSS 4, shadcn/ui |
 | [![Aparté](www/showcase/aparte.jpg)](https://aparte-lndev.vercel.app) | **[Aparté](landing-pages/aparte)**<br>[live site](https://aparte-lndev.vercel.app) | Gift-delivery app, editorial direction: magazine layout, Bodoni and photography | Next.js 16, Tailwind CSS 4, shadcn/ui |
-| [![Passeline](www/showcase/passeline.jpg)](https://passeline-lndev.vercel.app) | **[Passeline](landing-pages/passeline)**<br>[live site](https://passeline-lndev.vercel.app) | Gift-delivery app, illustrated direction: a hand-drawn SVG town that changes from morning to night | Next.js 16, Tailwind CSS 4, shadcn/ui |
 | [![Écrin](www/showcase/ecrin.jpg)](https://ecrin-lndev.vercel.app) | **[Écrin](landing-pages/ecrin)**<br>[live site](https://ecrin-lndev.vercel.app) | Gift-delivery app, immersive direction: a dark setting, a CSS 3D gift box and springy motion | Next.js 16, Tailwind CSS 4, shadcn/ui, Motion |
 
 Every preview links to its live demo at `https://[name]-lndev.vercel.app`,
@@ -68,7 +68,7 @@ are bundled locally, with credits and licenses in each project.
 
 ### About the gift-delivery series
 
-Ficelle, Passeline, Aparté and Écrin answer the same brief: four art directions
+Passeline, Ficelle, Aparté and Écrin answer the same brief: four art directions
 for fictional gift-delivery apps set in made-up US towns. They share a color
 palette (teal, deep teal, gold, ink and cream) and the same set of pages:
 
@@ -161,14 +161,17 @@ showcase and project metadata.
    These are maintained separately from the JavaScript data.
 7. Deploy the project with `landing-pages/my-product` as **Root Directory**
    and the Vercel project name `my-product-lndev`. Keep its links consistent
-   in this README, the JSON-LD and the `<noscript>` fallback. If it joins the three featured
-   projects, update the hero's three cards in `www/index.html`.
+   in this README, the JSON-LD and the `<noscript>` fallback. The hero automatically
+   includes every entry from `www/projects.js`; its three static cards are the
+   fallback shown before JavaScript loads.
 
 ## Showcase site
 
 `www/` presents all eight projects in a filterable gallery with an alternative
-index view. Three featured cards rotate automatically every five seconds with
-a smooth stacked-card transition. Rotation pauses on hover, keyboard focus,
+index view. The hero rotates through the entire collection every five seconds,
+keeping only three cards on screen: one in front and two in the stack. It
+prepares the next preview image and recycles the outgoing card while invisible
+for a smooth transition. Rotation pauses on hover, keyboard focus,
 while offscreen or in a hidden tab, and when animations are paused or reduced
 motion is requested. Each project includes source links and a **Behind the
 design** panel. The site uses

@@ -1,7 +1,7 @@
 {
   "name": "Landing Pages",
   "short_name": "Landing Pages",
-  "description": "An open-source collection of landing pages, each with its own art direction.",
+  "description": "Open-source landing pages with a personality of their own. Built with Next.js and fully customized shadcn/ui.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f7f6f2",
