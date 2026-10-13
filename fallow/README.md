@@ -1,0 +1,45 @@
+# FALLOW
+
+An imaginary seed library told as a four-chapter, full-screen botanical journey. Part of [LN's landing-page collection](https://github.com/ln-dev7/landing-pages).
+
+## Art direction
+
+Dusty rose, earth, warm silver, oversized Cormorant Garamond italics and Manrope annotations. A single original Three.js world carries the visitor from a closed seed to its roots, an open bloom, and a garden. Native scroll drives the camera and materials. This is an experiential site, with a quiet dock and field-notes drawer rather than a conventional stack of marketing cards.
+
+The reference at https://why.zero.university/ informed the idea of a continuous, interactive narrative. No source code, typography artwork, models, textures or copy from Zero are included. Geometry, flower species and illustrations are original.
+
+## Run
+
+Node 20.9+ and pnpm:
+
+```sh
+pnpm install
+pnpm dev
+pnpm typecheck
+pnpm build
+```
+
+Deploy this folder independently using the Next.js preset. Set `NEXT_PUBLIC_SITE_URL` to the actual deployment origin for canonical metadata and sitemap entries.
+
+## Interactions
+
+- Wake the seed; petals unfold in the live scene.
+- Native scrolling moves through four connected camera compositions.
+- Select one of three imagined species; its color changes in the whole garden.
+- Download a generated SVG botanical specimen. No server or image service involved.
+- Open the field notes, navigate chapters or pause ambient animation with keyboard-accessible shadcn/ui controls.
+- Respect live `prefers-reduced-motion` changes. Rendering pauses when the story is offscreen, the notes are open, or the tab is hidden. DPR is capped and mobile uses fewer flowers. The meadow batches flowers into four instanced meshes. WebGL failure leaves a chapter-aware CSS botanical fallback and usable content; context restoration resumes the live world.
+- Closed, softly curled petal geometry, satin plant materials, welded stone normals, and time-based camera damping keep surfaces and movement smooth.
+- The header caption is geometrically centered. Mobile controls have 44-pixel minimum targets; the bottom dock accounts for the device safe area.
+
+The story and controls are HTML, rendered by Next.js. WebGL is an enhancement and loads lazily. No scroll hijacking, sound, tracking, account, form submission or persistence.
+
+## Stack and assets
+
+Next.js 16 / React 19 / Tailwind CSS 4 / shadcn/ui base-maia (Base UI) / Three.js. The shadcn primitives are fully styled for FALLOW. Shared control mechanics only; original layout and artwork.
+
+Local Cormorant Garamond and Manrope fonts retain the SIL Open Font License in `app/fonts/`. Procedural 3D geometry uses standard Three.js materials and the package's RoomEnvironment reflection setup. No external image assets.
+
+FALLOW, its plants and the botanical descriptions are fictional, not horticultural advice or a real conservation program.
+
+Developed by [LN](https://lndev.me). Source code: [MIT](../LICENSE). [Support the project](https://lndev.mychariow.shop/prd_3cu1s0).
