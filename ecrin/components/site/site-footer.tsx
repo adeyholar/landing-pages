@@ -46,6 +46,30 @@ export function SiteFooter() {
         <p className="mt-14 border-t border-cream/10 pt-8 text-sm text-cream/55">
           © 2026 {company.legalName}, {company.form}.
         </p>
+        <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-cream/75">
+          <p>
+            Developed by{" "}
+            <a
+              href="https://lndev.me"
+              className="underline decoration-current/40 underline-offset-4 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-4"
+            >
+              LN
+            </a>
+            .
+          </p>
+          <a
+            href="https://github.com/ln-dev7/landing-pages"
+            className="underline decoration-current/40 underline-offset-4 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-4"
+          >
+            Open-source code · MIT License
+          </a>
+          <a
+            href="https://lndev.mychariow.shop/prd_3cu1s0"
+            className="underline decoration-current/40 underline-offset-4 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-4"
+          >
+            Support the project <span aria-hidden="true">↗</span>
+          </a>
+        </div>
       </div>
     </footer>
   )

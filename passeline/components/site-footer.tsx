@@ -229,6 +229,30 @@ export function SiteFooter({
               </ul>
             </nav>
           </div>
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-cream/12 pt-6 text-[0.875rem] text-cream/80">
+            <p>
+              Developed by{" "}
+              <a
+                href="https://lndev.me"
+                className="underline decoration-current/40 underline-offset-4 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-4"
+              >
+                LN
+              </a>
+              .
+            </p>
+            <a
+              href="https://github.com/ln-dev7/landing-pages"
+              className="underline decoration-current/40 underline-offset-4 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-4"
+            >
+              Open-source code · MIT License
+            </a>
+            <a
+              href="https://lndev.mychariow.shop/prd_3cu1s0"
+              className="underline decoration-current/40 underline-offset-4 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-4"
+            >
+              Support the project <span aria-hidden="true">↗</span>
+            </a>
+          </div>
         </div>
       </div>
     </footer>
