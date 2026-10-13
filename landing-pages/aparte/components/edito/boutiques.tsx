@@ -124,19 +124,19 @@ export function Boutiques() {
               <Photo
                 zoom
                 src={bouquet}
-                alt="Seen from above, a bright bouquet of yellow mums, coral carnations and purple dahlias."
+                alt="Pink peonies and eucalyptus wrapped in brown kraft paper."
                 sizes="(min-width: 1024px) 260px, 45vw"
-                position="50% 30%"
-                crop={1.06}
+                position="50% 100%"
+                crop={1}
                 className="aspect-[4/5] w-full"
               />
               <Photo
                 zoom
                 src={the}
-                alt="A cup of amber tea on a white surface, among a few green leaves and dried sprigs."
+                alt="Pale green tea in a white porcelain cup, resting in soft window light."
                 sizes="(min-width: 1024px) 260px, 45vw"
-                position="80% 30%"
-                crop={1.22}
+                position="50% 55%"
+                crop={1}
                 className="aspect-[4/5] w-full lg:mt-16"
               />
             </div>

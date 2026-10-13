@@ -1,4 +1,3 @@
-import Image from "next/image"
 import Link from "next/link"
 
 import {
@@ -8,10 +7,10 @@ import {
   RunningHead,
 } from "@/components/edito/primitives"
 import { Vitrine } from "@/components/edito/visuels"
+import { BoutiquePreview } from "@/components/partner/boutique-preview"
 import { PartnerForm } from "@/components/partner/partner-form"
 import { buttonVariants } from "@/components/ui/button"
 import { site } from "@/lib/site"
-import ecranBoutique from "@/public/images/ecran-institut-celadon.jpg"
 import quai from "@/public/images/quai.jpg"
 
 /* ——— Couverture du numéro spécial ——— */
@@ -178,16 +177,10 @@ export function PartnerSommaire() {
               .
             </p>
 
-            {/* La seule capture d'app du site, petite */}
+            {/* Maquette HTML de l’app : nette même au zoom */}
             <figure className="mt-12 flex items-end gap-5">
               <div className="w-[9.5rem] shrink-0 overflow-hidden rounded-[1.25rem] border border-ink/15 bg-white p-1.5 shadow-[0_24px_40px_-26px_rgb(15_35_36/0.45)]">
-                <Image
-                  src={ecranBoutique}
-                  alt="The Institut Céladon page in the Aparté app: a bouquet banner, the address, a “Give a gift card” button and a “Book a time” button."
-                  sizes="152px"
-                  quality={90}
-                  className="h-auto w-full rounded-[0.875rem]"
-                />
+                <BoutiquePreview />
               </div>
               <Caption className="max-w-[16rem] pb-1">
                 Institut Céladon in the app: give a gift card, or book a time
@@ -257,15 +250,15 @@ export function PartnerLarchHarbor() {
           <figure className="col-span-12 lg:col-span-6">
             <Photo
               src={quai}
-              alt="Boats moored on the Morrow River under rust-colored fall trees, with the town behind them."
+              alt="Sailboats and waterfront houses reflected in Flensburg harbor at dusk."
               sizes="(min-width: 1024px) 46vw, 100vw"
               crop={1}
-              position="30% 60%"
+              position="50% 50%"
               zoom
               className="aspect-[4/3] w-full max-w-[42rem]"
             />
             <Caption className="mt-3">
-              Washerwomen’s Quay, a few steps from Maison Ambre.
+              Waterfront inspiration for our fictional town: Flensburg, photographed by Carsten Ruthemann.
             </Caption>
           </figure>
 

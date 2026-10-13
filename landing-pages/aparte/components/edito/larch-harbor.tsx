@@ -17,7 +17,7 @@ export function LarchHarbor() {
           <Container>
             <h2
               id="larch-harbor-title"
-              className="display pt-8 text-[3.5rem] sm:pt-12 sm:text-[5.5rem] lg:pt-16 lg:text-[8.5rem]"
+              className="display text-cream [text-shadow:0_2px_18px_#0f2324] pt-8 text-[3.5rem] sm:pt-12 sm:text-[5.5rem] lg:pt-16 lg:text-[8.5rem]"
             >
               Aparté,
               <br />
@@ -28,15 +28,16 @@ export function LarchHarbor() {
         <figure>
           <Photo
             src={quai}
-            alt="A fall afternoon on the Morrow River: boats at the quay, a cobbled path, pale facades and a streetcar in the distance."
+            alt="Sailboats in Flensburg harbor at dusk, with waterfront houses reflected in the still water."
             sizes="100vw"
             crop={1}
-            position="22% 0%"
+            position="50% 45%"
             className="aspect-[4/5] w-full sm:aspect-[3/2] lg:aspect-[2/1] lg:max-h-[50rem]"
           />
           <Container>
             <figcaption className="mt-4 text-[0.78125rem] leading-[1.45] text-ink-soft italic">
-              Larch Harbor on an October afternoon, along the Morrow.
+              A harbor at the close of day. Flensburg, photographed by Carsten
+              Ruthemann, stands in for our imaginary Larch Harbor.
             </figcaption>
           </Container>
         </figure>

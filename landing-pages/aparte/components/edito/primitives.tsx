@@ -64,8 +64,8 @@ export function RunningHead({
 }
 
 /**
- * Photo au traitement commun (dominante chaude, grain). `crop` agrandit
- * légèrement l'image pour masquer les coins arrondis des fichiers d'origine.
+ * Photo HD au traitement commun (dominante chaude, grain). `crop` permet
+ * un recadrage éditorial optionnel, sans agrandissement par défaut.
  */
 export function Photo({
   src,
@@ -73,7 +73,7 @@ export function Photo({
   sizes,
   className,
   position = "50% 50%",
-  crop = 1.045,
+  crop = 1,
   preload = false,
   zoom = false,
   imgClassName,

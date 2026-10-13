@@ -15,12 +15,12 @@ export default function ProductHandoffPage() {
       title="This piece is waiting for you in the app."
       photo={{
         src: bouquet,
-        alt: "Seen from above, a bright bouquet of yellow mums, coral carnations and purple dahlias.",
+        alt: "Pink peonies and eucalyptus wrapped in brown kraft paper.",
         caption:
           "Every shop in the book can have its creations delivered by our couriers.",
         className: "aspect-[4/5] w-full max-w-[18rem]",
-        position: "50% 30%",
-        crop: 1.06,
+        position: "50% 100%",
+        crop: 1,
       }}
     >
       <p>

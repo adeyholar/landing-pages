@@ -23,14 +23,14 @@ export function Moment() {
           <figure className="order-2 col-span-7 col-start-6 mt-12 sm:col-span-5 sm:col-start-8 lg:order-none lg:col-span-3 lg:col-start-1 lg:mt-28">
             <Photo
               src={detail}
-              alt="A close-up of two hands holding a small pink box tied with a pale ribbon."
+              alt="Hands hold a gift wrapped in deep green paper, tied with a satin ribbon and a sprig of eucalyptus."
               sizes="(min-width: 1024px) 240px, 50vw"
               crop={1}
               zoom
               className="aspect-[330/410] w-full max-w-[240px]"
             />
             <Caption className="mt-3 max-w-[240px]">
-              The same moment, up close.
+              The care is in the details.
             </Caption>
           </figure>
 

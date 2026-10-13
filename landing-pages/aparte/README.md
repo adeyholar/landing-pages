@@ -32,10 +32,13 @@ this project's source code on
   `#123F3B` for the founder’s word and the footer.
 - **Logo**: a Bodoni “a” tucked inside an opening parenthesis, in two golds
   (`components/brand/logo.tsx`, `public/brand/aparte-logo.svg`).
-- **Images**: one treatment everywhere (warm cast, grain), the `.photo` class
-  in `app/globals.css`. Maison Ambre’s storefront and the Institut Céladon
-  gift card are drawn in code (`components/edito/visuels.tsx`); the app screen
-  `public/images/ecran-institut-celadon.jpg` is rendered from an HTML page.
+- **Images**: six locally bundled HD photographs from Pexels and Unsplash,
+  with a warm cast and grain via `.photo` in `app/globals.css`. Authors,
+  source pages, dimensions and licenses are recorded in [PHOTO-CREDITS.md](PHOTO-CREDITS.md).
+  Maison Ambre’s storefront and the Institut Céladon gift card are drawn in
+  code (`components/edito/visuels.tsx`). The app preview is responsive HTML
+  and SVG (`components/partner/boutique-preview.tsx`) using the licensed bouquet
+  photo, so its interface remains sharp at any pixel density.
 - **Layout**: running heads with folios, drop cap, pull quote, an address
   book with dot leaders, and the merchant form styled as an application form.
 - **Motion**: a single sequence on load (cover headline and image), none with

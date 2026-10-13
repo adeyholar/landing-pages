@@ -102,7 +102,7 @@ window.PROJECTS = [
   },
   {
     slug: "aparte",
-    image: "showcase/aparte.jpg",
+    image: "showcase/aparte.jpg?v=2",
     logo: "media/aparte-logo.svg",
     name: "Aparté",
     url: "https://aparte-lndev.vercel.app",

@@ -5,7 +5,7 @@ Usage : python3 scripts/opengraph-image.py (fontTools, brotli et Pillow requis).
 import os, re, random, tempfile
 from fontTools.ttLib import TTFont
 from fontTools.varLib import instancer
-from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageChops
+from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageChops, ImageOps
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TMP = tempfile.mkdtemp()
@@ -35,11 +35,8 @@ img = Image.new("RGB", (W, H), PAPER)
 
 # Photo : même traitement que le site (dominante chaude, grain)
 source = Image.open(ROOT + "/public/images/moment-cadeau.jpg").convert("RGB")
-pw, ph = source.size
-crop = int(pw * 0.045 / 2)  # masque les coins arrondis d'origine
-tw = 450 * S
-th = int(tw * ph / pw)
-original = source.crop((crop, crop, pw - crop, ph - crop)).resize((tw, th), Image.LANCZOS)
+tw, th = 450 * S, 550 * S
+original = ImageOps.fit(source, (tw, th), Image.Resampling.LANCZOS, centering=(0.76, 0.5))
 desat = Image.blend(original, original.convert("L").convert("RGB"), 0.14)
 warm = ImageChops.soft_light(desat, Image.new("RGB", desat.size, (217, 165, 90)))
 photo = Image.blend(original, warm, 0.35)

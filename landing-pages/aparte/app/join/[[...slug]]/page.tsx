@@ -15,7 +15,7 @@ export default function JoinHandoffPage() {
       title="This invitation is closed."
       photo={{
         src: detail,
-        alt: "A close-up of two hands holding a small pink box tied with a pale ribbon.",
+        alt: "Hands hold a gift wrapped in deep green paper, tied with a satin ribbon and a sprig of eucalyptus.",
         caption: "A note signed by many hands is still possible.",
         className: "aspect-[330/410] w-full max-w-[15rem]",
         crop: 1,

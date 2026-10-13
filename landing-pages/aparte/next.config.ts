@@ -2,7 +2,7 @@ import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
   images: {
-    // Les photos d'origine sont petites : on les recompresse peu.
+    // Photos HD locales : tailles responsives et rendu photographique soigné.
     qualities: [75, 90],
   },
   experimental: {

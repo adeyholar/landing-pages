@@ -32,15 +32,15 @@ export function Arrivee() {
           <figure className="col-span-11 sm:col-span-8 lg:col-span-5 lg:row-span-2">
             <Photo
               src={livreur}
-              alt="In a black cap and glasses, a smiling courier carries two parcels wrapped in kraft paper."
+              alt="A smiling courier carries cardboard parcels and padded envelopes outdoors."
               sizes="(min-width: 1024px) 38vw, (min-width: 640px) 66vw, 92vw"
-              position="50% 35%"
+              position="50% 0%"
               zoom
-              className="aspect-[775/896] w-full"
+              className="aspect-[3/5] w-full"
             />
             <Caption className="mt-3">
-              Our couriers are independent contractors, and every one of them
-              showed us ID before their first run.
+              A parcel, carried with care. An illustration of the personal touch
+              behind every delivery.
             </Caption>
           </figure>
 

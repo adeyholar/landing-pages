@@ -12,10 +12,10 @@ import moment from "@/public/images/moment-cadeau.jpg"
  * l'image, quelle que soit la largeur d'écran.
  *
  * Mobile : deux lignes sur le papier, « coming. » à cheval sur le bord haut de
- * la photo, encre dessus, crème dessous (sur les cheveux sombres).
+ * la photo, en encre sur le fond clair de la nouvelle photographie.
  * Très grand écran (xl) : la scène occupe les colonnes 7 à 11 d'une grille de 12
  * (gouttière 24 px), la colonne 1 est donc à -(120cqw + 28,8 px) ; les lignes
- * descendent en escalier et passent, à l'encre, sur la doudoune rose.
+ * descendent en escalier et passent, à l'encre, sur le fond clair de la photographie.
  */
 const lines = ["She didn’t", "see it", "coming."] as const
 
@@ -23,11 +23,9 @@ const geometry = [
   // mobile : corps 19cqw, photo à 2,33em sous le haut du titre
   "[--l1:0em] [--l2:0.55em] [--l3:0.12em]",
   "[font-size:19cqw] [left:5.2cqw] top-0",
-  "[--px:-5.2cqw] [--py:44.3cqw] [--pw:100cqw] [--ph:115.6cqw]",
   // très grand écran : composition « couverture » sur 12 colonnes
   "xl:[--l2:2.2em] xl:[--l3:3.95em]",
   "xl:[font-size:27.8cqw] xl:[left:calc(-120cqw-28.8px)] xl:top-[11cqw]",
-  "xl:[--pw:0px] xl:[--ph:0px]",
 ].join(" ")
 
 export function Cover() {
@@ -57,7 +55,6 @@ export function Cover() {
                         style={
                           {
                             "--i": i,
-                            "--indent": `var(--l${i + 1})`,
                           } as React.CSSProperties
                         }
                       >
@@ -71,14 +68,14 @@ export function Cover() {
               <figure>
                 <Photo
                   src={moment}
-                  alt="Sitting beside her partner, a young woman looks down at a small pink box, lips parted in surprise."
+                  alt="A smiling woman in a brown sweater holds a pink gift box tied with a ribbon."
                   sizes="(min-width: 1280px) 38vw, (min-width: 768px) 640px, 100vw"
-                  position="50% 40%"
+                  position="76% 50%"
                   preload
                   className="cover-photo aspect-[775/896]"
                 />
                 <figcaption className="cover-after px-5 pt-3 text-right text-[0.78125rem] leading-[1.45] text-ink-soft italic sm:px-8 md:px-0 xl:absolute xl:top-0 xl:left-full xl:ml-4 xl:p-0 xl:text-left xl:[writing-mode:vertical-rl]">
-                  A courier, a pink box and a handwritten note.
+                  A little surprise, a lot to say.
                 </figcaption>
               </figure>
             </div>

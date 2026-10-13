@@ -342,7 +342,7 @@
     clip-path: inset(0 0 0 0);
   }
 }
-/* s'ajoute à la propriété `scale` qui recadre les coins arrondis d'origine */
+/* Léger rapprochement au chargement, en plus du recadrage éditorial. */
 @keyframes photo-settle {
   from {
     transform: scale(1.08);
@@ -367,25 +367,12 @@
   padding-bottom: 0.2em;
   margin-bottom: -0.2em;
 }
-/*
- * Encre sur le papier, crème là où la ligne passe sur la photo : le fond de
- * chaque ligne contient un rectangle crème calé sur la photo (--px, --py,
- * --pw, --ph, exprimés depuis le coin du titre), découpé à la forme du texte.
- */
+/* Encre sur le fond clair de la photographie et sur le papier. */
 .cover-line > span {
   display: block;
   padding-bottom: 0.2em;
   margin-bottom: -0.2em;
   color: var(--ink);
-  background:
-    linear-gradient(var(--cream), var(--cream)) no-repeat
-      calc(var(--px, 0px) - var(--indent, 0em))
-      calc(var(--py, 0px) - var(--i, 0) * 0.9em) / var(--pw, 0px)
-      var(--ph, 0px),
-    linear-gradient(var(--ink), var(--ink));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 /* Contraste forcé (Windows) : on rend le titre en texte plein */
