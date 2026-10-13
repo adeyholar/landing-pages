@@ -832,6 +832,7 @@ em {
 }
 
 .table {
+  position: relative; /* Keep the offscreen column label inside the scroll region. */
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -1036,4 +1037,55 @@ tbody tr:hover .go {
 
 .notfound .hero__title {
   margin-bottom: 12px;
+}
+
+/* Project support */
+.nav__links .nav__support {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.nav__support svg,
+.button--support svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform .25s var(--ease);
+}
+.nav__support:hover svg,
+.button--support:hover svg { transform: scale(1.12); }
+.footer__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+.footer__actions .button { margin-top: 0; }
+.button--outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+}
+@media (max-width: 560px) {
+  .nav__inner {
+    height: auto;
+    min-height: 64px;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-block: 14px;
+  }
+  .nav__links { width: 100%; justify-content: space-between; }
+  html { scroll-padding-top: 125px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav__support:hover svg,
+  .button--support:hover svg { transform: none; }
 }
