@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import type { MutableRefObject } from "react";
 import type * as Three from "three";
 import { journeyAt } from "@/lib/journey";
+import type { WorldLoadState } from "@/lib/world-loading";
 type Props = {
   progress: MutableRefObject<number>;
   awake: boolean;
@@ -10,6 +11,7 @@ type Props = {
   paused: boolean;
   active: boolean;
   onReady: (ready: boolean) => void;
+  onLoad: (state: WorldLoadState) => void;
 };
 export function World(props: Props) {
   const host = useRef<HTMLDivElement>(null),
@@ -22,30 +24,119 @@ export function World(props: Props) {
   useEffect(() => {
     const el = host.current;
     if (!el) return;
-    let disposed = false,
-      cleanup = () => {};
+    let disposed = false;
+    let failed = false;
+    let cleaned = false;
+    let loadingProgress = 0;
+    const disposers: (() => void)[] = [];
+    const resources = new Set<{ dispose: () => void }>();
+    const pendingFrames = new Map<number, (alive: boolean) => void>();
+    const own = <R extends { dispose: () => void } | null>(resource: R): R => {
+      if (!resource) return resource;
+      resources.add(resource);
+      return resource;
+    };
+    const release = (resource: { dispose: () => void }) => {
+      if (resources.delete(resource)) resource.dispose();
+    };
+    const cleanup = () => {
+      if (cleaned) return;
+      cleaned = true;
+      request.current = () => {};
+      pendingFrames.forEach((resolve, frame) => {
+        cancelAnimationFrame(frame);
+        resolve(false);
+      });
+      pendingFrames.clear();
+      // Dispose in reverse construction order, including resources created
+      // before the scene was complete if setup was interrupted.
+      disposers.reverse().forEach((dispose) => {
+        try {
+          dispose();
+        } catch {
+          /* Keep releasing the remaining resources. */
+        }
+      });
+      disposers.length = 0;
+      [...resources].reverse().forEach((resource) => {
+        resources.delete(resource);
+        try {
+          resource.dispose();
+        } catch {
+          /* A lost context must not prevent the rest from being released. */
+        }
+      });
+    };
+    const fallback = () => {
+      if (disposed || failed) return;
+      failed = true;
+      cleanup();
+      state.current.onReady(false);
+      state.current.onLoad({
+        status: "fallback",
+        progress: 100,
+        stage: "A quieter garden awaits",
+      });
+    };
+    const nextFrame = () =>
+      new Promise<boolean>((resolve) => {
+        if (disposed || failed) {
+          resolve(false);
+          return;
+        }
+        const frame = requestAnimationFrame(() => {
+          pendingFrames.delete(frame);
+          resolve(!disposed && !failed);
+        });
+        pendingFrames.set(frame, resolve);
+      });
+    const milestone = async (progress: number, stage: string) => {
+      if (disposed || failed) return false;
+      loadingProgress = Math.max(loadingProgress, progress);
+      state.current.onLoad({
+        status: "loading",
+        progress: loadingProgress,
+        stage,
+      });
+      // Two frames give React and the browser a paint between CPU-heavy steps.
+      return (await nextFrame()) && (await nextFrame());
+    };
     async function setup() {
-      const T = await import("three");
-      const { RoomEnvironment } =
-        await import("three/addons/environments/RoomEnvironment.js");
-      const { mergeVertices, mergeGeometries } =
-        await import("three/addons/utils/BufferGeometryUtils.js");
-      if (disposed) return;
-      let renderer: Three.WebGLRenderer;
-      try {
-        renderer = new T.WebGLRenderer({
+      if (!(await milestone(0, "Gathering a little world"))) return;
+      const [T, { RoomEnvironment }, { mergeVertices, mergeGeometries }] =
+        await Promise.all([
+          import("three"),
+          import("three/addons/environments/RoomEnvironment.js"),
+          import("three/addons/utils/BufferGeometryUtils.js"),
+        ]);
+      if (disposed || failed) return;
+      const renderer = own(
+        new T.WebGLRenderer({
           antialias: true,
           alpha: true,
           powerPreference: "high-performance",
-        });
-      } catch {
-        state.current.onReady(false);
-        return;
-      }
-      cleanup = () => {
-        renderer.dispose();
-        renderer.domElement.remove();
+        }),
+      );
+      // Three reports some shader failures without throwing during render.
+      // Defer cleanup until render returns rather than disposing mid-draw.
+      let shaderFailed = false;
+      renderer.debug.onShaderError = () => {
+        shaderFailed = true;
       };
+      renderer.domElement.style.opacity = "0";
+      disposers.push(() => renderer.domElement.remove());
+      const contextLost = (event: Event) => {
+        event.preventDefault();
+        fallback();
+      };
+      renderer.domElement.addEventListener("webglcontextlost", contextLost);
+      disposers.push(() =>
+        renderer.domElement.removeEventListener(
+          "webglcontextlost",
+          contextLost,
+        ),
+      );
+      if (!(await milestone(12, "Making room to grow"))) return;
       renderer.setPixelRatio(
         Math.min(devicePixelRatio, innerWidth < 700 ? 1.25 : 1.5),
       );
@@ -64,16 +155,10 @@ export function World(props: Props) {
         0.1,
         100,
       );
-      const room = new RoomEnvironment(),
-        pmrem = new T.PMREMGenerator(renderer),
-        env = pmrem.fromScene(room, 0.04);
-      scene.environment = env.texture;
-      scene.environmentIntensity = 0.65;
-      room.dispose();
-      pmrem.dispose();
       scene.add(new T.HemisphereLight(0xffede1, 0x7a4559, 1.3));
       const sun = new T.DirectionalLight(0xffe8ce, 3.2);
       sun.position.set(-5, 10, 6);
+      own(sun.shadow);
       sun.castShadow = true;
       sun.shadow.mapSize.set(
         innerWidth < 700 ? 512 : 1024,
@@ -88,24 +173,28 @@ export function World(props: Props) {
       const rim = new T.DirectionalLight(0xe0a8dd, 1.5);
       rim.position.set(8, 5, -6);
       scene.add(rim);
-      const groundMat = new T.MeshStandardMaterial({
-        color: 0x9e8188,
-        roughness: 1,
-        transparent: true,
-      });
-      const floor = new T.Mesh(new T.PlaneGeometry(160, 160), groundMat);
+      const groundMat = own(
+        new T.MeshStandardMaterial({
+          color: 0x9e8188,
+          roughness: 1,
+          transparent: true,
+        }),
+      );
+      const floor = new T.Mesh(own(new T.PlaneGeometry(160, 160)), groundMat);
       floor.rotation.x = -Math.PI / 2;
       floor.position.y = -1.25;
       floor.receiveShadow = true;
       floor.renderOrder = -2;
       scene.add(floor);
-      const rockMat = new T.MeshStandardMaterial({
-        color: 0x9f8a84,
-        roughness: 0.9,
-        transparent: true,
-        depthWrite: false,
-      });
-      const rockSource = new T.IcosahedronGeometry(1, 10);
+      const rockMat = own(
+        new T.MeshStandardMaterial({
+          color: 0x9f8a84,
+          roughness: 0.9,
+          transparent: true,
+          depthWrite: false,
+        }),
+      );
+      const rockSource = own(new T.IcosahedronGeometry(1, 10));
       const a = rockSource.attributes.position;
       for (let i = 0; i < a.count; i++) {
         const x = a.getX(i),
@@ -121,9 +210,9 @@ export function World(props: Props) {
       // across its surface instead of exposing the triangulation.
       rockSource.deleteAttribute("normal");
       rockSource.deleteAttribute("uv");
-      const rockGeo = mergeVertices(rockSource);
+      const rockGeo = own(mergeVertices(rockSource));
       rockGeo.computeVertexNormals();
-      rockSource.dispose();
+      release(rockSource);
       const stone = new T.Mesh(rockGeo, rockMat);
       stone.scale.set(3.2, 0.72, 2.5);
       stone.position.set(0.3, -0.55, 0);
@@ -177,7 +266,9 @@ export function World(props: Props) {
         tipRadius: number,
         sides = 8,
       ) => {
-        const geometry = new T.TubeGeometry(curve, steps, radius, sides, false);
+        const geometry = own(
+          new T.TubeGeometry(curve, steps, radius, sides, false),
+        );
         const positions = geometry.attributes.position;
         for (let ring = 0; ring <= steps; ring++) {
           const t = ring / steps;
@@ -197,24 +288,27 @@ export function World(props: Props) {
         return geometry;
       };
       const moon = new T.Mesh(
-        new T.SphereGeometry(5, 64, 40),
-        new T.MeshStandardMaterial({ color: 0xe9c1b7, roughness: 0.55 }),
+        own(new T.SphereGeometry(5, 64, 40)),
+        own(new T.MeshStandardMaterial({ color: 0xe9c1b7, roughness: 0.55 })),
       );
       moon.position.set(-15, 6, -22);
       scene.add(moon);
-      const wireMat = new T.MeshStandardMaterial({
-        color: 0xd1b5a4,
-        metalness: 0.7,
-        roughness: 0.25,
-      });
+      const wireMat = own(
+        new T.MeshStandardMaterial({
+          color: 0xd1b5a4,
+          metalness: 0.7,
+          roughness: 0.25,
+        }),
+      );
       const arch = new T.Mesh(
-        new T.TorusGeometry(6, 0.025, 6, 128, Math.PI * 1.5),
+        own(new T.TorusGeometry(6, 0.025, 6, 128, Math.PI * 1.5)),
         wireMat,
       );
       arch.position.set(0, 1.1, -5);
       arch.rotation.z = -Math.PI / 4;
       scene.add(arch);
-      const petalSource = new T.SphereGeometry(1, 40, 28);
+      if (!(await milestone(28, "Laying the quiet ground"))) return;
+      const petalSource = own(new T.SphereGeometry(1, 40, 28));
       const pos = petalSource.attributes.position;
       const pigments: number[] = [];
       // A closed, softly curled surface gives the petal a rounded edge and
@@ -243,34 +337,42 @@ export function World(props: Props) {
       );
       petalSource.deleteAttribute("normal");
       petalSource.deleteAttribute("uv");
-      const petalGeo = mergeVertices(petalSource);
+      const petalGeo = own(mergeVertices(petalSource));
       petalGeo.computeVertexNormals();
-      petalSource.dispose();
-      const petalMat = new T.MeshPhysicalMaterial({
-        color: 0xb66d86,
-        roughness: 0.43,
-        metalness: 0,
-        clearcoat: 0.24,
-        clearcoatRoughness: 0.48,
-        sheen: 0.45,
-        sheenColor: new T.Color(0xf6c1ca),
-        sheenRoughness: 0.65,
-        vertexColors: true,
-      });
-      const leafMat = new T.MeshStandardMaterial({
-        color: 0x77794d,
-        roughness: 0.62,
-        metalness: 0,
-      });
-      const stemMat = new T.MeshStandardMaterial({
-        color: 0x71754c,
-        roughness: 0.55,
-      });
-      const goldMat = new T.MeshStandardMaterial({
-        color: 0xc99a55,
-        roughness: 0.7,
-        metalness: 0,
-      });
+      release(petalSource);
+      const petalMat = own(
+        new T.MeshPhysicalMaterial({
+          color: 0xb66d86,
+          roughness: 0.43,
+          metalness: 0,
+          clearcoat: 0.24,
+          clearcoatRoughness: 0.48,
+          sheen: 0.45,
+          sheenColor: new T.Color(0xf6c1ca),
+          sheenRoughness: 0.65,
+          vertexColors: true,
+        }),
+      );
+      const leafMat = own(
+        new T.MeshStandardMaterial({
+          color: 0x77794d,
+          roughness: 0.62,
+          metalness: 0,
+        }),
+      );
+      const stemMat = own(
+        new T.MeshStandardMaterial({
+          color: 0x71754c,
+          roughness: 0.55,
+        }),
+      );
+      const goldMat = own(
+        new T.MeshStandardMaterial({
+          color: 0xc99a55,
+          roughness: 0.7,
+          metalness: 0,
+        }),
+      );
       const stalkPath = new T.CatmullRomCurve3([
         new T.Vector3(0, 0, 0),
         new T.Vector3(-0.15, 0.8, 0.05),
@@ -298,14 +400,19 @@ export function World(props: Props) {
         bloom.add(rotation);
         petals.push(hinge);
       }
-      const center = new T.Mesh(new T.SphereGeometry(0.34, 32, 24), goldMat);
+      const center = new T.Mesh(
+        own(new T.SphereGeometry(0.34, 32, 24)),
+        goldMat,
+      );
       center.scale.y = 0.3;
       center.position.y = 0.18;
       bloom.add(center);
-      const pollen = new T.InstancedMesh(
-        new T.SphereGeometry(0.027, 8, 6),
-        goldMat,
-        150,
+      const pollen = own(
+        new T.InstancedMesh(
+          own(new T.SphereGeometry(0.027, 8, 6)),
+          goldMat,
+          150,
+        ),
       );
       const dummy = new T.Object3D();
       for (let i = 0; i < 150; i++) {
@@ -322,7 +429,7 @@ export function World(props: Props) {
       bloom.add(pollen);
       // The dormant form is a single closed surface. Folding every open
       // petal into the same narrow space creates intersecting triangles.
-      const budSource = new T.SphereGeometry(1, 64, 48);
+      const budSource = own(new T.SphereGeometry(1, 64, 48));
       const budPositions = budSource.attributes.position;
       const budPigments: number[] = [];
       for (let i = 0; i < budPositions.count; i++) {
@@ -341,14 +448,17 @@ export function World(props: Props) {
       );
       budSource.deleteAttribute("normal");
       budSource.deleteAttribute("uv");
-      const budGeometry = mergeVertices(budSource);
+      const budGeometry = own(mergeVertices(budSource));
       budGeometry.computeVertexNormals();
-      budSource.dispose();
+      release(budSource);
       const bud = new T.Mesh(budGeometry, petalMat);
       bud.name = "closed-bud";
       bud.castShadow = true;
       bloom.add(bud);
-      const calyx = new T.Mesh(new T.SphereGeometry(0.34, 32, 24), leafMat);
+      const calyx = new T.Mesh(
+        own(new T.SphereGeometry(0.34, 32, 24)),
+        leafMat,
+      );
       calyx.position.y = 0.025;
       calyx.scale.set(0.92, 0.35, 0.92);
       bloom.add(calyx);
@@ -360,7 +470,7 @@ export function World(props: Props) {
       const leafLength = 0.93;
       const leafCenterY = (t: number) =>
         Math.sin(t * Math.PI) * 0.14 + 0.06 * t - 0.09 * t * t;
-      const leafSource = new T.SphereGeometry(1, 32, 24);
+      const leafSource = own(new T.SphereGeometry(1, 32, 24));
       const leafPositions = leafSource.attributes.position;
       for (let i = 0; i < leafPositions.count; i++) {
         const t = (leafPositions.getY(i) + 1) * 0.5;
@@ -376,9 +486,9 @@ export function World(props: Props) {
       }
       leafSource.deleteAttribute("normal");
       leafSource.deleteAttribute("uv");
-      const leafGeo = mergeVertices(leafSource);
+      const leafGeo = own(mergeVertices(leafSource));
       leafGeo.computeVertexNormals();
-      leafSource.dispose();
+      release(leafSource);
       const veinPath = new T.CatmullRomCurve3(
         Array.from({ length: 25 }, (_, i) => {
           const t = (i / 24) * 0.965;
@@ -432,6 +542,7 @@ export function World(props: Props) {
       }
       plant.position.copy(plantAnchor);
       scene.add(plant);
+      if (!(await milestone(42, "Shaping a small possibility"))) return;
       const field = new T.Group();
       const fieldCount = innerWidth < 600 ? 11 : 21;
       const fieldPoses: {
@@ -477,7 +588,7 @@ export function World(props: Props) {
         )
           return;
         const group = parts.get(mesh.material) ?? [];
-        const part = mesh.geometry.clone().applyMatrix4(mesh.matrixWorld);
+        const part = own(mesh.geometry.clone()).applyMatrix4(mesh.matrixWorld);
         part.deleteAttribute("uv");
         if (mesh.material !== petalMat) part.deleteAttribute("color");
         group.push(part);
@@ -485,10 +596,10 @@ export function World(props: Props) {
       });
       const fieldMeshes: Three.InstancedMesh[] = [];
       parts.forEach((geometries, material) => {
-        const geometry = mergeGeometries(geometries);
-        geometries.forEach((part) => part.dispose());
+        const geometry = own(mergeGeometries(geometries));
+        geometries.forEach((part) => release(part));
         if (!geometry) return;
-        const mesh = new T.InstancedMesh(geometry, material, fieldCount);
+        const mesh = own(new T.InstancedMesh(geometry, material, fieldCount));
         mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);
         mesh.castShadow = true;
         fieldMeshes.push(mesh);
@@ -506,7 +617,7 @@ export function World(props: Props) {
         const height = basal ? 0.14 : 0.23 + (blade % 3) * 0.105;
         const bend = basal ? 0.22 : 0.09 + (blade % 4) * 0.04;
         const width = basal ? 0.052 : 0.024 + (blade % 2) * 0.008;
-        const bladeSource = new T.SphereGeometry(1, 8, 12);
+        const bladeSource = own(new T.SphereGeometry(1, 8, 12));
         const positions = bladeSource.attributes.position;
         const tones: number[] = [];
         for (let vertex = 0; vertex < positions.count; vertex++) {
@@ -529,24 +640,26 @@ export function World(props: Props) {
         );
         bladeSource.deleteAttribute("normal");
         bladeSource.deleteAttribute("uv");
-        const bladeGeo = mergeVertices(bladeSource);
+        const bladeGeo = own(mergeVertices(bladeSource));
         bladeGeo.computeVertexNormals();
         bladeGeo.rotateY(blade * 2.39996);
         tuftParts.push(bladeGeo);
-        bladeSource.dispose();
+        release(bladeSource);
       }
-      const grassGeo = mergeGeometries(tuftParts)!;
-      tuftParts.forEach((part) => part.dispose());
-      const grassMat = new T.MeshStandardMaterial({
-        color: 0xffffff,
-        vertexColors: true,
-        roughness: 0.83,
-        metalness: 0,
-        transparent: true,
-        depthWrite: false,
-      });
+      const grassGeo = own(mergeGeometries(tuftParts))!;
+      tuftParts.forEach((part) => release(part));
+      const grassMat = own(
+        new T.MeshStandardMaterial({
+          color: 0xffffff,
+          vertexColors: true,
+          roughness: 0.83,
+          metalness: 0,
+          transparent: true,
+          depthWrite: false,
+        }),
+      );
       const grassCount = innerWidth < 700 ? 125 : 190;
-      const grass = new T.InstancedMesh(grassGeo, grassMat, grassCount);
+      const grass = own(new T.InstancedMesh(grassGeo, grassMat, grassCount));
       const grassTint = new T.Color();
       const localTurn = new T.Quaternion();
       let planted = 0;
@@ -581,12 +694,14 @@ export function World(props: Props) {
       scene.add(grass);
       const roots = new T.Group();
       roots.position.copy(plantAnchor);
-      const rootMat = new T.MeshStandardMaterial({
-        color: 0xd7b09b,
-        emissive: 0x603531,
-        emissiveIntensity: 0.4,
-        roughness: 0.65,
-      });
+      const rootMat = own(
+        new T.MeshStandardMaterial({
+          color: 0xd7b09b,
+          emissive: 0x603531,
+          emissiveIntensity: 0.4,
+          roughness: 0.65,
+        }),
+      );
       for (let i = 0; i < 32; i++) {
         const angle = i * 2.39996,
           depth = 1 + (i % 7) * 0.4;
@@ -612,7 +727,7 @@ export function World(props: Props) {
         roots.add(root);
       }
       scene.add(roots);
-      const dustGeo = new T.BufferGeometry(),
+      const dustGeo = own(new T.BufferGeometry()),
         dustPos = new Float32Array(120 * 3);
       for (let i = 0; i < 120; i++) {
         dustPos[i * 3] = Math.sin(i * 91) * 14;
@@ -622,14 +737,27 @@ export function World(props: Props) {
       dustGeo.setAttribute("position", new T.BufferAttribute(dustPos, 3));
       const dust = new T.Points(
         dustGeo,
-        new T.PointsMaterial({
-          color: 0xffead3,
-          size: 0.035,
-          transparent: true,
-          opacity: 0.65,
-        }),
+        own(
+          new T.PointsMaterial({
+            color: 0xffead3,
+            size: 0.035,
+            transparent: true,
+            opacity: 0.65,
+          }),
+        ),
       );
       scene.add(dust);
+      if (!(await milestone(55, "Putting down roots"))) return;
+      // The environment is generated locally; there are no image textures
+      // or model downloads to count. PMREM performs its GPU work here.
+      const room = own(new RoomEnvironment());
+      const pmrem = own(new T.PMREMGenerator(renderer));
+      const env = own(pmrem.fromScene(room, 0.04));
+      scene.environment = env.texture;
+      scene.environmentIntensity = 0.65;
+      release(room);
+      release(pmrem);
+      if (!(await milestone(76, "Finding the softer light"))) return;
       let raf = 0,
         time = 0,
         last = 0,
@@ -639,7 +767,6 @@ export function World(props: Props) {
         my = 0,
         pointerX = 0,
         pointerY = 0,
-        lost = false,
         lastScrim = "";
       const bg = new T.Color(),
         heroColor = new T.Color("#e1cbd0"),
@@ -657,11 +784,16 @@ export function World(props: Props) {
       ];
       const mobileDepth = [16, 16, 16, 16];
       const projectedAnchor = new T.Vector3();
-      function draw(ms = 0) {
+      function draw(ms = 0, initial = false) {
         raf = 0;
-        if (disposed || lost || document.hidden || !state.current.active)
-          return;
-        const paused = state.current.paused,
+        if (
+          disposed ||
+          failed ||
+          document.hidden ||
+          (!initial && !state.current.active)
+        )
+          return false;
+        const paused = state.current.paused || initial,
           dt = Math.min((ms - last) / 1000, 0.04) || 0.016;
         last = ms;
         if (!paused) time += dt;
@@ -779,13 +911,22 @@ export function World(props: Props) {
         dust.rotation.y = time * 0.015;
         dust.position.y = Math.sin(time * 0.2) * 0.3;
         arch.rotation.z = -Math.PI / 4 + p * 0.15;
-        renderer.render(scene, camera);
-        if (!paused) raf = requestAnimationFrame(draw);
+        try {
+          renderer.render(scene, camera);
+          if (shaderFailed) {
+            fallback();
+            return false;
+          }
+        } catch {
+          fallback();
+          return false;
+        }
+        if (!paused && !initial) raf = requestAnimationFrame(draw);
+        return true;
       }
       const queue = () => {
-        if (!raf && !disposed && !lost) raf = requestAnimationFrame(draw);
+        if (!raf && !disposed && !failed) raf = requestAnimationFrame(draw);
       };
-      request.current = queue;
       const pointer = (e: PointerEvent) => {
         if (state.current.paused || e.pointerType !== "mouse") return;
         pointerX = (e.clientX / innerWidth - 0.5) * 2;
@@ -811,70 +952,156 @@ export function World(props: Props) {
           queue();
         }
       };
-      const contextLost = (e: Event) => {
-        e.preventDefault();
-        lost = true;
-        el!.parentElement?.style.removeProperty("--scene-scrim");
-        lastScrim = "";
+      // Resource ownership already covers all geometries/materials, including
+      // temporary bake meshes. Register animation/listener cleanup before awaits.
+      disposers.push(() => {
         cancelAnimationFrame(raf);
-        raf = 0;
-        renderer.domElement.style.opacity = "0";
-        state.current.onReady(false);
-      };
-      const contextRestored = () => {
-        lost = false;
-        renderer.domElement.style.opacity = "1";
-        state.current.onReady(true);
-        queue();
-      };
+        el!.parentElement?.style.removeProperty("--scene-scrim");
+      });
+      // compileAsync traverses hidden objects too in this Three version. Keep
+      // all renderables visible and uncullable for one concealed warm-up frame
+      // so vertex buffers, shadow maps and instanced variants are uploaded.
+      const renderables: {
+        object: Three.Object3D;
+        visible: boolean;
+        culled: boolean;
+      }[] = [];
+      scene.traverse((object) => {
+        renderables.push({
+          object,
+          visible: object.visible,
+          culled: object.frustumCulled,
+        });
+        object.visible = true;
+        object.frustumCulled = false;
+      });
+      fieldPoses.forEach((flower, i) => {
+        dummy.position.set(flower.x, flower.y, flower.z);
+        dummy.rotation.set(0, flower.rotation, 0);
+        dummy.scale.setScalar(flower.size);
+        dummy.updateMatrix();
+        fieldMeshes.forEach((mesh) => mesh.setMatrixAt(i, dummy.matrix));
+      });
+      fieldMeshes.forEach((mesh) => {
+        mesh.instanceMatrix.needsUpdate = true;
+      });
+      camera.position.set(...(cameras[0] as [number, number, number]));
+      camera.lookAt(plantAnchor.x, plantAnchor.y + 1.2, plantAnchor.z);
+      scene.updateMatrixWorld(true);
+      // Match compileAsync's parallel shader wait, but own the animation-frame
+      // polling so unmount/context loss can cancel it without orphaned timers.
+      // Poll every program: a shared material can have both mesh and instanced
+      // variants, while compileAsync only checks its last currentProgram.
+      renderer.compile(scene, camera);
+      const gl = renderer.getContext() as WebGL2RenderingContext;
+      const parallel = gl.getExtension("KHR_parallel_shader_compile");
+      const programs = (renderer.info.programs ?? []).map(
+        (entry) => entry.program as WebGLProgram,
+      );
+      while (
+        parallel &&
+        programs.some(
+          (program) =>
+            !gl.getProgramParameter(program, parallel.COMPLETION_STATUS_KHR),
+        )
+      ) {
+        if (gl.isContextLost()) {
+          fallback();
+          return;
+        }
+        if (!(await nextFrame())) return;
+      }
+      if (disposed || failed) return;
+      if (
+        programs.some(
+          (program) => !gl.getProgramParameter(program, gl.LINK_STATUS),
+        )
+      ) {
+        fallback();
+        return;
+      }
+      if (!(await milestone(88, "Letting the light settle"))) return;
+      renderer.render(scene, camera);
+      if (shaderFailed) {
+        fallback();
+        return;
+      }
+      renderables.forEach(({ object, visible, culled }) => {
+        object.visible = visible;
+        object.frustumCulled = culled;
+      });
+      if (!(await milestone(96, "Waiting for the first light"))) return;
+      // The warm-up uses every mesh. This frame restores the real scroll,
+      // camera, visibility and paused state before the scene is revealed.
+      while (document.hidden) if (!(await nextFrame())) return;
+      renderer.setSize(el!.clientWidth, el!.clientHeight);
+      camera.aspect = el!.clientWidth / el!.clientHeight;
+      camera.updateProjectionMatrix();
+      if (!draw(performance.now(), true)) return;
+      if (disposed || failed) return;
+      // The complete scene can now be composited behind the opaque loader.
+      renderer.domElement.style.opacity = "1";
+      if (gl.isContextLost()) {
+        fallback();
+        return;
+      }
+      // A fence waits without gl.finish() blocking the main thread. The first
+      // real frame must finish on the GPU, not merely be queued by JavaScript.
+      let fence: WebGLSync | null = gl.fenceSync(
+        gl.SYNC_GPU_COMMANDS_COMPLETE,
+        0,
+      );
+      if (!fence) {
+        fallback();
+        return;
+      }
+      disposers.push(() => {
+        if (fence) gl.deleteSync(fence);
+        fence = null;
+      });
+      gl.flush();
+      const fenceStart = performance.now();
+      while (fence) {
+        if (disposed || failed) return;
+        const status = gl.clientWaitSync(fence, 0, 0);
+        if (status === gl.ALREADY_SIGNALED || status === gl.CONDITION_SATISFIED)
+          break;
+        if (
+          status === gl.WAIT_FAILED ||
+          gl.isContextLost() ||
+          performance.now() - fenceStart > 10000
+        ) {
+          fallback();
+          return;
+        }
+        if (!(await nextFrame())) return;
+      }
+      if (fence) gl.deleteSync(fence);
+      fence = null;
+      if (!(await nextFrame()) || !(await nextFrame())) return;
+      if (disposed || failed) return;
       const observer = new ResizeObserver(resize);
       observer.observe(el!);
       addEventListener("pointermove", pointer, { passive: true });
       addEventListener("scroll", queue, { passive: true });
       document.addEventListener("visibilitychange", visibility);
-      renderer.domElement.addEventListener("webglcontextlost", contextLost);
-      renderer.domElement.addEventListener(
-        "webglcontextrestored",
-        contextRestored,
-      );
-      queue();
-      state.current.onReady(true);
-      cleanup = () => {
-        el!.parentElement?.style.removeProperty("--scene-scrim");
-        lastScrim = "";
-        cancelAnimationFrame(raf);
+      disposers.push(() => {
         observer.disconnect();
         removeEventListener("pointermove", pointer);
         removeEventListener("scroll", queue);
         document.removeEventListener("visibilitychange", visibility);
-        renderer.domElement.removeEventListener(
-          "webglcontextlost",
-          contextLost,
-        );
-        renderer.domElement.removeEventListener(
-          "webglcontextrestored",
-          contextRestored,
-        );
-        const geos = new Set<Three.BufferGeometry>(),
-          mats = new Set<Three.Material>();
-        scene.traverse((o) => {
-          const m = o as Three.Mesh;
-          if (m.geometry) geos.add(m.geometry);
-          if (m.material)
-            (Array.isArray(m.material) ? m.material : [m.material]).forEach(
-              (x) => mats.add(x),
-            );
-        });
-        geos.forEach((g) => g.dispose());
-        mats.forEach((m) => m.dispose());
-        env.dispose();
-        renderer.dispose();
-        renderer.domElement.remove();
-      };
+      });
+      request.current = queue;
+      state.current.onReady(true);
+      state.current.onLoad({
+        status: "ready",
+        progress: 100,
+        stage: "A little world, ready for you",
+      });
+      last = performance.now();
+      queue();
     }
-    setup().catch(() => {
-      cleanup();
-    });
+    setup().catch(fallback);
     return () => {
       disposed = true;
       request.current = () => {};

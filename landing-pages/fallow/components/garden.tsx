@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import {
   ArrowDown,
@@ -18,6 +18,9 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { GardenLoader } from "@/components/garden-loader";
+import { WorldBoundary } from "@/components/world-boundary";
+import { INITIAL_WORLD_LOAD } from "@/lib/world-loading";
 const World = dynamic(() => import("./world").then((m) => m.World), {
   ssr: false,
 });
@@ -55,8 +58,81 @@ export function Garden() {
     [saved, setSaved] = useState(false),
     [inView, setInView] = useState(true),
     [ready, setReady] = useState(false);
+  const [worldLoad, setWorldLoad] = useState(INITIAL_WORLD_LOAD);
+  const [fontsReady, setFontsReady] = useState(false);
+  const [without3D, setWithout3D] = useState(false);
+  const [entrance, setEntrance] = useState<"loading" | "revealing" | "entered">(
+    "loading",
+  );
+  const loadComplete = worldLoad.status !== "loading" && fontsReady;
+  const loadProgress = loadComplete
+    ? 100
+    : Math.min(
+        99,
+        Math.floor(worldLoad.progress * 0.94 + (fontsReady ? 6 : 0)),
+      );
+  const loadStage =
+    worldLoad.status !== "loading" && !fontsReady
+      ? "Setting the final type"
+      : worldLoad.stage;
+  const revealGarden = useCallback(() => setEntrance("revealing"), []);
+  const quietRequested = useRef(false);
+  const enterGarden = useCallback(() => {
+    const restoreFocus =
+      quietRequested.current ||
+      document.activeElement?.closest(".garden-loader");
+    setEntrance("entered");
+    if (restoreFocus)
+      requestAnimationFrame(() =>
+        document.getElementById("story")?.focus({ preventScroll: true }),
+      );
+  }, []);
+  const quietGarden = useCallback(() => {
+    quietRequested.current = true;
+    setWithout3D(true);
+    setReady(false);
+    setFontsReady(true);
+    setWorldLoad({
+      status: "fallback",
+      progress: 100,
+      stage: "Your quiet garden is ready",
+    });
+  }, []);
+  const unavailableWorld = useCallback(() => {
+    setWithout3D(true);
+    setReady(false);
+    setWorldLoad({
+      status: "fallback",
+      progress: 100,
+      stage: "Your quiet garden is ready",
+    });
+  }, []);
   const progress = useRef(0);
   const story = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    let disposed = false;
+    async function prepareFonts() {
+      const styles = getComputedStyle(document.documentElement);
+      const serif = styles.getPropertyValue("--font-serif").trim();
+      const sans = styles.getPropertyValue("--font-sans").trim();
+      try {
+        await Promise.allSettled([
+          document.fonts.load(`400 16px ${sans}`),
+          document.fonts.load(`400 16px ${serif}`),
+          document.fonts.load(`600 16px ${serif}`),
+          document.fonts.load(`italic 400 16px ${serif}`),
+        ]);
+        await document.fonts.ready;
+      } finally {
+        // Failed font requests settle on the already available system stack.
+        if (!disposed) setFontsReady(true);
+      }
+    }
+    void prepareFonts().catch(() => {});
+    return () => {
+      disposed = true;
+    };
+  }, []);
   useEffect(() => {
     const media = matchMedia("(prefers-reduced-motion: reduce)");
     const sync = () => setPaused(media.matches);
@@ -130,7 +206,11 @@ export function Garden() {
     setSaved(true);
   };
   return (
-    <>
+    <div
+      className="garden-shell"
+      data-entrance={entrance}
+      data-world-status={worldLoad.status}
+    >
       <div
         className="world-wrap"
         data-chapter={chapter}
@@ -144,278 +224,302 @@ export function Garden() {
           <span />
           <i />
         </div>
-        <World
-          progress={progress}
-          awake={awake}
-          kind={kind}
-          paused={paused}
-          active={inView && !journal}
-          onReady={setReady}
-        />
+        {!without3D && (
+          <WorldBoundary onUnavailable={unavailableWorld}>
+            <World
+              progress={progress}
+              awake={awake}
+              kind={kind}
+              paused={paused || entrance !== "entered"}
+              active={entrance !== "entered" || (inView && !journal)}
+              onReady={setReady}
+              onLoad={setWorldLoad}
+            />
+          </WorldBoundary>
+        )}
         <div className="grain" />
       </div>
-      <header className={`garden-header ${overRoots ? "over-roots" : ""}`}>
-        <a
-          href="#chapter-0"
-          className="wordmark"
-          aria-label="Fallow, beginning"
-        >
-          fallow<span>®</span>
-        </a>
-        <span className="header-caption">An exercise in becoming.</span>
-        <Button
-          variant="unstyled"
-          className="journal-button"
-          onClick={() => setJournal(true)}
-        >
-          Field notes <Plus size={15} />
-        </Button>
-      </header>
-      <main id="story" ref={story}>
-        <section
-          className="story-panel first"
-          id="chapter-0"
-          aria-labelledby="title"
-        >
-          <div className="panel-inside">
-            <div className="hero-kicker">
-              <span className="live-dot" /> An imaginary botanical world
-            </div>
-            <h1 id="title">
-              Small things.
-              <br />
-              <em>Other worlds.</em>
-            </h1>
-            <p className="hero-copy">
-              A seed is a quiet kind of possibility.
-              <br />
-              Give this one a little attention.
-            </p>
-            <div className="wake-wrap">
-              <Button
-                variant="unstyled"
-                className={`wake-button ${awake ? "is-awake" : ""}`}
-                onClick={() => setAwake((v) => !v)}
-                aria-pressed={awake}
-              >
-                <span className="seed-glyph">✳</span>
-                {awake ? "The seed is awake" : "Wake the seed"}
-                <span className="wake-plus">{awake ? "−" : "+"}</span>
-              </Button>
-              <span className="wake-status" aria-live="polite">
-                {awake
-                  ? "The bud is stirring. Follow its roots."
-                  : "One small gesture. A whole new beginning."}
-              </span>
-            </div>
-            <div className="hero-bottom">
-              <span>Specimen 001 / Unhurried by nature</span>
-              <Button
-                variant="unstyled"
-                className="scroll-link"
-                onClick={() => go(1)}
-              >
-                Follow the roots <ArrowDown size={16} />
-              </Button>
-              <span className="webgl-status">
-                {ready ? "Living study · 01—04" : "Botanical study · 01—04"}
-              </span>
-            </div>
-          </div>
-        </section>
-        <section
-          className="story-panel roots"
-          id="chapter-1"
-          aria-labelledby="roots-title"
-        >
-          <div className="panel-inside">
-            <div className="chapter-copy">
-              <span className="eyebrow">01 / Beneath the surface</span>
-              <h2 id="roots-title">
-                Before there
-                <br />
-                is <em>anything,</em>
-                <br />
-                there is this.
-              </h2>
-              <p>
-                A little reaching. A little trusting.
-                <br />
-                The most important part of growing
-                <br />
-                is the part you don’t see.
-              </p>
-              <span className="annotation">
-                <i /> Root system / forming connections
-              </span>
-            </div>
-            <span className="giant-whisper" aria-hidden="true">
-              begin.
-            </span>
-          </div>
-        </section>
-        <section
-          className="story-panel bloom"
-          id="chapter-2"
-          aria-labelledby="bloom-title"
-        >
-          <div className="panel-inside">
-            <div className="chapter-copy">
-              <span className="eyebrow">02 / A change of heart</span>
-              <h2 id="bloom-title">
-                You don’t have
-                <br />
-                to become
-                <br />
-                <em>everything.</em>
-              </h2>
-              <p>
-                Just something entirely your own.
-                <br />
-                Choose what you’d like to grow.
-              </p>
-              <RadioGroup
-                className="species-options"
-                aria-label="Choose a flower"
-                value={String(kind)}
-                onValueChange={(v) => {
-                  setKind(Number(v));
-                  setSaved(false);
-                }}
-              >
-                {species.map((s, i) => (
-                  <RadioGroupItem
-                    key={s.name}
-                    value={String(i)}
-                    className="species-choice"
-                    style={{ "--swatch": s.color } as React.CSSProperties}
-                  >
-                    <span />
-                    {s.name}
-                  </RadioGroupItem>
-                ))}
-              </RadioGroup>
-              <div className="species-note" aria-live="polite">
-                <em>{species[kind].latin}</em>
-                <span>{species[kind].habit}</span>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section
-          className="story-panel final"
-          id="chapter-3"
-          aria-labelledby="garden-title"
-        >
-          <div className="panel-inside">
-            <span className="eyebrow">03 / Room for possibility</span>
-            <h2 id="garden-title">
-              Leave a little
-              <br />
-              <em>more alive.</em>
-            </h2>
-            <p>
-              Take a small reminder with you.
-              <br />
-              Good things have their own pace.
-            </p>
-            <Button className="collect-button" onClick={download}>
-              {saved ? <Check size={17} /> : <Sprout size={17} />}{" "}
-              {saved ? "Save your specimen again" : "Keep this little world"}
-              <ArrowUpRight size={17} />
-            </Button>
-            <span className="download-note" role="status">
-              {saved
-                ? "Your illustrated specimen is ready to download."
-                : "An illustrated specimen. Yours to keep."}
-            </span>
-          </div>
-        </section>
-      </main>
-      <nav className="chapter-dock" aria-label="Story chapters">
-        {chapters.map((c, i) => (
+      <div
+        className="garden-content"
+        inert={entrance === "revealing"}
+        aria-busy={entrance !== "entered"}
+      >
+        <header className={`garden-header ${overRoots ? "over-roots" : ""}`}>
+          <a
+            href="#chapter-0"
+            className="wordmark"
+            aria-label="Fallow, beginning"
+          >
+            fallow<span>®</span>
+          </a>
+          <span className="header-caption">An exercise in becoming.</span>
           <Button
             variant="unstyled"
-            key={c}
-            className={chapter === i ? "active" : ""}
-            aria-current={chapter === i ? "step" : undefined}
-            aria-label={`${i + 1}. ${c}`}
-            onClick={() => go(i)}
+            className="journal-button"
+            onClick={() => setJournal(true)}
           >
-            <span>0{i + 1}</span>
-            <span className="dock-label">{c}</span>
-            <i />
+            Field notes <Plus size={15} />
           </Button>
-        ))}
-        <Button
-          variant="unstyled"
-          className="motion-button"
-          aria-label={paused ? "Resume ambient motion" : "Pause ambient motion"}
-          aria-pressed={paused}
-          onClick={() => setPaused((v) => !v)}
-        >
-          {paused ? <Play size={14} /> : <Pause size={14} />}
-        </Button>
-      </nav>
-      <footer className="garden-footer">
-        <a className="wordmark" href="#chapter-0">
-          fallow<span>®</span>
-        </a>
-        <p>A fictional garden. A real invitation to slow down.</p>
-        <div>
-          <span>
-            Developed by <a href="https://lndev.me">LN ↗</a>
-          </span>
-          <a href="https://github.com/ln-dev7/landing-pages">
-            Open source · MIT ↗
-          </a>
-          <a href="https://lndev.mychariow.shop/prd_3cu1s0">
-            Support the project ↗
-          </a>
-          <Button variant="unstyled" onClick={() => setJournal(true)}>
-            About this garden
+        </header>
+        <main id="story" ref={story} tabIndex={-1}>
+          <section
+            className="story-panel first"
+            id="chapter-0"
+            aria-labelledby="title"
+          >
+            <div className="panel-inside">
+              <div className="hero-kicker">
+                <span className="live-dot" /> An imaginary botanical world
+              </div>
+              <h1 id="title">
+                Small things.
+                <br />
+                <em>Other worlds.</em>
+              </h1>
+              <p className="hero-copy">
+                A seed is a quiet kind of possibility.
+                <br />
+                Give this one a little attention.
+              </p>
+              <div className="wake-wrap">
+                <Button
+                  variant="unstyled"
+                  className={`wake-button ${awake ? "is-awake" : ""}`}
+                  onClick={() => setAwake((v) => !v)}
+                  aria-pressed={awake}
+                >
+                  <span className="seed-glyph">✳</span>
+                  {awake ? "The seed is awake" : "Wake the seed"}
+                  <span className="wake-plus">{awake ? "−" : "+"}</span>
+                </Button>
+                <span className="wake-status" aria-live="polite">
+                  {awake
+                    ? "The bud is stirring. Follow its roots."
+                    : "One small gesture. A whole new beginning."}
+                </span>
+              </div>
+              <div className="hero-bottom">
+                <span>Specimen 001 / Unhurried by nature</span>
+                <Button
+                  variant="unstyled"
+                  className="scroll-link"
+                  onClick={() => go(1)}
+                >
+                  Follow the roots <ArrowDown size={16} />
+                </Button>
+                <span className="webgl-status">
+                  {ready ? "Living study · 01—04" : "Botanical study · 01—04"}
+                </span>
+              </div>
+            </div>
+          </section>
+          <section
+            className="story-panel roots"
+            id="chapter-1"
+            aria-labelledby="roots-title"
+          >
+            <div className="panel-inside">
+              <div className="chapter-copy">
+                <span className="eyebrow">01 / Beneath the surface</span>
+                <h2 id="roots-title">
+                  Before there
+                  <br />
+                  is <em>anything,</em>
+                  <br />
+                  there is this.
+                </h2>
+                <p>
+                  A little reaching. A little trusting.
+                  <br />
+                  The most important part of growing
+                  <br />
+                  is the part you don’t see.
+                </p>
+                <span className="annotation">
+                  <i /> Root system / forming connections
+                </span>
+              </div>
+              <span className="giant-whisper" aria-hidden="true">
+                begin.
+              </span>
+            </div>
+          </section>
+          <section
+            className="story-panel bloom"
+            id="chapter-2"
+            aria-labelledby="bloom-title"
+          >
+            <div className="panel-inside">
+              <div className="chapter-copy">
+                <span className="eyebrow">02 / A change of heart</span>
+                <h2 id="bloom-title">
+                  You don’t have
+                  <br />
+                  to become
+                  <br />
+                  <em>everything.</em>
+                </h2>
+                <p>
+                  Just something entirely your own.
+                  <br />
+                  Choose what you’d like to grow.
+                </p>
+                <RadioGroup
+                  className="species-options"
+                  aria-label="Choose a flower"
+                  value={String(kind)}
+                  onValueChange={(v) => {
+                    setKind(Number(v));
+                    setSaved(false);
+                  }}
+                >
+                  {species.map((s, i) => (
+                    <RadioGroupItem
+                      key={s.name}
+                      value={String(i)}
+                      className="species-choice"
+                      style={{ "--swatch": s.color } as React.CSSProperties}
+                    >
+                      <span />
+                      {s.name}
+                    </RadioGroupItem>
+                  ))}
+                </RadioGroup>
+                <div className="species-note" aria-live="polite">
+                  <em>{species[kind].latin}</em>
+                  <span>{species[kind].habit}</span>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section
+            className="story-panel final"
+            id="chapter-3"
+            aria-labelledby="garden-title"
+          >
+            <div className="panel-inside">
+              <span className="eyebrow">03 / Room for possibility</span>
+              <h2 id="garden-title">
+                Leave a little
+                <br />
+                <em>more alive.</em>
+              </h2>
+              <p>
+                Take a small reminder with you.
+                <br />
+                Good things have their own pace.
+              </p>
+              <Button className="collect-button" onClick={download}>
+                {saved ? <Check size={17} /> : <Sprout size={17} />}{" "}
+                {saved ? "Save your specimen again" : "Keep this little world"}
+                <ArrowUpRight size={17} />
+              </Button>
+              <span className="download-note" role="status">
+                {saved
+                  ? "Your illustrated specimen is ready to download."
+                  : "An illustrated specimen. Yours to keep."}
+              </span>
+            </div>
+          </section>
+        </main>
+        <nav className="chapter-dock" aria-label="Story chapters">
+          {chapters.map((c, i) => (
+            <Button
+              variant="unstyled"
+              key={c}
+              className={chapter === i ? "active" : ""}
+              aria-current={chapter === i ? "step" : undefined}
+              aria-label={`${i + 1}. ${c}`}
+              onClick={() => go(i)}
+            >
+              <span>0{i + 1}</span>
+              <span className="dock-label">{c}</span>
+              <i />
+            </Button>
+          ))}
+          <Button
+            variant="unstyled"
+            className="motion-button"
+            aria-label={
+              paused ? "Resume ambient motion" : "Pause ambient motion"
+            }
+            aria-pressed={paused}
+            onClick={() => setPaused((v) => !v)}
+          >
+            {paused ? <Play size={14} /> : <Pause size={14} />}
           </Button>
-        </div>
-      </footer>
-      <Sheet open={journal} onOpenChange={setJournal}>
-        <SheetContent className="field-notes">
-          <span className="eyebrow">Fallow / Field notes № 001</span>
-          <SheetTitle>
-            A place to
-            <br />
-            <em>begin again.</em>
-          </SheetTitle>
-          <SheetDescription>
-            FALLOW is an imaginary seed library. A short, interactive story
-            about attention, patience, and the worlds hidden in small
-            beginnings.
-          </SheetDescription>
-          <div className="notes-specimen">
-            <span>✳</span>
-            <em>{species[kind].name}</em>
-            <p>{species[kind].note}</p>
+        </nav>
+        <footer className="garden-footer">
+          <a className="wordmark" href="#chapter-0">
+            fallow<span>®</span>
+          </a>
+          <p>A fictional garden. A real invitation to slow down.</p>
+          <div>
+            <span>
+              Developed by <a href="https://lndev.me">LN ↗</a>
+            </span>
+            <a href="https://github.com/ln-dev7/landing-pages">
+              Open source · MIT ↗
+            </a>
+            <a href="https://lndev.mychariow.shop/prd_3cu1s0">
+              Support the project ↗
+            </a>
+            <Button variant="unstyled" onClick={() => setJournal(true)}>
+              About this garden
+            </Button>
           </div>
-          <h3>Make yourself at home</h3>
-          <p>
-            Scroll to travel through four chapters. Wake the seed, choose a
-            bloom, then save your own illustrated specimen. Everything happens
-            here in your browser.
-          </p>
-          <h3>A fictional world, made with care</h3>
-          <p>
-            The plants, names and botanical details are imagined. No data is
-            collected or submitted. The 3D world is original procedural artwork,
-            created with Three.js. The source is open under MIT.
-          </p>
-          <p>Fonts: Cormorant Garamond and Manrope, SIL Open Font License.</p>
-          <Button variant="outline" onClick={() => setPaused((v) => !v)}>
-            {paused ? "Enable ambient motion" : "Use still view"}
-          </Button>
-          <a className="notes-credit" href="https://lndev.me">
-            Made by LN <ArrowUpRight size={14} />
-          </a>
-        </SheetContent>
-      </Sheet>
-    </>
+        </footer>
+        <Sheet open={journal} onOpenChange={setJournal}>
+          <SheetContent className="field-notes">
+            <span className="eyebrow">Fallow / Field notes № 001</span>
+            <SheetTitle>
+              A place to
+              <br />
+              <em>begin again.</em>
+            </SheetTitle>
+            <SheetDescription>
+              FALLOW is an imaginary seed library. A short, interactive story
+              about attention, patience, and the worlds hidden in small
+              beginnings.
+            </SheetDescription>
+            <div className="notes-specimen">
+              <span>✳</span>
+              <em>{species[kind].name}</em>
+              <p>{species[kind].note}</p>
+            </div>
+            <h3>Make yourself at home</h3>
+            <p>
+              Scroll to travel through four chapters. Wake the seed, choose a
+              bloom, then save your own illustrated specimen. Everything happens
+              here in your browser.
+            </p>
+            <h3>A fictional world, made with care</h3>
+            <p>
+              The plants, names and botanical details are imagined. No data is
+              collected or submitted. The 3D world is original procedural
+              artwork, created with Three.js. The source is open under MIT.
+            </p>
+            <p>Fonts: Cormorant Garamond and Manrope, SIL Open Font License.</p>
+            <Button variant="outline" onClick={() => setPaused((v) => !v)}>
+              {paused ? "Enable ambient motion" : "Use still view"}
+            </Button>
+            <a className="notes-credit" href="https://lndev.me">
+              Made by LN <ArrowUpRight size={14} />
+            </a>
+          </SheetContent>
+        </Sheet>
+      </div>
+      {entrance !== "entered" && (
+        <GardenLoader
+          progress={loadProgress}
+          stage={loadStage}
+          complete={loadComplete}
+          reduced={paused}
+          onReveal={revealGarden}
+          onComplete={enterGarden}
+          onQuiet={quietGarden}
+        />
+      )}
+    </div>
   );
 }

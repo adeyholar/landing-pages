@@ -28,7 +28,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <html lang="en" className={`${sans.variable} ${serif.variable}`}>
       <body>
         <noscript>
-          <style>{`.roots{background:#59414d}`}</style>
+          <style>{`.roots{background:#59414d}.garden-loader{display:none!important}.garden-content{visibility:visible!important}html:has(.garden-loader),body:has(.garden-loader){overflow:auto!important}.skip{visibility:visible!important}`}</style>
         </noscript>
         <a className="skip" href="#story">
           Skip to the story
