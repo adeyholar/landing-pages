@@ -1,3 +1,4 @@
+import { Marquee } from "@/components/marquee";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -80,14 +81,15 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <div className="club-strip">
-        <span>COME AS YOU ARE</span>
-        <span aria-hidden="true">✳</span>
-        <span>FALL. LAUGH. TRY AGAIN.</span>
-        <span aria-hidden="true">✳</span>
-        <span>THE GOOD KIND OF STUCK</span>
-        <span aria-hidden="true">✳</span>
-      </div>
+      <Marquee
+        className="club-strip"
+        separator="✳"
+        items={[
+          "COME AS YOU ARE",
+          "FALL. LAUGH. TRY AGAIN.",
+          "THE GOOD KIND OF STUCK",
+        ]}
+      />
       <section className="intro-section section-pad" data-reveal>
         <p className="eyebrow">MORE THAN A WAY UP</p>
         <h2>

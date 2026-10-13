@@ -71,7 +71,7 @@ export function MotionSetup() {
       const scenes = Array.from(
         document.querySelectorAll<HTMLElement>(
           crux
-            ? ".crux-hero, .club-strip, .intro-section, .crew-section, .crux-final"
+            ? ".crux-hero, .intro-section, .crew-section, .crux-final"
             : ".maree-hero, .place-section, .ritual-section, .gather-section, .maree-final",
         ),
       );

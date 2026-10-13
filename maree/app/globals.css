@@ -2981,3 +2981,337 @@ main {
 .footer-project a:hover {
   opacity: 0.75;
 }
+
+/* The center column stays on the page center, independent of logo/CTA widths. */
+.site-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 24px;
+}
+.site-header > .wordmark {
+  justify-self: start;
+  min-height: 44px;
+  white-space: nowrap;
+}
+.desktop-nav {
+  justify-self: center;
+  gap: clamp(22px, 2.5vw, 36px);
+  font-size: 15px;
+  line-height: 1.3;
+}
+.desktop-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  white-space: nowrap;
+}
+.desktop-nav a:after {
+  bottom: 6px;
+}
+.header-actions {
+  justify-self: end;
+  flex-shrink: 0;
+}
+.header-cta {
+  min-height: 46px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.menu-toggle {
+  flex: 0 0 44px;
+}
+
+/* Only the track moves; equal groups keep both ends of the loop identical. */
+.marquee {
+  position: relative;
+  display: block;
+  padding-inline: 0;
+  isolation: isolate;
+}
+.marquee-viewport {
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    #000 calc(100% - 76px),
+    transparent calc(100% - 48px)
+  );
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-loop var(--marquee-duration, 32s) linear infinite;
+}
+.marquee-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: var(--marquee-gap, 42px);
+  flex: 0 0 auto;
+  width: max-content;
+  min-width: 100vw;
+  padding-inline: calc(var(--marquee-gap, 42px) / 2);
+  white-space: nowrap;
+}
+.marquee-separator {
+  flex-shrink: 0;
+}
+.marquee-toggle {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+  border-radius: var(--radius);
+  background: var(--marquee-background);
+  color: inherit;
+}
+.marquee-toggle:hover {
+  border-color: currentColor;
+}
+.marquee-toggle:focus-visible {
+  outline-offset: 2px;
+}
+.marquee[data-paused="true"] .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+@media (hover: hover) {
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+}
+@keyframes marquee-loop {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Room for comfortable targets before the desktop nav becomes crowded. */
+@media (max-width: 960px) {
+  .site-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 16px;
+  }
+  .desktop-nav {
+    display: none;
+  }
+  .menu-toggle {
+    display: flex;
+  }
+}
+@media (max-width: 760px) {
+  .site-header {
+    padding: 16px 5%;
+    gap: 10px;
+  }
+  .header-actions {
+    gap: 10px;
+  }
+  .header-cta {
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 13px;
+    gap: 14px;
+  }
+  .header-cta span {
+    font-size: 20px;
+  }
+  .button-sm,
+  .text-link,
+  .session-filters button,
+  .circuit-buttons button,
+  .ritual-tabs button {
+    min-height: 44px;
+  }
+  .stepper {
+    height: 46px;
+  }
+  .stepper button {
+    height: 44px;
+  }
+  .mobile-menu nav {
+    margin-block: 10px;
+  }
+  .menu-inner {
+    padding: 22px;
+    gap: 24px;
+  }
+  .footer-bottom nav {
+    flex-wrap: wrap;
+  }
+  .footer-bottom nav a,
+  .footer-project a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .marquee {
+    --marquee-gap: 30px;
+  }
+  .hero-copy-bottom > p,
+  .intro-bottom p,
+  .pass-card > p,
+  .faq-list [data-slot="accordion-content"] p,
+  .maree-hero-content > p:not(.eyebrow),
+  .place-description p:nth-child(2),
+  .pause-widget p:not(.eyebrow),
+  .gather-copy > p:not(.eyebrow) {
+    font-size: 14px;
+  }
+  .booking-summary {
+    min-width: 0;
+  }
+  .form-actions {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 359px) {
+  .site-header {
+    padding-inline: 16px;
+    gap: 8px;
+  }
+  .header-actions {
+    gap: 8px;
+  }
+  .header-cta {
+    padding-inline: 12px;
+    gap: 8px;
+  }
+  .header-cta > span {
+    display: none;
+  }
+  .site-header .wordmark {
+    font-size: 29px;
+    gap: 5px;
+  }
+  .site-header .wordmark svg {
+    width: 24px;
+    margin: 0;
+  }
+  .menu-inner {
+    padding: 20px;
+  }
+  .mobile-menu nav a {
+    font-size: 18px;
+    gap: 12px;
+  }
+  .mobile-menu .button {
+    font-size: 13px;
+    gap: 18px;
+    padding-inline: 20px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+    transform: none;
+  }
+  .marquee-toggle {
+    display: none;
+  }
+  .marquee-viewport {
+    mask-image: none;
+  }
+  .marquee-group {
+    min-width: 100%;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 14px 22px;
+    padding: 0 5%;
+  }
+  .marquee-track {
+    width: 100%;
+  }
+  .marquee-group + .marquee-group {
+    display: none;
+  }
+  .marquee-separator {
+    display: none;
+  }
+}
+
+.maree-strip.marquee {
+  --marquee-background: var(--paper);
+  --marquee-duration: 42s;
+  --marquee-gap: 50px;
+  padding-block: 30px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.maree-strip .marquee-separator {
+  font-size: 22px;
+  line-height: 0.8;
+}
+.maree-strip .marquee-toggle {
+  border-radius: 50%;
+}
+@media (max-width: 760px) {
+  .maree-strip.marquee {
+    --marquee-gap: 34px;
+    padding-block: 25px;
+    font-size: 11px;
+  }
+  .ritual-tabs button {
+    font-size: 16px;
+    gap: 9px;
+  }
+}
+@media (max-width: 359px) {
+  .ritual-tabs button {
+    padding-right: 10px;
+    gap: 6px;
+    font-size: 15px;
+  }
+  .visit-choices button {
+    gap: 10px;
+  }
+  .visit-choices strong {
+    font-size: 24px;
+  }
+  .visit-choice-price {
+    font-size: 19px;
+  }
+  .visit-indicator {
+    font-size: 22px;
+  }
+}
+
+/* Seven comfortable day targets also fit a 320px viewport. */
+.date-popover {
+  width: min(364px, calc(100vw - 8px));
+  padding-inline: clamp(1px, calc((100vw - 318px) / 2), 18px);
+}
+.date-popover [data-slot="calendar"] {
+  --cell-size: 44px;
+}
+.date-popover .rdp-month_caption {
+  height: 44px;
+}
+.date-popover .rdp-day {
+  aspect-ratio: auto;
+}
+.date-popover .rdp-day button {
+  width: 100%;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 13px;
+}
+.date-popover .rdp-button_previous,
+.date-popover .rdp-button_next {
+  width: 44px;
+  height: 44px;
+}
+.date-popover .calendar-title,
+.calendar-note {
+  padding-inline: 8px;
+}
+.calendar-note {
+  font-size: 11px;
+}

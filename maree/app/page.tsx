@@ -1,3 +1,4 @@
+import { Marquee } from "@/components/marquee";
 import { WaterRipple } from "@/components/water-ripple";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -58,15 +59,16 @@ export default function Home() {
           <WaterRipple />
         </div>
       </section>
-      <div className="maree-strip">
-        <span>WARM UP.</span>
-        <i />
-        <span>COOL DOWN.</span>
-        <i />
-        <span>DRIFT A LITTLE.</span>
-        <i />
-        <span>COME BACK TO YOU.</span>
-      </div>
+      <Marquee
+        className="maree-strip"
+        separator="·"
+        items={[
+          "WARM UP.",
+          "COOL DOWN.",
+          "DRIFT A LITTLE.",
+          "COME BACK TO YOU.",
+        ]}
+      />
       <section id="place" className="place-section section-pad" data-reveal>
         <div className="place-lead">
           <p className="eyebrow">Somewhere between the sea and yourself</p>
