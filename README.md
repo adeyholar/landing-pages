@@ -1,44 +1,70 @@
 # Landing pages
 
-Six standalone landing pages and marketing sites built with Next.js, Tailwind
+Eight standalone landing pages and marketing sites built with Next.js, Tailwind
 CSS and fully customized shadcn/ui components. Each project has its own visual
 identity, typography, voice, animations and interactions, and can be installed,
 built and deployed independently.
 
-Browse the whole collection at **[lp.lndev.me](https://lp.lndev.me)**.
+Browse the collection at **[lp.lndev.me](https://lp.lndev.me)**.
 
 ## Projects
 
 | Preview | Project | What it is | Stack |
 | --- | --- | --- | --- |
-| [![Ficelle](www/showcase/ficelle.jpg)](https://ficelle-lndev.vercel.app) | **[Ficelle](ficelle)**<br>[live site](https://ficelle-lndev.vercel.app) | Gift-delivery app, "gift parcel" direction: kraft paper, shipping labels, stamps and receipts | Next.js 16, Tailwind CSS v4, shadcn/ui |
-| [![Passeline](www/showcase/passeline.jpg)](https://passeline-lndev.vercel.app) | **[Passeline](passeline)**<br>[live site](https://passeline-lndev.vercel.app) | Gift-delivery app, illustrated direction: hand-drawn SVG town, from morning to night | Next.js 16, Tailwind CSS v4, shadcn/ui |
-| [![Aparté](www/showcase/aparte.jpg)](https://aparte-lndev.vercel.app) | **[Aparté](aparte)**<br>[live site](https://aparte-lndev.vercel.app) | Gift-delivery app, editorial direction: magazine layout, Bodoni, photos | Next.js 16, Tailwind CSS v4, shadcn/ui |
-| [![Écrin](www/showcase/ecrin.jpg)](https://ecrin-lndev.vercel.app) | **[Écrin](ecrin)**<br>[live site](https://ecrin-lndev.vercel.app) | Gift-delivery app, immersive direction: dark, CSS 3D gift box, springy motion | Next.js 16, Tailwind CSS v4, shadcn/ui, Motion |
-| [![CRUX](www/showcase/crux.jpg)](https://crux-lndev.vercel.app) | **[CRUX](crux)**<br>[live site](https://crux-lndev.vercel.app) | Independent bouldering club: condensed italic typography, acid lime, chalk, an interactive circuit board and a filterable session calendar | Next.js 16, React 19, Tailwind CSS 4, shadcn/ui (Base UI) |
-| [![Marée](www/showcase/maree.jpg)](https://maree-lndev.vercel.app) | **[Marée](maree)**<br>[live site](https://maree-lndev.vercel.app) | Coastal bath house: sea green, linen, ocean photography, warm/cool/rest exploration and an optional breathing pause | Next.js 16, React 19, Tailwind CSS 4, shadcn/ui (Base UI) |
+| [![Fallow](www/showcase/fallow.jpg)](https://fallow-lndev.vercel.app) | **[Fallow](fallow)**<br>[live site](https://fallow-lndev.vercel.app) | An imaginary botanical world: four connected WebGL chapters, a seed that wakes and blooms, species selection and an illustrated specimen to keep | Next.js 16, Tailwind CSS 4, shadcn/ui, Three.js |
+| [![Offcut](www/showcase/offcut.jpg)](https://offcut-lndev.vercel.app) | **[Offcut](offcut)**<br>[live site](https://offcut-lndev.vercel.app) | Furniture atelier: butter yellow, plum, original wooden objects in Three.js, collection filters, a finish configurator and a local project brief | Next.js 16, Tailwind CSS 4, shadcn/ui, Three.js |
+| [![Crux](www/showcase/crux.jpg)](https://crux-lndev.vercel.app) | **[Crux](crux)**<br>[live site](https://crux-lndev.vercel.app) | Independent bouldering club: condensed italic typography, acid lime, chalk, an interactive circuit board and filterable sessions | Next.js 16, Tailwind CSS 4, shadcn/ui |
+| [![Marée](www/showcase/maree.jpg)](https://maree-lndev.vercel.app) | **[Marée](maree)**<br>[live site](https://maree-lndev.vercel.app) | Coastal bath house: sea green, linen, ocean photography, warm/cool/rest exploration and an optional breathing pause | Next.js 16, Tailwind CSS 4, shadcn/ui |
+| [![Ficelle](www/showcase/ficelle.jpg)](https://ficelle-lndev.vercel.app) | **[Ficelle](ficelle)**<br>[live site](https://ficelle-lndev.vercel.app) | Gift-delivery app, parcel direction: kraft paper, shipping labels, stamps and receipts | Next.js 16, Tailwind CSS 4, shadcn/ui |
+| [![Aparté](www/showcase/aparte.jpg)](https://aparte-lndev.vercel.app) | **[Aparté](aparte)**<br>[live site](https://aparte-lndev.vercel.app) | Gift-delivery app, editorial direction: magazine layout, Bodoni and photography | Next.js 16, Tailwind CSS 4, shadcn/ui |
+| [![Passeline](www/showcase/passeline.jpg)](https://passeline-lndev.vercel.app) | **[Passeline](passeline)**<br>[live site](https://passeline-lndev.vercel.app) | Gift-delivery app, illustrated direction: a hand-drawn SVG town that changes from morning to night | Next.js 16, Tailwind CSS 4, shadcn/ui |
+| [![Écrin](www/showcase/ecrin.jpg)](https://ecrin-lndev.vercel.app) | **[Écrin](ecrin)**<br>[live site](https://ecrin-lndev.vercel.app) | Gift-delivery app, immersive direction: a dark setting, a CSS 3D gift box and springy motion | Next.js 16, Tailwind CSS 4, shadcn/ui, Motion |
 
-Click a preview to open its demo URL. Source folders are linked beside each preview.
+Every preview links to its live demo at `https://[name]-lndev.vercel.app`,
+using the lowercase, unaccented folder name (for example,
+[fallow-lndev.vercel.app](https://fallow-lndev.vercel.app)). Project names link
+to their source folders.
 
-### One foundation, six identities
+### One foundation, eight identities
 
 These are fully customized shadcn/ui projects. Shared primitives provide the
 accessible controls; the layout, visual language and motion belong to each
 project. The collection explores a consistent product brief through four
-gift-delivery brands, then extends to climbing and coastal wellness.
+gift-delivery brands, then extends to climbing, coastal wellness, furniture
+design and interactive botanical storytelling.
 
-### CRUX and Marée
+### Fallow and Offcut
 
-The two newest projects use the same `base-maia` shadcn foundation as the original collection,
-with fully customized components, fonts, motion and art direction. Each has
-a full homepage, a three-step sample visit planner, a group enquiry page,
-a searchable FAQ, information pages and a custom 404. Forms are interactive
-local demonstrations; they do not make real reservations or send data.
+Fallow is a full-screen, continuous 3D story. Native scrolling changes the
+camera, lighting and composition of one original procedural garden across four
+chapters. Wake its seed, explore its roots, select an imagined species and keep
+a generated SVG botanical specimen. The HTML story remains usable without
+WebGL; mobile rendering is limited and ambient animation can be paused.
+
+Offcut is a furniture atelier with smooth, original Three.js models: bevelled
+edges, turned profiles, procedural wood grain, satin materials and studio
+lighting. Scroll and pointer movement subtly change perspective. Collection
+filters and a live finish configurator lead into a local project brief. Models
+load near the viewport, rendering stops when settled, and an SVG fallback is
+available without WebGL.
+
+Both projects use custom shadcn controls, local fonts, responsive layouts,
+reduced-motion support and clearly identified fictional products.
+
+### Crux and Marée
+
+Crux and Marée use the `base-maia` shadcn foundation, built on Base UI, with
+fully customized components, fonts, motion and art direction. Each has a full
+homepage, a three-step sample visit planner, a group enquiry page, a searchable
+FAQ, information pages and a custom 404. Forms are interactive local
+demonstrations; they do not make real reservations or send data.
 
 Calendar and popover date pickers, grouped form fields, textareas, tabs,
 accordions and mobile navigation all use customized shadcn/ui components.
-Scroll animations and micro-interactions respect reduced-motion preferences.
-Photos and fonts are bundled locally, with credits and licenses in each project.
+Their scrolling bands loop continuously, include a pause control and become
+static when reduced motion is requested. Desktop navigation is centered;
+mobile menus and controls have comfortable touch targets. Photos and fonts
+are bundled locally, with credits and licenses in each project.
 
 ### About the gift-delivery series
 
@@ -54,34 +80,35 @@ palette (teal, deep teal, gold, ink and cream) and the same set of pages:
 
 Everything in them is invented: brands, places, people, prices and legal
 texts. External links (app stores, partner portals, QR codes) lead to each
-project's own source folder on GitHub. Each project's
-README covers its product rules, art direction and files.
+project's own source folder on GitHub. Each project's README covers its
+product rules, art direction and files.
 
 ## Repository layout
 
-```
+```text
 landing-pages/
-├── <project>/    one standalone project per landing page (own package.json and README)
-├── www/          the showcase site presenting the collection (static HTML, CSS, JS)
-│   ├── projects.js   the list of projects shown on the site
+├── <project>/        one standalone project per landing page
+│                     (own package.json, lockfile and README)
+├── www/              the collection showcase: static HTML, CSS and JS
+│   ├── projects.js   project records used by the gallery and index
 │   ├── showcase/     framed 1600 × 900 preview images (.jpg)
 │   ├── analytics.js  Vercel Web Analytics for the static site
-│   └── media/        logos and favicon
+│   └── media/        logos, favicon and locally bundled fonts
 ├── .github/FUNDING.yml
 ├── LICENSE
 └── README.md
 ```
 
-Projects share nothing at the root: each folder installs, builds and deploys
-on its own, with whatever stack it needs.
+Projects share no build configuration at the root: each folder installs,
+builds and deploys on its own, with whatever stack it needs.
 
 ## Run a project
 
 Each project's README lists its requirements, commands and environment
-variables. For the current projects (Next.js, pnpm, Node 20+):
+variables. For the current Next.js projects, use pnpm and Node 20.9 or newer:
 
 ```bash
-cd ficelle        # or any project folder
+cd fallow        # or any project folder
 pnpm install
 pnpm dev
 ```
@@ -90,51 +117,72 @@ pnpm dev
 
 Deploy each folder as its own site. On Vercel, import this repository once per
 project and set **Root Directory** to the project's folder. Use the Next.js
-preset for the six landing pages and the Other preset for the buildless `www/`
-showcase. For CRUX and Marée, set `NEXT_PUBLIC_SITE_URL` to the deployment
-URL to enable canonical metadata and the sitemap; see their `.env.example`.
+preset for the eight landing pages and the Other preset for the buildless
+`www/` showcase.
+
+For Crux, Marée, Offcut and Fallow, set `NEXT_PUBLIC_SITE_URL` to the actual
+public origin for sitemap and absolute metadata URLs; see each project's
+`.env.example`. Live previews use `https://[name]-lndev.vercel.app`, with
+the lowercase, unaccented project folder name. Use that origin in the
+showcase and project metadata.
 
 ## Add a landing page
 
 1. Create a folder named after the project (lowercase, no spaces, for example
-   `my-product/`). It must be self-contained, with its own dependencies, its
-   own lockfile and its own `.gitignore`.
+   `my-product/`). It must be self-contained, with its own dependencies,
+   lockfile and `.gitignore`.
 2. Write its `README.md`: what it is, art direction, stack, how to run it,
    environment variables, and anything fictional or placeholder.
-3. Deploy it (for example on Vercel, with the project's folder as **Root
-   Directory**) and add its preview image to `www/showcase/`:
-   `my-product.jpg`, 1600 × 900. Match the existing previews: a real homepage
-   capture in a rounded browser window, on a neutral background with a soft shadow.
-4. Add a row to the **Projects** table above, with the preview linking to the
-   live site.
-5. Add an entry to `www/projects.js` (and, optionally, its logo to
-   `www/media/`). The showcase site's cards, index and counts follow.
-6. Keep the JSON-LD project list, `<noscript>` fallback and initial counters in
-   `www/index.html` in sync. Add the preview image to `www/sitemap.xml`.
+3. Add a real homepage capture to `www/showcase/my-product.jpg`, 1600 × 900.
+   Match the collection's rounded browser window, neutral background and
+   soft shadow.
+4. Add a row to the **Projects** table above. Link the preview to
+   `https://my-product-lndev.vercel.app` and the project name to its source folder.
+5. Add a record to `www/projects.js`, using an existing entry as the schema.
+   Choose its `group` (`immersive`, `editorial` or `playful`), and provide its
+   copy, typography, palette, stack and image. Use a title-case display name
+   and set `url` to `https://my-product-lndev.vercel.app`. Set `source` only
+   when overriding the default GitHub folder.
+6. Update the static JSON-LD list, `<noscript>` fallback, visible counts and
+   filter counts in `www/index.html`. Add the preview to `www/sitemap.xml`.
+   These are maintained separately from the JavaScript data.
+7. Deploy the project with its folder as **Root Directory** and the Vercel
+   project name `my-product-lndev`. Keep its links consistent in this README,
+   the JSON-LD and the `<noscript>` fallback. If it joins the three featured
+   projects, update the hero's selectors and initial preview in `www/index.html`.
 
 ## Showcase site
 
-`www/` is a static site that presents the collection: no build step, no
-dependencies. Preview it locally with:
+`www/` presents all eight projects in a filterable gallery with an alternative
+index view. A three-project picker changes the featured hero preview; each
+project includes source links and a **Behind the design** panel. The site uses
+local typography, light and dark themes, an infinite ticker, scroll reveals
+and a motion control that respects the system's reduced-motion preference.
+The theme preference is stored in the browser. A static project list remains
+available when JavaScript is disabled.
+
+The showcase has no build step or dependencies. Preview it locally with:
 
 ```bash
-cd www && python3 -m http.server
+cd www
+python3 -m http.server
 ```
 
-It is live at [lp.lndev.me](https://lp.lndev.me). To deploy it on Vercel,
+It is hosted at [lp.lndev.me](https://lp.lndev.me). To deploy it on Vercel,
 import the repository once more with **Root Directory** set to `www`.
 
 Vercel Web Analytics is initialized by `www/analytics.js` on the homepage
 and 404 page using the plain HTML tracking script. Enable **Web Analytics**
 in the Vercel project dashboard and redeploy `www/`; Vercel then serves
 `/_vercel/insights/script.js`. Localhost and file previews skip the tracking
-script. No React component, npm package, or build step is required for this
+script. No React component, npm package or build step is required for this
 static integration. See the [Vercel quickstart](https://vercel.com/docs/analytics/quickstart).
 
-The site's public URL, `https://lp.lndev.me`, is written in `www/index.html` (canonical, Open Graph, structured data),
-`www/robots.txt` and `www/sitemap.xml`: update all three if it changes. When
-you add a project, also add it to the structured data and the `<noscript>`
-list in `www/index.html`, and its preview to `www/sitemap.xml`.
+The public URL, `https://lp.lndev.me`, is written in `www/index.html`
+(canonical, Open Graph and structured data), `www/robots.txt` and
+`www/sitemap.xml`: update all three if it changes. Project records are in
+`www/projects.js`; static metadata, fallback links and sitemap images must
+also be kept in sync when projects are added, removed or deployed.
 
 ## Showcase videos
 
@@ -145,11 +193,12 @@ masters): git and Vercel ignore every `.mp4` in that folder.
 
 ## Support the project
 
-Developed by **[LN](https://lndev.me)**. The source is free to read, fork and
-reuse under MIT. If you would like to support this collection and my other
-open-source work, you can [make a contribution](https://lndev.mychariow.shop/prd_3cu1s0).
-The same link is available through GitHub’s Sponsor button, the showcase
-header and the project footers.
+Developed by **[LN](https://lndev.me)**. The [source code](https://github.com/ln-dev7/landing-pages)
+is free to read, fork and reuse under MIT. If you would like to support this
+collection and my other open-source work, you can
+[make a contribution](https://lndev.mychariow.shop/prd_3cu1s0).
+The same link is available through GitHub's Sponsor button, configured in
+`.github/FUNDING.yml`, the showcase header and the project footers.
 
 ## License
 
@@ -158,7 +207,8 @@ The code is released under the [MIT License](LICENSE).
 The MIT License does not cover:
 
 - **Fonts**: bundled fonts keep their own licenses, mostly the SIL Open Font
-  License. The license text sits next to the font files, in each project's
-  `app/fonts/` folder.
-- **Third-party images used as placeholders**: in the current projects, these
-  are the JPEG photos in `public/images/`.
+  License. License texts sit next to the fonts in each project's `app/fonts/`
+  folder and in `www/media/fonts/`.
+- **Third-party images used as placeholders**: see each project's asset
+  credits for the source and applicable terms. Original illustrations,
+  procedural models and generated imagery are documented in project READMEs.
