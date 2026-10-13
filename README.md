@@ -4,6 +4,8 @@ A collection of landing pages and marketing sites. Each one is a standalone
 project in its own folder, with its own art direction, stack and README, and a
 live deployment.
 
+Browse the whole collection at **[lp.lndev.me](https://lp.lndev.me)**.
+
 ## Projects
 
 | Preview | Project | What it is | Stack |
@@ -88,11 +90,10 @@ dependencies. Preview it locally with:
 cd www && python3 -m http.server
 ```
 
-To deploy it on Vercel, import the repository once more with **Root
-Directory** set to `www`.
+It is live at [lp.lndev.me](https://lp.lndev.me). To deploy it on Vercel,
+import the repository once more with **Root Directory** set to `www`.
 
-The site's public URL, `https://landing-pages-lndev.vercel.app`, is written
-in `www/index.html` (canonical, Open Graph, structured data),
+The site's public URL, `https://lp.lndev.me`, is written in `www/index.html` (canonical, Open Graph, structured data),
 `www/robots.txt` and `www/sitemap.xml`: update all three if it changes. When
 you add a project, also add it to the structured data and the `<noscript>`
 list in `www/index.html`, and its preview to `www/sitemap.xml`.
