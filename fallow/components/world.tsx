@@ -2,6 +2,7 @@
 import { useEffect, useRef } from "react";
 import type { MutableRefObject } from "react";
 import type * as Three from "three";
+import { journeyAt } from "@/lib/journey";
 type Props = {
   progress: MutableRefObject<number>;
   awake: boolean;
@@ -96,10 +97,13 @@ export function World(props: Props) {
       floor.rotation.x = -Math.PI / 2;
       floor.position.y = -1.25;
       floor.receiveShadow = true;
+      floor.renderOrder = -2;
       scene.add(floor);
       const rockMat = new T.MeshStandardMaterial({
         color: 0x9f8a84,
         roughness: 0.9,
+        transparent: true,
+        depthWrite: false,
       });
       const rockSource = new T.IcosahedronGeometry(1, 10);
       const a = rockSource.attributes.position;
@@ -125,6 +129,7 @@ export function World(props: Props) {
       stone.position.set(0.3, -0.55, 0);
       stone.castShadow = true;
       stone.receiveShadow = true;
+      stone.renderOrder = -1;
       scene.add(stone);
       const terraces = new T.Group();
       for (let i = 0; i < 10; i++) {
@@ -134,9 +139,63 @@ export function World(props: Props) {
         s.rotation.y = i * 0.9;
         s.castShadow = true;
         s.receiveShadow = true;
+        s.renderOrder = -1;
         terraces.add(s);
       }
       scene.add(terraces);
+      scene.updateMatrixWorld(true);
+      const surfaceRay = new T.Raycaster();
+      const downward = new T.Vector3(0, -1, 0);
+      const upright = new T.Vector3(0, 1, 0);
+      const supportingSurfaces = [stone, ...terraces.children, floor];
+      const surfaceAt = (
+        x: number,
+        z: number,
+        surfaces: Three.Object3D[] = supportingSurfaces,
+      ) => {
+        surfaceRay.set(new T.Vector3(x, 12, z), downward);
+        const hit = surfaceRay.intersectObjects(surfaces, false)[0];
+        if (!hit?.face) return null;
+        return {
+          point: hit.point.clone(),
+          normal: hit.face.normal
+            .clone()
+            .applyNormalMatrix(
+              new T.Matrix3().getNormalMatrix(hit.object.matrixWorld),
+            )
+            .normalize(),
+        };
+      };
+      const plantSurface = surfaceAt(0, 0, [stone]);
+      const plantAnchor =
+        plantSurface?.point.clone() ?? new T.Vector3(0, 0.15, 0);
+      plantAnchor.y -= 0.012;
+      const taperedTube = (
+        curve: Three.Curve<Three.Vector3>,
+        steps: number,
+        radius: number,
+        tipRadius: number,
+        sides = 8,
+      ) => {
+        const geometry = new T.TubeGeometry(curve, steps, radius, sides, false);
+        const positions = geometry.attributes.position;
+        for (let ring = 0; ring <= steps; ring++) {
+          const t = ring / steps;
+          const center = curve.getPointAt(t);
+          const taper = T.MathUtils.lerp(1, tipRadius / radius, t);
+          for (let side = 0; side <= sides; side++) {
+            const vertex = ring * (sides + 1) + side;
+            positions.setXYZ(
+              vertex,
+              center.x + (positions.getX(vertex) - center.x) * taper,
+              center.y + (positions.getY(vertex) - center.y) * taper,
+              center.z + (positions.getZ(vertex) - center.z) * taper,
+            );
+          }
+        }
+        geometry.computeVertexNormals();
+        return geometry;
+      };
       const moon = new T.Mesh(
         new T.SphereGeometry(5, 64, 40),
         new T.MeshStandardMaterial({ color: 0xe9c1b7, roughness: 0.55 }),
@@ -170,7 +229,10 @@ export function World(props: Props) {
             u * u * 0.48 +
             lateral * lateral * 0.16 +
             pos.getZ(i) * 0.026,
-          lateral * (0.47 + u * 0.14) * (0.28 + u * 0.72),
+          lateral *
+            (0.47 + u * 0.14) *
+            (0.28 + u * 0.72) *
+            T.MathUtils.smoothstep(u, 0, 0.2),
         );
         const shade = 0.82 + u * 0.17 + Math.abs(lateral) * 0.04;
         pigments.push(shade, shade * 0.99, shade);
@@ -206,8 +268,8 @@ export function World(props: Props) {
       });
       const goldMat = new T.MeshStandardMaterial({
         color: 0xc99a55,
-        roughness: 0.38,
-        metalness: 0.6,
+        roughness: 0.7,
+        metalness: 0,
       });
       const stalkPath = new T.CatmullRomCurve3([
         new T.Vector3(0, 0, 0),
@@ -215,13 +277,14 @@ export function World(props: Props) {
         new T.Vector3(0.12, 1.8, 0),
         new T.Vector3(0, 2.6, 0),
       ]);
-      const stalkGeo = new T.TubeGeometry(stalkPath, 48, 0.05, 12, false);
+      const stalkGeo = taperedTube(stalkPath, 56, 0.055, 0.034, 12);
       const bloom = new T.Group();
       bloom.rotation.x = 0.58;
       bloom.position.y = 2.6;
       const petals: Three.Group[] = [];
       for (let i = 0; i < 16; i++) {
         const hinge = new T.Group();
+        hinge.position.x = 0.08;
         const rotation = new T.Group();
         rotation.rotation.y = (i * Math.PI * 2) / 8 + (i > 7 ? 0.34 : 0);
         const petal = new T.Mesh(petalGeo, petalMat);
@@ -236,8 +299,8 @@ export function World(props: Props) {
         petals.push(hinge);
       }
       const center = new T.Mesh(new T.SphereGeometry(0.34, 32, 24), goldMat);
-      center.scale.y = 0.55;
-      center.position.y = 0.1;
+      center.scale.y = 0.3;
+      center.position.y = 0.18;
       bloom.add(center);
       const pollen = new T.InstancedMesh(
         new T.SphereGeometry(0.027, 8, 6),
@@ -250,7 +313,7 @@ export function World(props: Props) {
           r = 0.32 * Math.sqrt(i / 150);
         dummy.position.set(
           Math.cos(phi) * r,
-          0.12 + 0.17 * Math.sqrt(1 - (r * r) / 0.103),
+          0.18 + 0.3 * Math.sqrt(0.34 * 0.34 - r * r) + 0.006,
           Math.sin(phi) * r,
         );
         dummy.updateMatrix();
@@ -283,27 +346,97 @@ export function World(props: Props) {
       budSource.dispose();
       const bud = new T.Mesh(budGeometry, petalMat);
       bud.name = "closed-bud";
+      bud.castShadow = true;
       bloom.add(bud);
       const calyx = new T.Mesh(new T.SphereGeometry(0.34, 32, 24), leafMat);
       calyx.position.y = 0.025;
       calyx.scale.set(0.92, 0.35, 0.92);
       bloom.add(calyx);
       const plant = new T.Group();
-      plant.add(new T.Mesh(stalkGeo, stemMat));
+      const stalk = new T.Mesh(stalkGeo, stemMat);
+      stalk.castShadow = true;
+      plant.add(stalk);
       plant.add(bloom);
-      for (let i = 0; i < 3; i++) {
-        const leaf = new T.Mesh(petalGeo, leafMat);
-        leaf.position.y = 0.45 + i * 0.42;
-        leaf.rotation.y = i * 2.6;
-        leaf.rotation.z = 0.18 + i * 0.13;
-        leaf.scale.set(0.58, 0.4, 0.52);
-        plant.add(leaf);
+      const leafLength = 0.93;
+      const leafCenterY = (t: number) =>
+        Math.sin(t * Math.PI) * 0.14 + 0.06 * t - 0.09 * t * t;
+      const leafSource = new T.SphereGeometry(1, 32, 24);
+      const leafPositions = leafSource.attributes.position;
+      for (let i = 0; i < leafPositions.count; i++) {
+        const t = (leafPositions.getY(i) + 1) * 0.5;
+        const lateral = leafPositions.getX(i);
+        leafPositions.setXYZ(
+          i,
+          t * leafLength,
+          leafCenterY(t) +
+            lateral * lateral * 0.027 +
+            leafPositions.getZ(i) * 0.01,
+          lateral * 0.19 * (0.72 + t * 0.28),
+        );
       }
+      leafSource.deleteAttribute("normal");
+      leafSource.deleteAttribute("uv");
+      const leafGeo = mergeVertices(leafSource);
+      leafGeo.computeVertexNormals();
+      leafSource.dispose();
+      const veinPath = new T.CatmullRomCurve3(
+        Array.from({ length: 25 }, (_, i) => {
+          const t = (i / 24) * 0.965;
+          const upperSurface =
+            0.01 * Math.sqrt(Math.max(0, 1 - (2 * t - 1) ** 2));
+          return new T.Vector3(
+            t * leafLength,
+            leafCenterY(t) + upperSurface - 0.001,
+            0,
+          );
+        }),
+      );
+      const veinGeo = taperedTube(veinPath, 32, 0.0055, 0.0013, 6);
+      for (let i = 0; i < 3; i++) {
+        const node = stalkPath.getPoint(0.19 + i * 0.19);
+        const tangent = stalkPath.getTangent(0.19 + i * 0.19).normalize();
+        const angle = i * 2.45 + 0.15;
+        const outward = new T.Vector3(Math.cos(angle), 0, Math.sin(angle));
+        const leafBase = node
+          .clone()
+          .addScaledVector(outward, 0.22)
+          .addScaledVector(tangent, 0.1);
+        const petiolePath = new T.CatmullRomCurve3([
+          node,
+          node
+            .clone()
+            .addScaledVector(outward, 0.075)
+            .addScaledVector(tangent, 0.07),
+          leafBase,
+        ]);
+        plant.add(
+          new T.Mesh(taperedTube(petiolePath, 20, 0.022, 0.012, 8), stemMat),
+        );
+        const across = new T.Vector3()
+          .crossVectors(outward, tangent)
+          .normalize();
+        const normal = new T.Vector3()
+          .crossVectors(across, outward)
+          .normalize();
+        const leafMount = new T.Group();
+        leafMount.position.copy(leafBase);
+        leafMount.quaternion.setFromRotationMatrix(
+          new T.Matrix4().makeBasis(outward, normal, across),
+        );
+        leafMount.scale.setScalar(1.05 - i * 0.11);
+        const leaf = new T.Mesh(leafGeo, leafMat);
+        leaf.castShadow = true;
+        leafMount.add(leaf);
+        leafMount.add(new T.Mesh(veinGeo, stemMat));
+        plant.add(leafMount);
+      }
+      plant.position.copy(plantAnchor);
       scene.add(plant);
       const field = new T.Group();
       const fieldCount = innerWidth < 600 ? 11 : 21;
       const fieldPoses: {
         x: number;
+        y: number;
         z: number;
         size: number;
         rotation: number;
@@ -311,9 +444,13 @@ export function World(props: Props) {
       for (let i = 0; i < fieldCount; i++) {
         const angle = i * 2.39996;
         const radius = 3 + Math.sqrt(i) * 1.7;
+        const x = Math.cos(angle) * radius;
+        const z = Math.sin(angle) * radius - 3;
+        const surface = surfaceAt(x, z);
         fieldPoses.push({
-          x: Math.cos(angle) * radius,
-          z: Math.sin(angle) * radius - 3,
+          x,
+          y: (surface?.point.y ?? floor.position.y) - 0.012,
+          z,
           size: 0.3 + (i % 5) * 0.08,
           rotation: i * 1.5,
         });
@@ -321,6 +458,9 @@ export function World(props: Props) {
       // Bake the open flower once per material. The entire meadow uses four
       // instanced draws instead of hundreds of individual petal meshes.
       const template = plant.clone(true);
+      template.position.set(0, 0, 0);
+      template.quaternion.identity();
+      template.scale.setScalar(1);
       const templateBloom = template.children[1];
       templateBloom.children.slice(0, 16).forEach((radial, index) => {
         radial.children[0].rotation.z = index > 7 ? 0.18 : -0.14;
@@ -350,28 +490,97 @@ export function World(props: Props) {
         if (!geometry) return;
         const mesh = new T.InstancedMesh(geometry, material, fieldCount);
         mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);
+        mesh.castShadow = true;
         fieldMeshes.push(mesh);
         field.add(mesh);
       });
       scene.add(field);
-      const grassGeo = new T.PlaneGeometry(0.025, 1, 1, 4);
-      grassGeo.translate(0, 0.5, 0);
-      const grass = new T.InstancedMesh(grassGeo, leafMat, 900);
-      for (let i = 0; i < 900; i++) {
-        const angle = i * 2.39996,
-          r = Math.sqrt(i / 900) * 3;
-        dummy.position.set(
-          Math.cos(angle) * r,
-          0.05,
-          Math.sin(angle) * r * 0.75,
+      // A tuft has a shared buried root and seven curved, tapered leaves.
+      // Sample the actual stone surface once; no flat-height floating blades.
+      const tuftParts: Three.BufferGeometry[] = [];
+      const grassBase = new T.Color(0x475643);
+      const grassTip = new T.Color(0x9ba785);
+      const bladeTint = new T.Color();
+      for (let blade = 0; blade < 7; blade++) {
+        const basal = blade > 4;
+        const height = basal ? 0.14 : 0.23 + (blade % 3) * 0.105;
+        const bend = basal ? 0.22 : 0.09 + (blade % 4) * 0.04;
+        const width = basal ? 0.052 : 0.024 + (blade % 2) * 0.008;
+        const bladeSource = new T.SphereGeometry(1, 8, 12);
+        const positions = bladeSource.attributes.position;
+        const tones: number[] = [];
+        for (let vertex = 0; vertex < positions.count; vertex++) {
+          const t = (positions.getY(vertex) + 1) * 0.5;
+          const side = positions.getX(vertex);
+          positions.setXYZ(
+            vertex,
+            bend * t * t + positions.getZ(vertex) * 0.0025,
+            height * t * (1 - 0.13 * t) + side * side * 0.006,
+            side * width * (0.9 - t * 0.45),
+          );
+          bladeTint
+            .copy(grassBase)
+            .lerp(grassTip, Math.pow(t, 0.7) * (0.72 + blade * 0.035));
+          tones.push(bladeTint.r, bladeTint.g, bladeTint.b);
+        }
+        bladeSource.setAttribute(
+          "color",
+          new T.Float32BufferAttribute(tones, 3),
         );
-        dummy.rotation.set(0, i, 0.1 * Math.sin(i));
-        dummy.scale.set(1, 0.12 + ((Math.sin(i * 127) + 1) / 2) * 0.4, 1);
-        dummy.updateMatrix();
-        grass.setMatrixAt(i, dummy.matrix);
+        bladeSource.deleteAttribute("normal");
+        bladeSource.deleteAttribute("uv");
+        const bladeGeo = mergeVertices(bladeSource);
+        bladeGeo.computeVertexNormals();
+        bladeGeo.rotateY(blade * 2.39996);
+        tuftParts.push(bladeGeo);
+        bladeSource.dispose();
       }
+      const grassGeo = mergeGeometries(tuftParts)!;
+      tuftParts.forEach((part) => part.dispose());
+      const grassMat = new T.MeshStandardMaterial({
+        color: 0xffffff,
+        vertexColors: true,
+        roughness: 0.83,
+        metalness: 0,
+        transparent: true,
+        depthWrite: false,
+      });
+      const grassCount = innerWidth < 700 ? 125 : 190;
+      const grass = new T.InstancedMesh(grassGeo, grassMat, grassCount);
+      const grassTint = new T.Color();
+      const localTurn = new T.Quaternion();
+      let planted = 0;
+      for (let i = 0; planted < grassCount && i < grassCount * 4; i++) {
+        const angle = i * 2.39996;
+        const radius = Math.sqrt(((i * 73) % 199) / 199) * 0.82;
+        const x = stone.position.x + Math.cos(angle) * radius * stone.scale.x;
+        const z = Math.sin(angle) * radius * stone.scale.z;
+        if (Math.hypot(x - plantAnchor.x, z - plantAnchor.z) < 0.23) continue;
+        const surface = surfaceAt(x, z, [stone]);
+        if (!surface || surface.normal.y < 0.72) continue;
+        dummy.position
+          .copy(surface.point)
+          .addScaledVector(surface.normal, -0.014);
+        dummy.quaternion.setFromUnitVectors(upright, surface.normal);
+        localTurn.setFromAxisAngle(upright, angle);
+        dummy.quaternion.multiply(localTurn);
+        const size = 0.62 + (Math.sin(i * 17.13) + 1) * 0.3;
+        dummy.scale.setScalar(size);
+        dummy.updateMatrix();
+        grass.setMatrixAt(planted, dummy.matrix);
+        grassTint.setHex([0xd7dec8, 0xb9c6a5, 0xe5dfc6, 0xc3ccb2][i % 4]);
+        grass.setColorAt(planted, grassTint);
+        planted++;
+      }
+      grass.count = planted;
+      grass.instanceMatrix.needsUpdate = true;
+      if (grass.instanceColor) grass.instanceColor.needsUpdate = true;
+      grass.computeBoundingSphere();
+      grass.receiveShadow = true;
+      grass.castShadow = true;
       scene.add(grass);
       const roots = new T.Group();
+      roots.position.copy(plantAnchor);
       const rootMat = new T.MeshStandardMaterial({
         color: 0xd7b09b,
         emissive: 0x603531,
@@ -391,12 +600,12 @@ export function World(props: Props) {
             ),
         );
         const root = new T.Mesh(
-          new T.TubeGeometry(
+          taperedTube(
             new T.CatmullRomCurve3(points),
-            20,
+            28,
             0.012 + (i % 3) * 0.005,
-            5,
-            false,
+            0.0025,
+            7,
           ),
           rootMat,
         );
@@ -425,32 +634,29 @@ export function World(props: Props) {
         time = 0,
         last = 0,
         p = state.current.progress.current,
-        opening = 0,
+        awakening = 0,
         mx = 0,
         my = 0,
         pointerX = 0,
         pointerY = 0,
-        lost = false;
+        lost = false,
+        lastScrim = "";
       const bg = new T.Color(),
         heroColor = new T.Color("#e1cbd0"),
         rootColor = new T.Color("#59414d"),
         bloomColor = new T.Color("#cbb6c6"),
         gardenColor = new T.Color("#e3d7c8"),
-        flowerColor = new T.Color();
+        flowerColor = new T.Color(),
+        scrimColor = new T.Color();
       const colors = [heroColor, rootColor, bloomColor, gardenColor];
       const cameras = [
-          [6.8, 4.3, 11],
-          [5, 1, 9],
-          [4.5, 5.3, 8.3],
-          [0, 6.5, 17],
-        ],
-        targets = [
-          [-1.4, 1.6, 0],
-          [-1, -0.65, 0],
-          [-1.5, 2.4, 0],
-          [0, 1.7, 0],
-        ],
-        mobileLift = [2.6, 0.4, 2.7, 3.3];
+        [6.8, 4.3, 11],
+        [6.3, 4.3, 18.6],
+        [4.5, 4.6, 10.5],
+        [0, 6.5, 17],
+      ];
+      const mobileDepth = [16, 16, 16, 16];
+      const projectedAnchor = new T.Vector3();
       function draw(ms = 0) {
         raf = 0;
         if (disposed || lost || document.hidden || !state.current.active)
@@ -464,45 +670,66 @@ export function World(props: Props) {
         p = paused ? dest : p + (dest - p) * cameraEase;
         mx = paused ? 0 : mx + (pointerX - mx) * cameraEase;
         my = paused ? 0 : my + (pointerY - my) * cameraEase;
-        const targetOpen = state.current.awake || p > 1.3 ? 1 : 0;
-        opening = paused
-          ? targetOpen
-          : opening + (targetOpen - opening) * (1 - Math.exp(-2.2 * dt));
-        const index = Math.min(2, Math.floor(p)),
-          f = T.MathUtils.smoothstep(Math.min(1, p - index), 0, 1),
-          mobile = innerWidth < 700,
-          heroFraming = 1 - T.MathUtils.smoothstep(p, 0, 1),
-          shortViewportLift = Math.max(0, 780 - innerHeight) * 0.02;
+        const journey = journeyAt(p);
+        const opening = journey.bloom;
+        const awakeTarget = state.current.awake ? 1 : 0;
+        awakening = paused
+          ? awakeTarget
+          : awakening + (awakeTarget - awakening) * cameraEase;
+        const index = Math.min(2, Math.floor(journey.progress)),
+          f = T.MathUtils.smoothstep(journey.progress - index, 0, 1),
+          mobile = el!.clientWidth < 700;
+        camera.clearViewOffset();
         camera.position.set(
           T.MathUtils.lerp(cameras[index][0], cameras[index + 1][0], f) +
-            mx * 0.35,
+            mx * 0.25,
           T.MathUtils.lerp(cameras[index][1], cameras[index + 1][1], f) +
-            my * 0.2,
+            my * 0.12,
           T.MathUtils.lerp(cameras[index][2], cameras[index + 1][2], f) +
-            (mobile ? 7 : 0),
-        );
-        camera.lookAt(
-          T.MathUtils.lerp(targets[index][0], targets[index + 1][0], f) +
-            (mobile ? 0.7 : -0.45 * heroFraming),
-          T.MathUtils.lerp(targets[index][1], targets[index + 1][1], f) +
             (mobile
-              ? 0.85 +
-                shortViewportLift +
-                T.MathUtils.lerp(mobileLift[index], mobileLift[index + 1], f)
+              ? T.MathUtils.lerp(mobileDepth[index], mobileDepth[index + 1], f)
               : 0),
-          0,
+        );
+        camera.lookAt(plantAnchor.x, plantAnchor.y + 1.2, plantAnchor.z);
+        camera.updateMatrixWorld(true);
+        projectedAnchor.copy(plantAnchor).project(camera);
+        // A fixed screen-space root keeps the plant grounded while the lens
+        // gently widens to reveal what is below it. No chapter lifts the plant.
+        const gardenFrame = T.MathUtils.smoothstep(journey.progress, 2, 3);
+        const anchorX = (mobile ? 0.12 : 0.3) * (1 - gardenFrame);
+        const anchorY = mobile ? -0.56 : -0.34 - gardenFrame * 0.16;
+        camera.setViewOffset(
+          el!.clientWidth,
+          el!.clientHeight,
+          ((projectedAnchor.x - anchorX) * el!.clientWidth) / 2,
+          ((anchorY - projectedAnchor.y) * el!.clientHeight) / 2,
+          el!.clientWidth,
+          el!.clientHeight,
         );
         bg.copy(colors[index]).lerp(colors[index + 1], f);
         scene.background = bg;
+        bg.getRGB(scrimColor, T.SRGBColorSpace);
+        const scrim = `${Math.round(scrimColor.r * 255)} ${Math.round(scrimColor.g * 255)} ${Math.round(scrimColor.b * 255)}`;
+        if (scrim !== lastScrim) {
+          el!.parentElement?.style.setProperty("--scene-scrim", scrim);
+          lastScrim = scrim;
+        }
         (scene.fog as Three.FogExp2).color.copy(bg);
-        const underground = Math.max(0, 1 - Math.abs(p - 1) * 1.6);
+        const underground = journey.roots;
         groundMat.opacity = 1 - underground * 0.98;
-        stone.scale.y = 0.72 * (1 - underground * 0.8);
-        stone.position.y = -0.55 - underground * 3;
-        grass.visible = underground < 0.65;
-        roots.visible = underground > 0.12;
+        groundMat.depthWrite = underground < 0.01;
+        rockMat.opacity = 1 - underground;
+        rockMat.depthWrite = underground < 0.01;
+        stone.castShadow = underground < 0.5;
+        terraces.children.forEach((terrace) => {
+          terrace.castShadow = underground < 0.5;
+        });
+        grassMat.opacity = 1 - T.MathUtils.smoothstep(underground, 0, 0.75);
+        grass.visible = grassMat.opacity > 0.01;
+        grassMat.depthWrite = underground < 0.01;
+        roots.visible = underground > 0.01;
         roots.scale.y = 0.3 + underground * 0.7;
-        rootMat.emissiveIntensity = underground * 1.2;
+        rootMat.emissiveIntensity = underground * 0.6;
         const selected = [0xb66d86, 0xd3a259, 0x879aca][state.current.kind];
         petalMat.color.lerp(
           flowerColor.setHex(selected),
@@ -519,25 +746,28 @@ export function World(props: Props) {
         });
         const budPresence = 1 - T.MathUtils.smoothstep(opening, 0.12, 0.7);
         bud.visible = budPresence > 0.001;
-        bud.scale.setScalar(Math.max(0.001, budPresence));
+        const budScale = Math.max(0.001, budPresence);
+        bud.scale.set(
+          budScale * (1 + awakening * 0.08),
+          budScale * (1 + awakening * 0.04),
+          budScale * (1 + awakening * 0.08),
+        );
         center.visible = opening > 0.32;
         pollen.visible = opening > 0.32;
         bloom.rotation.y = time * 0.045;
-        plant.rotation.z = Math.sin(time * 0.36) * 0.025;
-        plant.position.y =
-          Math.sin(time * 0.6) * 0.035 + (mobile ? underground * 4.8 : 0);
-        const gardenGrowth = T.MathUtils.smoothstep(p, 2.15, 3);
+        plant.rotation.z = Math.sin(time * 0.36) * 0.012;
+        plant.position.copy(plantAnchor);
+        const gardenGrowth = journey.meadow;
         field.visible = gardenGrowth > 0.01;
-        field.scale.y = Math.max(0.001, gardenGrowth);
         if (field.visible) {
           fieldPoses.forEach((flower, i) => {
-            dummy.position.set(flower.x, -0.8, flower.z);
+            dummy.position.set(flower.x, flower.y, flower.z);
             dummy.rotation.set(
               0,
               flower.rotation,
               Math.sin(time * 0.45 + i) * 0.035,
             );
-            dummy.scale.setScalar(flower.size);
+            dummy.scale.setScalar(flower.size * gardenGrowth);
             dummy.updateMatrix();
             fieldMeshes.forEach((mesh) => mesh.setMatrixAt(i, dummy.matrix));
           });
@@ -584,6 +814,8 @@ export function World(props: Props) {
       const contextLost = (e: Event) => {
         e.preventDefault();
         lost = true;
+        el!.parentElement?.style.removeProperty("--scene-scrim");
+        lastScrim = "";
         cancelAnimationFrame(raf);
         raf = 0;
         renderer.domElement.style.opacity = "0";
@@ -608,6 +840,8 @@ export function World(props: Props) {
       queue();
       state.current.onReady(true);
       cleanup = () => {
+        el!.parentElement?.style.removeProperty("--scene-scrim");
+        lastScrim = "";
         cancelAnimationFrame(raf);
         observer.disconnect();
         removeEventListener("pointermove", pointer);

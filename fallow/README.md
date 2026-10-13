@@ -23,13 +23,13 @@ Deploy this folder independently using the Next.js preset. Set `NEXT_PUBLIC_SITE
 
 ## Interactions
 
-- Wake the seed; petals unfold in the live scene.
-- Native scrolling moves through four connected camera compositions.
+- Wake the seed to stir the bud. Petals open as you reach the third chapter.
+- Native scrolling reveals roots, opens the flower, then grows the meadow from the ground. One shared scroll clock makes the sequence reversible; camera framing keeps the main plant anchored during the seed, roots and bloom chapters.
 - Select one of three imagined species; its color changes in the whole garden.
 - Download a generated SVG botanical specimen. No server or image service involved.
 - Open the field notes, navigate chapters or pause ambient animation with keyboard-accessible shadcn/ui controls.
 - Respect live `prefers-reduced-motion` changes. Rendering pauses when the story is offscreen, the notes are open, or the tab is hidden. DPR is capped and mobile uses fewer flowers. The meadow batches flowers into four instanced meshes. WebGL failure leaves a chapter-aware CSS botanical fallback and usable content; context restoration resumes the live world.
-- Closed, softly curled petal geometry, satin plant materials, welded stone normals, and time-based camera damping keep surfaces and movement smooth.
+- Closed, softly curled petals, veined leaves with attached petioles, and tapered grass tufts follow the actual stem and terrain. Ground contact is sampled from the stone surface, and the terrain fades in place to reveal the roots. Satin materials, welded normals and time-based camera damping keep surfaces and movement smooth.
 - The header caption is geometrically centered. Mobile controls have 44-pixel minimum targets; the bottom dock accounts for the device safe area.
 
 The story and controls are HTML, rendered by Next.js. WebGL is an enhancement and loads lazily. No scroll hijacking, sound, tracking, account, form submission or persistence.

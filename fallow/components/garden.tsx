@@ -50,6 +50,7 @@ export function Garden() {
     [kind, setKind] = useState(0),
     [paused, setPaused] = useState(false),
     [chapter, setChapter] = useState(0),
+    [overRoots, setOverRoots] = useState(false),
     [journal, setJournal] = useState(false),
     [saved, setSaved] = useState(false),
     [inView, setInView] = useState(true),
@@ -89,8 +90,9 @@ export function Garden() {
         if (y >= p.offsetTop)
           v = i + Math.min(1, (y - p.offsetTop) / p.offsetHeight);
       });
-      progress.current = Math.min(3.6, v);
-      setChapter(Math.min(3, Math.floor(v + 0.16)));
+      progress.current = Math.min(3, v);
+      setChapter(Math.min(3, Math.floor(v + 0.001)));
+      setOverRoots(v >= 0.55 && v < 1.5);
       panels.forEach((p) => {
         const t = p.getBoundingClientRect().top / innerHeight;
         p.style.setProperty(
@@ -152,7 +154,7 @@ export function Garden() {
         />
         <div className="grain" />
       </div>
-      <header className={`garden-header ${chapter === 1 ? "over-roots" : ""}`}>
+      <header className={`garden-header ${overRoots ? "over-roots" : ""}`}>
         <a
           href="#chapter-0"
           className="wordmark"
@@ -202,7 +204,7 @@ export function Garden() {
               </Button>
               <span className="wake-status" aria-live="polite">
                 {awake
-                  ? "Something good has started. Keep going."
+                  ? "The bud is stirring. Follow its roots."
                   : "One small gesture. A whole new beginning."}
               </span>
             </div>
@@ -279,7 +281,6 @@ export function Garden() {
                 onValueChange={(v) => {
                   setKind(Number(v));
                   setSaved(false);
-                  setAwake(true);
                 }}
               >
                 {species.map((s, i) => (

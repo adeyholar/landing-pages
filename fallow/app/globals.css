@@ -966,3 +966,64 @@ html[data-motion="paused"] *::after {
     padding-inline: 20px;
   }
 }
+
+/* Give the botanical scene its own room below the copy on short phones. */
+@media (max-width: 700px) and (max-height: 740px) {
+  .panel-inside,
+  .roots .panel-inside,
+  .bloom .panel-inside,
+  .final .panel-inside {
+    padding-top: 100px;
+  }
+  .hero-bottom {
+    bottom: 86px;
+  }
+}
+
+@media (max-width: 700px) {
+  .bloom .panel-inside {
+    padding-top: 100px;
+  }
+  .bloom .chapter-copy h2 {
+    margin: 24px 0 20px;
+  }
+  .bloom .species-options {
+    margin-top: 18px;
+  }
+  .bloom .species-note {
+    margin-top: 12px;
+  }
+}
+
+@media (max-width: 700px) and (max-height: 740px) {
+  .first .panel-inside {
+    padding-top: 90px;
+  }
+  .first h1 {
+    margin-top: 20px;
+    margin-bottom: 16px;
+  }
+  .wake-wrap {
+    margin-top: 18px;
+  }
+}
+@media (max-width: 370px) {
+  .species-choice {
+    padding-inline: 6px;
+  }
+}
+@media (max-width: 370px) and (max-height: 740px) {
+  .bloom .panel-inside {
+    padding-top: 85px;
+  }
+  .bloom .chapter-copy h2 {
+    font-size: 41px;
+    margin: 14px 0 16px;
+  }
+  .bloom .species-options {
+    margin-top: 10px;
+  }
+  .bloom .species-note {
+    margin-top: 4px;
+  }
+}
