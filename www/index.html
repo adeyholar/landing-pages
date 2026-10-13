@@ -3,20 +3,175 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Landing Pages — LN</title>
+    <title>Landing Pages — Open-source landing page collection</title>
     <meta
       name="description"
-      content="An open-source collection of landing pages, each with its own art direction, built to the same standard and deployed live."
+      content="An open-source collection of landing pages, each with its own art direction: live sites, full source code under the MIT License, built with Next.js and Tailwind CSS."
     />
+    <meta name="author" content="LN" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://landing-pages-lndev.vercel.app/" />
+
     <meta name="theme-color" content="#f6f5f1" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0d1314" media="(prefers-color-scheme: dark)" />
-    <meta property="og:title" content="Landing Pages — LN" />
+    <meta name="color-scheme" content="light dark" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Landing Pages" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content="https://landing-pages-lndev.vercel.app/" />
+    <meta property="og:title" content="Landing Pages — Open-source landing page collection" />
     <meta
       property="og:description"
-      content="An open-source collection of landing pages, each with its own art direction."
+      content="A collection of landing pages, each with its own art direction. Live sites and full source code, open source under MIT."
     />
-    <meta property="og:image" content="showcase/ecrin.jpg" />
+    <meta property="og:image" content="https://landing-pages-lndev.vercel.app/media/og-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Landing Pages: previews of the collection's landing pages" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Landing Pages — Open-source landing page collection" />
+    <meta
+      name="twitter:description"
+      content="A collection of landing pages, each with its own art direction. Live sites and full source code, open source under MIT."
+    />
+    <meta name="twitter:image" content="https://landing-pages-lndev.vercel.app/media/og-image.jpg" />
+    <meta name="twitter:image:alt" content="Landing Pages: previews of the collection's landing pages" />
+
+    <!-- Icons -->
     <link rel="icon" href="media/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="media/apple-touch-icon.png" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="sitemap" type="application/xml" href="sitemap.xml" />
+
+    <!-- Structured data. Keep the project list in sync with projects.js. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://landing-pages-lndev.vercel.app/#website",
+            "url": "https://landing-pages-lndev.vercel.app/",
+            "name": "Landing Pages",
+            "description": "An open-source collection of landing pages, each with its own art direction.",
+            "inLanguage": "en",
+            "author": {
+              "@id": "https://landing-pages-lndev.vercel.app/#author"
+            }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://landing-pages-lndev.vercel.app/#author",
+            "name": "LN",
+            "url": "https://lndev.me/",
+            "sameAs": [
+              "https://github.com/ln-dev7"
+            ]
+          },
+          {
+            "@type": "CollectionPage",
+            "@id": "https://landing-pages-lndev.vercel.app/#page",
+            "url": "https://landing-pages-lndev.vercel.app/",
+            "name": "Landing Pages — Open-source landing page collection",
+            "isPartOf": {
+              "@id": "https://landing-pages-lndev.vercel.app/#website"
+            },
+            "primaryImageOfPage": "https://landing-pages-lndev.vercel.app/media/og-image.jpg",
+            "mainEntity": {
+              "@id": "https://landing-pages-lndev.vercel.app/#projects"
+            }
+          },
+          {
+            "@type": "SoftwareSourceCode",
+            "@id": "https://landing-pages-lndev.vercel.app/#source",
+            "name": "Landing Pages",
+            "codeRepository": "https://github.com/ln-dev7/landing-pages",
+            "license": "https://opensource.org/licenses/MIT",
+            "programmingLanguage": [
+              "TypeScript",
+              "HTML",
+              "CSS"
+            ],
+            "author": {
+              "@id": "https://landing-pages-lndev.vercel.app/#author"
+            }
+          },
+          {
+            "@type": "ItemList",
+            "@id": "https://landing-pages-lndev.vercel.app/#projects",
+            "name": "Landing pages",
+            "numberOfItems": 4,
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Ficelle",
+                  "url": "https://ficelle-lndev.vercel.app",
+                  "description": "The whole site is a parcel being packed and opened: kraft paper with generated fibers, shipping labels, teal ink stamps, a gold ribbon and receipts. The delivery picker prints a live receipt as you choose.",
+                  "genre": "Gift parcel",
+                  "about": "Gift-delivery app",
+                  "image": "https://landing-pages-lndev.vercel.app/showcase/ficelle.jpg",
+                  "license": "https://opensource.org/licenses/MIT",
+                  "codeRepository": "https://github.com/ln-dev7/landing-pages/tree/master/ficelle"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Passeline",
+                  "url": "https://passeline-lndev.vercel.app",
+                  "description": "One gift crosses a hand-drawn SVG town: the quay, the streetcar, the town hall, the Ferris wheel. A gold dotted line links the scenes, and the page turns from morning to night as you scroll.",
+                  "genre": "Illustrated",
+                  "about": "Gift-delivery app",
+                  "image": "https://landing-pages-lndev.vercel.app/showcase/passeline.jpg",
+                  "license": "https://opensource.org/licenses/MIT",
+                  "codeRepository": "https://github.com/ln-dev7/landing-pages/tree/master/passeline"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Aparté",
+                  "url": "https://aparte-lndev.vercel.app",
+                  "description": "A magazine on the web: Bodoni headlines, running heads and folios, a drop cap, pull quotes and an address book with dot leaders. One warm, grainy treatment for every photo.",
+                  "genre": "Editorial",
+                  "about": "Gift-delivery app",
+                  "image": "https://landing-pages-lndev.vercel.app/showcase/aparte.jpg",
+                  "license": "https://opensource.org/licenses/MIT",
+                  "codeRepository": "https://github.com/ln-dev7/landing-pages/tree/master/aparte"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": "Écrin",
+                  "url": "https://ecrin-lndev.vercel.app",
+                  "description": "A dark, cinematic launch site lit in gold. A CSS 3D box spins and lifts its lid as you scroll, with springy micro-interactions on top: magnetic buttons, rolling totals, a light that follows the cursor.",
+                  "genre": "Immersive",
+                  "about": "Gift-delivery app",
+                  "image": "https://landing-pages-lndev.vercel.app/showcase/ecrin.jpg",
+                  "license": "https://opensource.org/licenses/MIT",
+                  "codeRepository": "https://github.com/ln-dev7/landing-pages/tree/master/ecrin"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,6 +179,7 @@
       href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap"
       rel="stylesheet"
     />
+    <link rel="preload" as="image" href="showcase/ficelle.jpg" fetchpriority="high" />
     <link rel="stylesheet" href="styles.css" />
     <script>
       (function () {
@@ -104,10 +260,10 @@
         <div id="projects" class="projects">
           <noscript>
             <ul class="fallback">
-              <li><a href="https://ficelle-lndev.vercel.app">Ficelle ↗</a></li>
-              <li><a href="https://passeline-lndev.vercel.app">Passeline ↗</a></li>
-              <li><a href="https://aparte-lndev.vercel.app">Aparté ↗</a></li>
-              <li><a href="https://ecrin-lndev.vercel.app">Écrin ↗</a></li>
+              <li><a href="https://ficelle-lndev.vercel.app">Ficelle</a> — Gift parcel. The whole site is a parcel being packed and opened: kraft paper with generated fibers, shipping labels, teal ink stamps, a gold ribbon and receipts. The delivery picker prints a live receipt as you choose. <a href="https://github.com/ln-dev7/landing-pages/tree/master/ficelle">Source</a></li>
+              <li><a href="https://passeline-lndev.vercel.app">Passeline</a> — Illustrated. One gift crosses a hand-drawn SVG town: the quay, the streetcar, the town hall, the Ferris wheel. A gold dotted line links the scenes, and the page turns from morning to night as you scroll. <a href="https://github.com/ln-dev7/landing-pages/tree/master/passeline">Source</a></li>
+              <li><a href="https://aparte-lndev.vercel.app">Aparté</a> — Editorial. A magazine on the web: Bodoni headlines, running heads and folios, a drop cap, pull quotes and an address book with dot leaders. One warm, grainy treatment for every photo. <a href="https://github.com/ln-dev7/landing-pages/tree/master/aparte">Source</a></li>
+              <li><a href="https://ecrin-lndev.vercel.app">Écrin</a> — Immersive. A dark, cinematic launch site lit in gold. A CSS 3D box spins and lifts its lid as you scroll, with springy micro-interactions on top: magnetic buttons, rolling totals, a light that follows the cursor. <a href="https://github.com/ln-dev7/landing-pages/tree/master/ecrin">Source</a></li>
             </ul>
           </noscript>
         </div>

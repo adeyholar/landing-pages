@@ -3,7 +3,8 @@
  * To add a project: drop its preview in showcase/ (16:9, about 1600 px
  * wide) and, optionally, its logo in media/, then add an entry below.
  * Only slug, name, url and image are required; the cards, the table and
- * the counts all follow.
+ * the counts all follow. The "Source" button points to the repository
+ * folder named after the slug; set `source` to override it.
  */
 window.PROJECTS = [
   {

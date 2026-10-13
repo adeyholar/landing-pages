@@ -28,7 +28,8 @@ palette (teal, deep teal, gold, ink and cream) and the same set of pages:
 - app link fallbacks and a 404.
 
 Everything in them is invented: brands, places, people, prices and legal
-texts. External links point to [lndev.me](http://lndev.me/). Each project's
+texts. External links (app stores, partner portals, QR codes) lead to each
+project's own source folder on GitHub. Each project's
 README covers its product rules, art direction and files.
 
 ## Repository layout
@@ -89,6 +90,12 @@ cd www && python3 -m http.server
 
 To deploy it on Vercel, import the repository once more with **Root
 Directory** set to `www`.
+
+The site's public URL, `https://landing-pages-lndev.vercel.app`, is written
+in `www/index.html` (canonical, Open Graph, structured data),
+`www/robots.txt` and `www/sitemap.xml`: update all three if it changes. When
+you add a project, also add it to the structured data and the `<noscript>`
+list in `www/index.html`, and its preview to `www/sitemap.xml`.
 
 ## Showcase videos
 
