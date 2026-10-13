@@ -260,43 +260,61 @@
         <div class="hero__display">
           <div class="hero__orbit" aria-hidden="true"></div>
           <span class="annotation">a different kind of starting point ↘</span>
-          <div class="feature-back feature-back--one" aria-hidden="true">
-            <img src="showcase/crux.jpg" alt="" width="1600" height="900" />
-          </div>
-          <div class="feature-back feature-back--two" aria-hidden="true">
-            <img src="showcase/maree.jpg" alt="" width="1600" height="900" />
-          </div>
           <a
             class="feature-card"
             href="#fallow"
-            id="feature-link"
+            data-feature-position="front"
             aria-label="Explore Fallow"
             ><img
-              id="feature-image"
               src="showcase/fallow.jpg"
               width="1600"
               height="900"
-              alt="Fallow — an interactive botanical world"
+              alt="Fallow — interactive botanical story"
             /><span class="feature-caption"
               ><span
-                ><small id="feature-category">INTERACTIVE BOTANICAL STORY</small
-                ><strong id="feature-name">Fallow</strong></span
+                ><small>INTERACTIVE BOTANICAL STORY</small
+                ><strong>Fallow</strong></span
               ><span class="feature-arrow" aria-hidden="true">↗</span></span
             ></a
           >
-          <div
-            class="feature-picker"
-            role="group"
-            aria-label="Featured project"
+          <a
+            class="feature-card"
+            href="#offcut"
+            data-feature-position="next"
+            aria-label="Explore Offcut"
+            aria-hidden="true"
+            tabindex="-1"
+            inert
+            ><img
+              src="showcase/offcut.jpg"
+              width="1600"
+              height="900"
+              alt="Offcut — furniture atelier"
+            /><span class="feature-caption"
+              ><span
+                ><small>FURNITURE ATELIER</small><strong>Offcut</strong></span
+              ><span class="feature-arrow" aria-hidden="true">↗</span></span
+            ></a
           >
-            <button type="button" data-feature="fallow" aria-pressed="true">
-              01 <span>Fallow</span></button
-            ><button type="button" data-feature="offcut" aria-pressed="false">
-              02 <span>Offcut</span></button
-            ><button type="button" data-feature="maree" aria-pressed="false">
-              03 <span>Marée</span>
-            </button>
-          </div>
+          <a
+            class="feature-card"
+            href="#maree"
+            data-feature-position="back"
+            aria-label="Explore Marée"
+            aria-hidden="true"
+            tabindex="-1"
+            inert
+            ><img
+              src="showcase/maree.jpg"
+              width="1600"
+              height="900"
+              alt="Marée — coastal bath house"
+            /><span class="feature-caption"
+              ><span
+                ><small>COASTAL BATH HOUSE</small><strong>Marée</strong></span
+              ><span class="feature-arrow" aria-hidden="true">↗</span></span
+            ></a
+          >
         </div>
       </section>
       <div class="hero__foot wrap">

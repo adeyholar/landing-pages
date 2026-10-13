@@ -2,7 +2,8 @@
   "use strict";
   const projects = window.PROJECTS || [];
   const root = document.documentElement;
-  const repo = "https://github.com/ln-dev7/landing-pages/tree/master/landing-pages/";
+  const repo =
+    "https://github.com/ln-dev7/landing-pages/tree/master/landing-pages/";
   const ext = 'target="_blank" rel="noopener"';
   const esc = (value) =>
     String(value ?? "").replace(
@@ -59,27 +60,6 @@
       ? '<span aria-hidden="true">⊞</span> Gallery view'
       : '<span aria-hidden="true">☷</span> Index view';
   });
-  document.querySelectorAll("[data-feature]").forEach((button) =>
-    button.addEventListener("click", () => {
-      const p = projects.find((p) => p.slug === button.dataset.feature);
-      if (!p) return;
-      document
-        .querySelectorAll("[data-feature]")
-        .forEach((b) => b.setAttribute("aria-pressed", String(b === button)));
-      const image = document.querySelector("#feature-image");
-      image.src = p.image;
-      image.alt = `${p.name} — ${p.category}`;
-      const link = document.querySelector("#feature-link");
-      link.href = "#" + p.slug;
-      link.setAttribute("aria-label", "Explore " + p.name);
-      document.querySelector("#feature-name").textContent = p.name;
-      document.querySelector("#feature-category").textContent =
-        p.category.toUpperCase();
-    }),
-  );
-  document
-    .querySelector("#feature-link")
-    .addEventListener("click", () => filterProjects("all"));
   const themeButton = document.querySelector(".theme-toggle");
   function syncTheme() {
     themeButton.setAttribute(
@@ -97,10 +77,83 @@
   syncTheme();
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   let paused = false;
+  const featureStage = document.querySelector(".hero__display");
+  const featuredCards = [...featureStage.querySelectorAll(".feature-card")];
+  const featurePositions = ["front", "next", "back"];
+  let featureIndex = 0;
+  let featureTimer;
+  let featureVisible = false;
+  let featureHovered = false;
+
+  function scheduleFeature() {
+    clearTimeout(featureTimer);
+    if (
+      paused ||
+      reduced.matches ||
+      document.hidden ||
+      !featureVisible ||
+      featureHovered ||
+      featureStage.contains(document.activeElement) ||
+      featuredCards.length < 2
+    )
+      return;
+    featureTimer = setTimeout(() => {
+      featuredCards[featureIndex].classList.add("is-departing");
+      featureIndex = (featureIndex + 1) % featuredCards.length;
+      featuredCards.forEach((card, index) => {
+        const position =
+          (index - featureIndex + featuredCards.length) % featuredCards.length;
+        card.dataset.featurePosition = featurePositions[position];
+        card.inert = position !== 0;
+        card.tabIndex = position === 0 ? 0 : -1;
+        if (position === 0) card.removeAttribute("aria-hidden");
+        else card.setAttribute("aria-hidden", "true");
+      });
+      scheduleFeature();
+    }, 5000);
+  }
+
+  featureStage.addEventListener("animationend", (event) => {
+    if (event.animationName === "feature-depart") {
+      event.target.classList.remove("is-departing");
+    }
+  });
+  featureStage.addEventListener("pointerenter", (event) => {
+    if (event.pointerType === "touch") return;
+    featureHovered = true;
+    scheduleFeature();
+  });
+  featureStage.addEventListener("pointerleave", () => {
+    featureHovered = false;
+    scheduleFeature();
+  });
+  featureStage.addEventListener("focusin", scheduleFeature);
+  featureStage.addEventListener("focusout", () => {
+    queueMicrotask(scheduleFeature);
+  });
+  featureStage.addEventListener("click", (event) => {
+    if (event.target.closest(".feature-card")) filterProjects("all");
+  });
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(
+      ([entry]) => {
+        featureVisible = entry.isIntersecting && entry.intersectionRatio >= 0.2;
+        scheduleFeature();
+      },
+      { threshold: 0.2 },
+    ).observe(featureStage);
+  } else {
+    featureVisible = true;
+  }
+  addEventListener("pagehide", () => clearTimeout(featureTimer));
+  addEventListener("pageshow", scheduleFeature);
+  addEventListener("hashchange", scheduleFeature);
   const motionButton = document.querySelector(".motion-toggle");
   function syncMotion() {
     const still = paused || reduced.matches;
     root.dataset.motion = still ? "still" : "full";
+    if (still)
+      featuredCards.forEach((card) => card.classList.remove("is-departing"));
     motionButton.setAttribute("aria-pressed", String(still));
     motionButton.setAttribute(
       "aria-label",
@@ -117,6 +170,7 @@
         : "Pause animations";
     motionButton.textContent = still ? "▷" : "Ⅱ";
     motionButton.disabled = reduced.matches;
+    scheduleFeature();
   }
   motionButton.addEventListener("click", () => {
     paused = !paused;
@@ -125,6 +179,7 @@
   reduced.addEventListener("change", syncMotion);
   syncMotion();
   document.addEventListener("visibilitychange", () => {
+    scheduleFeature();
     document.querySelector(".ticker__track").style.animationPlayState =
       document.hidden ? "paused" : "";
   });

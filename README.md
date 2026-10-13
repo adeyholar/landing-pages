@@ -162,13 +162,16 @@ showcase and project metadata.
 7. Deploy the project with `landing-pages/my-product` as **Root Directory**
    and the Vercel project name `my-product-lndev`. Keep its links consistent
    in this README, the JSON-LD and the `<noscript>` fallback. If it joins the three featured
-   projects, update the hero's selectors and initial preview in `www/index.html`.
+   projects, update the hero's three cards in `www/index.html`.
 
 ## Showcase site
 
 `www/` presents all eight projects in a filterable gallery with an alternative
-index view. A three-project picker changes the featured hero preview; each
-project includes source links and a **Behind the design** panel. The site uses
+index view. Three featured cards rotate automatically every five seconds with
+a smooth stacked-card transition. Rotation pauses on hover, keyboard focus,
+while offscreen or in a hidden tab, and when animations are paused or reduced
+motion is requested. Each project includes source links and a **Behind the
+design** panel. The site uses
 local typography, light and dark themes, an infinite ticker, scroll reveals
 and a motion control that respects the system's reduced-motion preference.
 The theme preference is stored in the browser. A static project list remains
