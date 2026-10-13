@@ -41,7 +41,7 @@ export function SiteFooter() {
             <div className="hidden shrink-0 bg-cream p-2.5 sm:block">
               <Image
                 src={qr}
-                alt="QR code to the App Store"
+                alt="QR code to the source code on GitHub"
                 width={92}
                 height={92}
                 unoptimized

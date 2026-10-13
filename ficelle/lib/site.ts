@@ -4,10 +4,10 @@ export const site = {
   description:
     "Ficelle gets your gifts across Bellmere, Oregon, and 15 miles around: handed over by a vetted courier, or left with a neighborhood shop for pickup. Local stores stock their shelves in the app, too.",
   email: "contact@ficelle.example",
-  // App fictive : les liens mènent à la page neutre de l'App Store.
-  appStoreUrl: "http://lndev.me/",
-  driverAppUrl: "http://lndev.me/",
-  proUrl: "http://lndev.me/",
+  // The app is fictional: its links lead to this project's source on GitHub.
+  appStoreUrl: "https://github.com/ln-dev7/landing-pages/tree/master/ficelle",
+  driverAppUrl: "https://github.com/ln-dev7/landing-pages/tree/master/ficelle",
+  proUrl: "https://github.com/ln-dev7/landing-pages/tree/master/ficelle",
   company: {
     legalName: "Ficelle, Inc.",
     form: "A Delaware corporation",

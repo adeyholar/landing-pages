@@ -4,10 +4,10 @@ export const site = {
   description:
     "Écrin carries your gifts across Vantry, Ohio, and the surrounding area: handed over in person or held at an Écrin Point, with a note that stays sealed until the box is opened. Local makers sell their work there too.",
   email: "contact@ecrin.example",
-  // L'app est fictive : les liens pointent vers la page neutre de l'App Store.
-  appStoreUrl: "http://lndev.me/",
-  driverAppUrl: "http://lndev.me/",
-  proUrl: "http://lndev.me/",
+  // The app is fictional: its links lead to this project's source on GitHub.
+  appStoreUrl: "https://github.com/ln-dev7/landing-pages/tree/master/ecrin",
+  driverAppUrl: "https://github.com/ln-dev7/landing-pages/tree/master/ecrin",
+  proUrl: "https://github.com/ln-dev7/landing-pages/tree/master/ecrin",
   company: {
     legalName: "Écrin, Inc.",
     form: "a Delaware corporation",

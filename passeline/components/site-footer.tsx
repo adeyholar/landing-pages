@@ -151,7 +151,7 @@ export function SiteFooter({
               </a>
               <Image
                 src="/images/qr-app-store.svg"
-                alt="QR code to the App Store"
+                alt="QR code to the source code on GitHub"
                 width={76}
                 height={76}
                 className="hidden rounded-md bg-cream p-1.5 sm:block"

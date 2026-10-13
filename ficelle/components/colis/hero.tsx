@@ -109,7 +109,7 @@ export function Hero() {
                 <dd>
                   <Image
                     src="/images/qr-app-store.svg"
-                    alt="QR code linking to Ficelle on the App Store"
+                    alt="QR code linking to the Ficelle source code on GitHub"
                     width={132}
                     height={132}
                     unoptimized

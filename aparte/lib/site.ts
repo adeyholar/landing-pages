@@ -4,10 +4,10 @@ export const site = {
   description:
     "Aparté sends your gifts across Larch Harbor and up to 20 miles out: a courier hands them over in person and reads your note, or a neighborhood keeper sets them aside. The town’s shops have their own pages in the app, too.",
   email: "contact@aparte.example",
-  // App fictive : les liens mènent à la page neutre de l'App Store.
-  appStoreUrl: "http://lndev.me/",
-  driverAppUrl: "http://lndev.me/",
-  proUrl: "http://lndev.me/",
+  // The app is fictional: its links lead to this project's source on GitHub.
+  appStoreUrl: "https://github.com/ln-dev7/landing-pages/tree/master/aparte",
+  driverAppUrl: "https://github.com/ln-dev7/landing-pages/tree/master/aparte",
+  proUrl: "https://github.com/ln-dev7/landing-pages/tree/master/aparte",
   company: {
     legalName: "Aparté, Inc.",
     form: "a Delaware corporation",

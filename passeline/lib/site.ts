@@ -4,10 +4,10 @@ export const site = {
   description:
     "Passeline carries your gifts across Wrenhaven, Vermont, and up to 12 miles around, by cargo-bike courier or through a vetted neighbor down the street. The town’s own shops sell their goods, treatments and gift cards in the app too.",
   email: "contact@passeline.example",
-  // App fictive : les liens mènent à la page neutre de l'App Store.
-  appStoreUrl: "http://lndev.me/",
-  driverAppUrl: "http://lndev.me/",
-  proUrl: "http://lndev.me/",
+  // The app is fictional: its links lead to this project's source on GitHub.
+  appStoreUrl: "https://github.com/ln-dev7/landing-pages/tree/master/passeline",
+  driverAppUrl: "https://github.com/ln-dev7/landing-pages/tree/master/passeline",
+  proUrl: "https://github.com/ln-dev7/landing-pages/tree/master/passeline",
   company: {
     legalName: "Passeline, Inc.",
     form: "a Delaware corporation",

@@ -10,7 +10,9 @@ Everything is invented: the town, Écrin, Inc. (a Delaware corporation), its
 founder Samuel Kerhervé, the shops, the apps (Écrin, Écrin Driver, Écrin
 Pro), the rules, and the prices. The `.example` addresses and the App ID lead
 nowhere, and every external link (App Store, merchant portal, driver app, QR
-code) points to [lndev.me](http://lndev.me/).
+code) points to
+this project's source code on
+[GitHub](https://github.com/ln-dev7/landing-pages/tree/master/ecrin).
 
 Next.js 16, shadcn/ui (Base UI, Maia style), and Tailwind CSS v4.
 

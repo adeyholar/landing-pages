@@ -7,7 +7,8 @@ town, the shops, the founder, the company (Ficelle, Inc., a Delaware
 corporation), the identifiers (App ID, the `ficelle.example` domain), the
 rules, the prices, the FAQ and the legal documents. Every external link (App
 Store, merchant portal, driver app, QR code) points to
-[lndev.me](http://lndev.me/).
+this project's source code on
+[GitHub](https://github.com/ln-dev7/landing-pages/tree/master/ficelle).
 
 ## The product
 

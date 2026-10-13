@@ -5,7 +5,9 @@ gifts delivered by hand in Larch Harbor, Washington, a fictional town on the
 Morrow River, and up to 20 miles around. Names, places, company details,
 rules, prices, legal text and identifiers are all fictional (domain
 `aparte.example`). Every external link (App Store, merchant portal, driver
-app, QR code) points to [lndev.me](http://lndev.me/).
+app, QR code) points to
+this project's source code on
+[GitHub](https://github.com/ln-dev7/landing-pages/tree/master/aparte).
 
 ## The service at a glance
 

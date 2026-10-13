@@ -303,7 +303,7 @@ export function FinalSection() {
             <div className="shrink-0 rounded-xl bg-cream p-2.5">
               <Image
                 src="/images/qr-app-store.svg"
-                alt="QR code to the App Store"
+                alt="QR code to the source code on GitHub"
                 width={104}
                 height={104}
                 unoptimized

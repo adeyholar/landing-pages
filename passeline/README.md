@@ -5,7 +5,8 @@ carries gifts across Wrenhaven, a fictional town in Vermont on the Orrin
 River, next to Belford. Everything is fictional, from the prices and legal
 pages to the company, its founder and the shops. Every external link (App
 Store, merchant portal, driver app, QR code) points to
-[lndev.me](http://lndev.me/).
+this project's source code on
+[GitHub](https://github.com/ln-dev7/landing-pages/tree/master/passeline).
 
 ## The product in short
 
