@@ -2,7 +2,7 @@
   "use strict";
   const projects = window.PROJECTS || [];
   const root = document.documentElement;
-  const repo = "https://github.com/ln-dev7/landing-pages/tree/master/";
+  const repo = "https://github.com/ln-dev7/landing-pages/tree/master/landing-pages/";
   const ext = 'target="_blank" rel="noopener"';
   const esc = (value) =>
     String(value ?? "").replace(
@@ -162,7 +162,7 @@
   copy.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(
-        "git clone https://github.com/ln-dev7/landing-pages.git\ncd landing-pages/fallow\npnpm install\npnpm dev",
+        "git clone https://github.com/ln-dev7/landing-pages.git\ncd landing-pages\ncd landing-pages/fallow\npnpm install\npnpm dev",
       );
       copy.textContent = "Copied ✓";
       document.querySelector("#copy-status").textContent = "Commands copied";

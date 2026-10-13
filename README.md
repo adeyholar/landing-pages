@@ -11,14 +11,14 @@ Browse the collection at **[lp.lndev.me](https://lp.lndev.me)**.
 
 | Preview | Project | What it is | Stack |
 | --- | --- | --- | --- |
-| [![Fallow](www/showcase/fallow.jpg)](https://fallow-lndev.vercel.app) | **[Fallow](fallow)**<br>[live site](https://fallow-lndev.vercel.app) | An imaginary botanical world: four connected WebGL chapters, a seed that wakes and blooms, species selection and an illustrated specimen to keep | Next.js 16, Tailwind CSS 4, shadcn/ui, Three.js |
-| [![Offcut](www/showcase/offcut.jpg)](https://offcut-lndev.vercel.app) | **[Offcut](offcut)**<br>[live site](https://offcut-lndev.vercel.app) | Furniture atelier: butter yellow, plum, original wooden objects in Three.js, collection filters, a finish configurator and a local project brief | Next.js 16, Tailwind CSS 4, shadcn/ui, Three.js |
-| [![Crux](www/showcase/crux.jpg)](https://crux-lndev.vercel.app) | **[Crux](crux)**<br>[live site](https://crux-lndev.vercel.app) | Independent bouldering club: condensed italic typography, acid lime, chalk, an interactive circuit board and filterable sessions | Next.js 16, Tailwind CSS 4, shadcn/ui |
-| [![Marée](www/showcase/maree.jpg)](https://maree-lndev.vercel.app) | **[Marée](maree)**<br>[live site](https://maree-lndev.vercel.app) | Coastal bath house: sea green, linen, ocean photography, warm/cool/rest exploration and an optional breathing pause | Next.js 16, Tailwind CSS 4, shadcn/ui |
-| [![Ficelle](www/showcase/ficelle.jpg)](https://ficelle-lndev.vercel.app) | **[Ficelle](ficelle)**<br>[live site](https://ficelle-lndev.vercel.app) | Gift-delivery app, parcel direction: kraft paper, shipping labels, stamps and receipts | Next.js 16, Tailwind CSS 4, shadcn/ui |
-| [![Aparté](www/showcase/aparte.jpg)](https://aparte-lndev.vercel.app) | **[Aparté](aparte)**<br>[live site](https://aparte-lndev.vercel.app) | Gift-delivery app, editorial direction: magazine layout, Bodoni and photography | Next.js 16, Tailwind CSS 4, shadcn/ui |
-| [![Passeline](www/showcase/passeline.jpg)](https://passeline-lndev.vercel.app) | **[Passeline](passeline)**<br>[live site](https://passeline-lndev.vercel.app) | Gift-delivery app, illustrated direction: a hand-drawn SVG town that changes from morning to night | Next.js 16, Tailwind CSS 4, shadcn/ui |
-| [![Écrin](www/showcase/ecrin.jpg)](https://ecrin-lndev.vercel.app) | **[Écrin](ecrin)**<br>[live site](https://ecrin-lndev.vercel.app) | Gift-delivery app, immersive direction: a dark setting, a CSS 3D gift box and springy motion | Next.js 16, Tailwind CSS 4, shadcn/ui, Motion |
+| [![Fallow](www/showcase/fallow.jpg)](https://fallow-lndev.vercel.app) | **[Fallow](landing-pages/fallow)**<br>[live site](https://fallow-lndev.vercel.app) | An imaginary botanical world: four connected WebGL chapters, a seed that wakes and blooms, species selection and an illustrated specimen to keep | Next.js 16, Tailwind CSS 4, shadcn/ui, Three.js |
+| [![Offcut](www/showcase/offcut.jpg)](https://offcut-lndev.vercel.app) | **[Offcut](landing-pages/offcut)**<br>[live site](https://offcut-lndev.vercel.app) | Furniture atelier: butter yellow, plum, original wooden objects in Three.js, collection filters, a finish configurator and a local project brief | Next.js 16, Tailwind CSS 4, shadcn/ui, Three.js |
+| [![Crux](www/showcase/crux.jpg)](https://crux-lndev.vercel.app) | **[Crux](landing-pages/crux)**<br>[live site](https://crux-lndev.vercel.app) | Independent bouldering club: condensed italic typography, acid lime, chalk, an interactive circuit board and filterable sessions | Next.js 16, Tailwind CSS 4, shadcn/ui |
+| [![Marée](www/showcase/maree.jpg)](https://maree-lndev.vercel.app) | **[Marée](landing-pages/maree)**<br>[live site](https://maree-lndev.vercel.app) | Coastal bath house: sea green, linen, ocean photography, warm/cool/rest exploration and an optional breathing pause | Next.js 16, Tailwind CSS 4, shadcn/ui |
+| [![Ficelle](www/showcase/ficelle.jpg)](https://ficelle-lndev.vercel.app) | **[Ficelle](landing-pages/ficelle)**<br>[live site](https://ficelle-lndev.vercel.app) | Gift-delivery app, parcel direction: kraft paper, shipping labels, stamps and receipts | Next.js 16, Tailwind CSS 4, shadcn/ui |
+| [![Aparté](www/showcase/aparte.jpg)](https://aparte-lndev.vercel.app) | **[Aparté](landing-pages/aparte)**<br>[live site](https://aparte-lndev.vercel.app) | Gift-delivery app, editorial direction: magazine layout, Bodoni and photography | Next.js 16, Tailwind CSS 4, shadcn/ui |
+| [![Passeline](www/showcase/passeline.jpg)](https://passeline-lndev.vercel.app) | **[Passeline](landing-pages/passeline)**<br>[live site](https://passeline-lndev.vercel.app) | Gift-delivery app, illustrated direction: a hand-drawn SVG town that changes from morning to night | Next.js 16, Tailwind CSS 4, shadcn/ui |
+| [![Écrin](www/showcase/ecrin.jpg)](https://ecrin-lndev.vercel.app) | **[Écrin](landing-pages/ecrin)**<br>[live site](https://ecrin-lndev.vercel.app) | Gift-delivery app, immersive direction: a dark setting, a CSS 3D gift box and springy motion | Next.js 16, Tailwind CSS 4, shadcn/ui, Motion |
 
 Every preview links to its live demo at `https://[name]-lndev.vercel.app`,
 using the lowercase, unaccented folder name (for example,
@@ -87,8 +87,15 @@ product rules, art direction and files.
 
 ```text
 landing-pages/
-├── <project>/        one standalone project per landing page
-│                     (own package.json, lockfile and README)
+├── landing-pages/    standalone landing-page projects
+│   ├── aparte/
+│   ├── crux/
+│   ├── ecrin/
+│   ├── fallow/
+│   ├── ficelle/
+│   ├── maree/
+│   ├── offcut/
+│   └── passeline/
 ├── www/              the collection showcase: static HTML, CSS and JS
 │   ├── projects.js   project records used by the gallery and index
 │   ├── showcase/     framed 1600 × 900 preview images (.jpg)
@@ -99,26 +106,32 @@ landing-pages/
 └── README.md
 ```
 
-Projects share no build configuration at the root: each folder installs,
-builds and deploys on its own, with whatever stack it needs.
+Each project in `landing-pages/` has its own `package.json`, lockfile and
+README. Projects share no build configuration at the repository root: each
+installs, builds and deploys independently.
 
 ## Run a project
 
 Each project's README lists its requirements, commands and environment
-variables. For the current Next.js projects, use pnpm and Node 20.9 or newer:
+variables. From the repository root, use pnpm and Node 20.9 or newer:
 
 ```bash
-cd fallow        # or any project folder
+cd landing-pages/fallow        # or another folder in landing-pages/
 pnpm install
 pnpm dev
 ```
 
 ## Deploy
 
-Deploy each folder as its own site. On Vercel, import this repository once per
-project and set **Root Directory** to the project's folder. Use the Next.js
-preset for the eight landing pages and the Other preset for the buildless
-`www/` showcase.
+Deploy each project as its own site. On Vercel, import this repository once
+per project and set **Root Directory** to `landing-pages/[name]` (for example,
+`landing-pages/fallow` or `landing-pages/crux`). Use the Next.js preset for
+all eight landing pages. The buildless showcase uses the Other preset and
+**Root Directory** `www`.
+
+For an existing Vercel project created before this folder layout, change its
+**Root Directory** from `[name]` to `landing-pages/[name]` before deploying
+this revision. The public domains do not change.
 
 For Crux, Marée, Offcut and Fallow, set `NEXT_PUBLIC_SITE_URL` to the actual
 public origin for sitemap and absolute metadata URLs; see each project's
@@ -129,8 +142,8 @@ showcase and project metadata.
 ## Add a landing page
 
 1. Create a folder named after the project (lowercase, no spaces, for example
-   `my-product/`). It must be self-contained, with its own dependencies,
-   lockfile and `.gitignore`.
+   `landing-pages/my-product/`). It must be self-contained, with its own
+   dependencies, lockfile and `.gitignore`.
 2. Write its `README.md`: what it is, art direction, stack, how to run it,
    environment variables, and anything fictional or placeholder.
 3. Add a real homepage capture to `www/showcase/my-product.jpg`, 1600 × 900.
@@ -142,13 +155,13 @@ showcase and project metadata.
    Choose its `group` (`immersive`, `editorial` or `playful`), and provide its
    copy, typography, palette, stack and image. Use a title-case display name
    and set `url` to `https://my-product-lndev.vercel.app`. Set `source` only
-   when overriding the default GitHub folder.
+   when overriding the default GitHub folder, `landing-pages/[slug]`.
 6. Update the static JSON-LD list, `<noscript>` fallback, visible counts and
    filter counts in `www/index.html`. Add the preview to `www/sitemap.xml`.
    These are maintained separately from the JavaScript data.
-7. Deploy the project with its folder as **Root Directory** and the Vercel
-   project name `my-product-lndev`. Keep its links consistent in this README,
-   the JSON-LD and the `<noscript>` fallback. If it joins the three featured
+7. Deploy the project with `landing-pages/my-product` as **Root Directory**
+   and the Vercel project name `my-product-lndev`. Keep its links consistent
+   in this README, the JSON-LD and the `<noscript>` fallback. If it joins the three featured
    projects, update the hero's selectors and initial preview in `www/index.html`.
 
 ## Showcase site
