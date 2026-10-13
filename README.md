@@ -8,10 +8,10 @@ live deployment.
 
 | Preview | Project | What it is | Stack |
 | --- | --- | --- | --- |
-| [![Ficelle](showcase/ficelle.jpg)](https://ficelle-lndev.vercel.app) | **[Ficelle](ficelle)**<br>[live site](https://ficelle-lndev.vercel.app) | Gift-delivery app, "gift parcel" direction: kraft paper, shipping labels, stamps and receipts | Next.js 16, Tailwind CSS v4, shadcn/ui |
-| [![Passeline](showcase/passeline.jpg)](https://passeline-lndev.vercel.app) | **[Passeline](passeline)**<br>[live site](https://passeline-lndev.vercel.app) | Gift-delivery app, illustrated direction: hand-drawn SVG town, from morning to night | Next.js 16, Tailwind CSS v4, shadcn/ui |
-| [![Aparté](showcase/aparte.jpg)](https://aparte-lndev.vercel.app) | **[Aparté](aparte)**<br>[live site](https://aparte-lndev.vercel.app) | Gift-delivery app, editorial direction: magazine layout, Bodoni, photos | Next.js 16, Tailwind CSS v4, shadcn/ui |
-| [![Écrin](showcase/ecrin.jpg)](https://ecrin-lndev.vercel.app) | **[Écrin](ecrin)**<br>[live site](https://ecrin-lndev.vercel.app) | Gift-delivery app, immersive direction: dark, CSS 3D gift box, springy motion | Next.js 16, Tailwind CSS v4, shadcn/ui, Motion |
+| [![Ficelle](www/showcase/ficelle.jpg)](https://ficelle-lndev.vercel.app) | **[Ficelle](ficelle)**<br>[live site](https://ficelle-lndev.vercel.app) | Gift-delivery app, "gift parcel" direction: kraft paper, shipping labels, stamps and receipts | Next.js 16, Tailwind CSS v4, shadcn/ui |
+| [![Passeline](www/showcase/passeline.jpg)](https://passeline-lndev.vercel.app) | **[Passeline](passeline)**<br>[live site](https://passeline-lndev.vercel.app) | Gift-delivery app, illustrated direction: hand-drawn SVG town, from morning to night | Next.js 16, Tailwind CSS v4, shadcn/ui |
+| [![Aparté](www/showcase/aparte.jpg)](https://aparte-lndev.vercel.app) | **[Aparté](aparte)**<br>[live site](https://aparte-lndev.vercel.app) | Gift-delivery app, editorial direction: magazine layout, Bodoni, photos | Next.js 16, Tailwind CSS v4, shadcn/ui |
+| [![Écrin](www/showcase/ecrin.jpg)](https://ecrin-lndev.vercel.app) | **[Écrin](ecrin)**<br>[live site](https://ecrin-lndev.vercel.app) | Gift-delivery app, immersive direction: dark, CSS 3D gift box, springy motion | Next.js 16, Tailwind CSS v4, shadcn/ui, Motion |
 
 Click a preview to open the live site.
 
@@ -36,7 +36,10 @@ README covers its product rules, art direction and files.
 ```
 landing-pages/
 ├── <project>/    one standalone project per landing page (own package.json and README)
-├── showcase/     one preview image (.jpg) per project
+├── www/          the showcase site presenting the collection (static HTML, CSS, JS)
+│   ├── projects.js   the list of projects shown on the site
+│   ├── showcase/     one preview image (.jpg) per project
+│   └── media/        logos and favicon
 ├── LICENSE
 └── README.md
 ```
@@ -68,16 +71,31 @@ project and set **Root Directory** to the project's folder.
 2. Write its `README.md`: what it is, art direction, stack, how to run it,
    environment variables, and anything fictional or placeholder.
 3. Deploy it (for example on Vercel, with the project's folder as **Root
-   Directory**) and add its preview image to `showcase/`: `my-product.jpg`,
-   about 1600 px wide.
+   Directory**) and add its preview image to `www/showcase/`:
+   `my-product.jpg`, 16:9, about 1600 px wide.
 4. Add a row to the **Projects** table above, with the preview linking to the
    live site.
+5. Add an entry to `www/projects.js` (and, optionally, its logo to
+   `www/media/`). The showcase site's cards, index and counts follow.
+
+## Showcase site
+
+`www/` is a static site that presents the collection: no build step, no
+dependencies. Preview it locally with:
+
+```bash
+cd www && python3 -m http.server
+```
+
+To deploy it on Vercel, import the repository once more with **Root
+Directory** set to `www`.
 
 ## Showcase videos
 
-Showcase videos are not versioned. Keep them next to the preview images in
-`showcase/` (for example `showcase/my-product.mp4`, or `showcase/2k/` for
-higher-resolution masters): git ignores every `.mp4` in that folder.
+Showcase videos are not versioned and the showcase site does not use them.
+Keep them next to the preview images in `www/showcase/` (for example
+`www/showcase/my-product.mp4`, or `www/showcase/2k/` for higher-resolution
+masters): git and Vercel ignore every `.mp4` in that folder.
 
 ## License
 

@@ -4,4 +4,4 @@ node_modules/
 .vercel
 *.log
 # showcase videos stay local
-showcase/**/*.mp4
+www/showcase/**/*.mp4
