@@ -8,8 +8,9 @@ export function journeyAt(progress: number) {
   const p = clamp(progress, 0, 3);
   return {
     p,
-    unfold: smooth(p),
-    passage: smooth(p - 1),
+    unfold: smooth((p - 0.12) / 0.76),
+    depart: smooth((p - 1.12) / 0.56),
+    passage: smooth((p - 1.12) / 0.88),
     alignment: smooth(p - 2),
   };
 }

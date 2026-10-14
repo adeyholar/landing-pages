@@ -280,7 +280,11 @@ export function Observatory() {
               {String(percent).padStart(3, "0")}
               <small> / 100</small>
             </span>
-            <Progress value={percent} aria-label="Observatory preparation" />
+            <Progress
+              value={percent}
+              locale="en-US"
+              aria-label="Observatory preparation"
+            />
           </div>
           {slow && (
             <Button

@@ -105,6 +105,7 @@ export function Scene(props: Props) {
       renderer.setSize(element!.clientWidth, element!.clientHeight);
       renderer.toneMapping = T.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1;
+      renderer.transmissionResolutionScale = mobile ? 0.65 : 1;
       renderer.domElement.style.opacity = "0";
       element!.appendChild(renderer.domElement);
       callbacks.push(() => renderer.domElement.remove());
@@ -181,15 +182,15 @@ export function Scene(props: Props) {
       );
       const glass = own(
         new T.MeshPhysicalMaterial({
-          color: 0xe1eeee,
+          color: 0xf5fcff,
           metalness: 0,
-          roughness: 0.055,
+          roughness: 0.025,
           transmission: 0.94,
           thickness: 0.24,
-          ior: 1.48,
+          ior: 1.46,
           attenuationColor: 0x8cbbbd,
-          attenuationDistance: 2.4,
-          clearcoat: 1,
+          attenuationDistance: 8,
+          clearcoat: 0.2,
           clearcoatRoughness: 0.07,
           depthWrite: false,
         }),
@@ -288,48 +289,131 @@ export function Scene(props: Props) {
         rings.push(group);
       }
       const lens = new T.Mesh(
-        own(new T.SphereGeometry(2.55, mobile ? 64 : 96, mobile ? 32 : 48)),
+        own(new T.SphereGeometry(2.61, mobile ? 64 : 96, mobile ? 32 : 48)),
         glass,
       );
       // A convex optical body catches reflections along its rounded perimeter.
       lens.scale.z = 0.047;
-      instrument.add(lens);
+      rings[0].add(lens);
+      lens.position.z = 0.06;
       const iris = new T.Group();
-      instrument.add(iris);
-      const bladeShape = new T.Shape();
-      bladeShape.moveTo(0.35, -0.18);
-      bladeShape.quadraticCurveTo(1.2, -0.6, 2.36, -0.15);
-      bladeShape.lineTo(2.38, 0.7);
-      bladeShape.quadraticCurveTo(0.65, 0.38, 0.35, -0.18);
-      const bladeGeo = own(
-        new T.ExtrudeGeometry(bladeShape, {
-          depth: 0.035,
+      rings[1].add(iris);
+      // A turned retaining plate covers each blade's outer edge. The curved
+      // overlapping blades have no free-floating tips or disconnected mounts.
+      const plateShape = new T.Shape();
+      plateShape.absarc(0, 0, 2.7, 0, Math.PI * 2, false);
+      const plateHole = new T.Path();
+      plateHole.absarc(0, 0, 2.34, 0, Math.PI * 2, true);
+      plateShape.holes.push(plateHole);
+      const plateGeo = own(
+        new T.ExtrudeGeometry(plateShape, {
+          depth: 0.085,
           bevelEnabled: true,
-          bevelSegments: 4,
+          bevelSegments: 3,
+          bevelSize: 0.016,
+          bevelThickness: 0.012,
+          curveSegments: 96,
           steps: 1,
-          bevelSize: 0.012,
-          bevelThickness: 0.01,
-          curveSegments: 28,
         }),
       );
-      const blades: Three.Mesh[] = [];
+      const plate = new T.Mesh(plateGeo, darkMetal);
+      plate.position.z = 0.13;
+      iris.add(plate);
+      const bladeShape = new T.Shape();
+      const polar = (r: number, a: number) =>
+        [r * Math.cos(a), r * Math.sin(a)] as const;
+      bladeShape.moveTo(...polar(2.55, -0.14));
+      bladeShape.absarc(0, 0, 2.55, -0.14, 0.9, false);
+      bladeShape.quadraticCurveTo(...polar(1.7, 1.03), ...polar(0.78, 0.9));
+      bladeShape.absarc(0, 0, 0.78, 0.9, 0.16, true);
+      bladeShape.quadraticCurveTo(...polar(1.68, -0.1), ...polar(2.55, -0.14));
+      const bladeGeo = own(
+        new T.ExtrudeGeometry(bladeShape, {
+          depth: 0.012,
+          bevelEnabled: true,
+          bevelSegments: 3,
+          steps: 1,
+          bevelSize: 0.006,
+          bevelThickness: 0.004,
+          curveSegments: 48,
+        }),
+      );
+      const bladeMaterials = [0x41454b, 0x4a4e53, 0x383c43].map((color) =>
+        own(
+          new T.MeshStandardMaterial({
+            color,
+            metalness: 0.92,
+            roughness: 0.34,
+          }),
+        ),
+      );
+      const screwGeo = own(new T.CylinderGeometry(0.052, 0.052, 0.045, 20));
+      screwGeo.rotateX(Math.PI / 2);
+      const screwSlotGeo = own(new T.BoxGeometry(0.066, 0.008, 0.003));
       for (let i = 0; i < 9; i++) {
-        const blade = new T.Mesh(bladeGeo, i % 3 ? darkMetal : copper);
-        blade.rotation.z = (i * Math.PI * 2) / 9;
-        blade.position.z = i * 0.013;
+        const angle = (i * Math.PI * 2) / 9;
+        const blade = new T.Mesh(bladeGeo, bladeMaterials[i % 3]);
+        blade.rotation.z = angle;
+        blade.position.z = 0.04 + i * 0.006;
         iris.add(blade);
-        blades.push(blade);
+        const screw = new T.Mesh(screwGeo, paleMetal);
+        screw.position.set(
+          Math.cos(angle) * 2.52,
+          Math.sin(angle) * 2.52,
+          0.25,
+        );
+        const slot = new T.Mesh(screwSlotGeo, darkMetal);
+        slot.position.z = 0.024;
+        slot.rotation.z = angle + 0.4;
+        screw.add(slot);
+        iris.add(screw);
       }
-      const axisGeo = own(new T.CylinderGeometry(0.018, 0.018, 6.8, 16));
+      // Fixed collars stay attached to the rings; telescopic rails join them.
       const axles = new T.Group();
       instrument.add(axles);
+      const rails: Three.Mesh[] = [];
+      const axisGeo = own(new T.CylinderGeometry(0.024, 0.024, 1, 20));
+      const collarGeo = own(new T.SphereGeometry(0.083, 20, 12));
+      const attachment = new T.Vector3(),
+        railEnd = new T.Vector3();
+      const direction = new T.Vector3(),
+        yAxis = new T.Vector3(0, 1, 0);
       for (let i = 0; i < 3; i++) {
-        const bar = new T.Mesh(axisGeo, copper);
-        bar.rotation.x = Math.PI / 2;
         const a = (i * Math.PI * 2) / 3;
-        bar.position.set(Math.cos(a) * 2.72, Math.sin(a) * 2.72, 0);
+        const bar = new T.Mesh(axisGeo, copper);
         axles.add(bar);
+        rails.push(bar);
+        rings.forEach((ring) => {
+          const collar = new T.Mesh(collarGeo, paleMetal);
+          collar.position.set(Math.cos(a) * 2.72, Math.sin(a) * 2.72, 0);
+          ring.add(collar);
+        });
       }
+      const assemblyMaterials = new Map<Three.Material, Three.Material>();
+      assembly.traverse((object) => {
+        if (!(object instanceof T.Mesh) || object === corona) return;
+        const material = object.material as Three.Material;
+        let local = assemblyMaterials.get(material);
+        if (!local) {
+          local = own(material.clone());
+          local.transparent = true;
+          assemblyMaterials.set(material, local);
+        }
+        object.material = local;
+      });
+      const lensMaterial = lens.material as Three.MeshPhysicalMaterial;
+      const irisMaterials = new Set<Three.Material>();
+      iris.traverse((object) => {
+        if (!(object instanceof T.Mesh)) return;
+        const material = own((object.material as Three.Material).clone());
+        object.material = material;
+        irisMaterials.add(material);
+      });
+      const railMaterial = own(copper.clone());
+      railMaterial.transparent = true;
+      rails.forEach((rail) => {
+        rail.material = railMaterial;
+      });
       if (!(await stage(46, "Measuring the space between"))) return;
       const starCount = mobile ? 1050 : 2350;
       const starGeo = own(new T.BufferGeometry()),
@@ -346,8 +430,22 @@ export function Scene(props: Props) {
       }
       starGeo.setAttribute("position", new T.BufferAttribute(starPositions, 3));
       starGeo.setAttribute("color", new T.BufferAttribute(starColors, 3));
+      const starCanvas = document.createElement("canvas");
+      starCanvas.width = starCanvas.height = 32;
+      const starContext = starCanvas.getContext("2d");
+      if (!starContext) throw new Error("Star texture unavailable");
+      const starGlow = starContext.createRadialGradient(16, 16, 0, 16, 16, 16);
+      starGlow.addColorStop(0, "rgba(255,255,255,1)");
+      starGlow.addColorStop(0.2, "rgba(255,255,255,0.9)");
+      starGlow.addColorStop(0.5, "rgba(255,255,255,0.25)");
+      starGlow.addColorStop(1, "rgba(255,255,255,0)");
+      starContext.fillStyle = starGlow;
+      starContext.fillRect(0, 0, 32, 32);
+      const starTexture = own(new T.CanvasTexture(starCanvas));
       const starMat = own(
         new T.PointsMaterial({
+          map: starTexture,
+          alphaTest: 0.005,
           size: mobile ? 0.07 : 0.065,
           vertexColors: true,
           transparent: true,
@@ -367,6 +465,7 @@ export function Scene(props: Props) {
       );
       const gateTrim = own(new T.TorusGeometry(4.24, 0.012, 10, 160));
       const gates: Three.Group[] = [];
+      const gateMaterials: Three.Material[][] = [];
       for (let i = 0; i < 8; i++) {
         const gate = new T.Group();
         gate.position.z = -8 - i * 8;
@@ -388,6 +487,15 @@ export function Scene(props: Props) {
           spokes.setMatrixAt(n, dummy.matrix);
         }
         gate.add(spokes);
+        const materials: Three.Material[] = [];
+        gate.traverse((object) => {
+          if (!(object instanceof T.Mesh)) return;
+          const material = own((object.material as Three.Material).clone());
+          material.transparent = true;
+          object.material = material;
+          materials.push(material);
+        });
+        gateMaterials.push(materials);
         passage.add(gate);
         gates.push(gate);
       }
@@ -398,6 +506,28 @@ export function Scene(props: Props) {
       own(alignmentCorona.material);
       alignmentCorona.scale.setScalar(0.8);
       alignment.add(alignmentCorona);
+      const solarMat = own(
+        new T.ShaderMaterial({
+          transparent: true,
+          depthWrite: false,
+          uniforms: { uOpacity: { value: 0 } },
+          vertexShader: `varying vec2 vUv; void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+          fragmentShader: `varying vec2 vUv; uniform float uOpacity;
+          void main(){
+            float r=length((vUv-.5)*2.);
+            if(r>1.) discard;
+            float limb=sqrt(max(0.,1.-r*r));
+            float grain=sin(vUv.x*831.)*sin(vUv.y*723.)*.012;
+            vec3 color=mix(vec3(.8,.30,.075),vec3(1.,.84,.53),.32+.68*limb)+grain;
+            gl_FragColor=vec4(color,uOpacity);
+            #include <tonemapping_fragment>
+            #include <colorspace_fragment>
+          }`,
+        }),
+      );
+      const sun = new T.Mesh(own(new T.PlaneGeometry(3.6, 3.6)), solarMat);
+      sun.position.z = -0.08;
+      alignment.add(sun);
       const finalMoon = new T.Mesh(sphere, moonMat);
       finalMoon.scale.setScalar(0.8);
       finalMoon.position.z = 0.35;
@@ -428,6 +558,20 @@ export function Scene(props: Props) {
       );
       const constellation = new T.Line(constellationGeo, constellationMat);
       alignment.add(constellation);
+      const alignmentMaterials = new Set<Three.Material>();
+      alignment.traverse((object) => {
+        if (
+          !(object instanceof T.Mesh) ||
+          object === alignmentCorona ||
+          object === sun ||
+          object === finalMoon
+        )
+          return;
+        const material = own((object.material as Three.Material).clone());
+        material.transparent = true;
+        object.material = material;
+        alignmentMaterials.add(material);
+      });
       if (!(await stage(68, "Waking the distant stars"))) return;
       let time = 0,
         last = 0,
@@ -479,11 +623,11 @@ export function Scene(props: Props) {
         my = paused ? 0 : my + (py - my) * ease;
         const j = journeyAt(progress),
           i = Math.min(2, Math.floor(j.p)),
-          f = T.MathUtils.smoothstep(j.p - i, 0, 1),
+          f = i === 0 ? j.unfold : i === 1 ? j.passage : j.alignment,
           narrow = element!.clientWidth < 700;
         cam.copy(cameras[i]).lerp(cameras[i + 1], f);
         focus.copy(targets[i]).lerp(targets[i + 1], f);
-        if (narrow) cam.z += (1 - j.passage) * 5 + j.alignment * 7;
+        if (narrow) cam.z += 5;
         cam.x += mx * 0.22;
         cam.y += my * 0.14;
         camera.clearViewOffset();
@@ -493,7 +637,9 @@ export function Scene(props: Props) {
         target
           .set(j.p < 1 ? 0.75 * (1 - j.unfold) : 0, 0, -25 * j.passage)
           .project(camera);
-        const anchorX = narrow ? 0 : 0.32 - j.passage * 0.16;
+        const anchorX = narrow
+          ? 0
+          : 0.36 - j.passage * 0.08 + j.alignment * 0.12;
         const alignmentAnchor =
           1 -
           (Math.min(element!.clientHeight * 0.65, 410) * 2) /
@@ -509,16 +655,26 @@ export function Scene(props: Props) {
           element!.clientWidth,
           element!.clientHeight,
         );
+        assembly.scale.setScalar(1 - j.unfold * (narrow ? 0.48 : 0.18));
+        assemblyMaterials.forEach((material) => {
+          material.opacity = 1 - j.depart;
+          material.depthWrite =
+            material !== lensMaterial && material.opacity > 0.995;
+        });
+        lensMaterial.opacity =
+          T.MathUtils.smoothstep(j.unfold, 0.35, 0.8) *
+          (1 - T.MathUtils.smoothstep(j.p, 1.08, 1.35));
         assembly.position.x = 0.75 * (1 - j.unfold);
         assembly.rotation.y = -j.unfold * 0.45;
         assembly.rotation.x = j.unfold * 0.24;
-        assembly.visible = j.p < 2.2;
+        assembly.visible = j.depart < 1;
         moon.position.x = -j.unfold * 4.2;
         moon.position.y = j.unfold * 1.1;
         moon.scale.setScalar(1 - j.unfold * 0.68);
         moon.rotation.y = time * 0.018;
         coronaMat.uniforms.uTime.value = time;
-        coronaMat.uniforms.uStrength.value = 1 - j.unfold * 0.88;
+        coronaMat.uniforms.uStrength.value =
+          (1 - j.unfold * 0.88) * (1 - j.depart);
         corona.scale.setScalar(1 - j.unfold * 0.68);
         corona.position.x = moon.position.x;
         corona.position.y = moon.position.y;
@@ -526,22 +682,57 @@ export function Scene(props: Props) {
           ring.position.z = (n - 1) * (0.16 + j.unfold * 2.9);
           ring.rotation.x = (1 - j.unfold) * (0.7 + n * 0.38);
           ring.rotation.y = (1 - j.unfold) * (0.22 + n * 0.28);
-          ring.rotation.z = time * 0.018 * (n % 2 ? -1 : 1);
+          ring.rotation.z = time * 0.012 * (n % 2 ? -1 : 1) * (1 - j.unfold);
         });
-        iris.scale.setScalar(0.82 + j.unfold * 0.18);
-        iris.visible = j.unfold > 0.03;
-        lens.visible = j.unfold > 0.05;
-        lens.position.z = -j.unfold * 2.8;
-        blades.forEach((blade, n) => {
-          blade.rotation.z = (n * Math.PI * 2) / 9 + j.unfold * 0.26;
+        iris.visible = j.unfold > 0.15;
+        irisMaterials.forEach((material) => {
+          material.opacity =
+            T.MathUtils.smoothstep(j.unfold, 0.35, 0.85) * (1 - j.depart);
+          material.depthWrite = material.opacity > 0.995;
         });
-        axles.scale.z = Math.max(0.001, j.unfold);
-        axles.visible = j.unfold > 0.05;
+        lens.visible = lensMaterial.opacity > 0.001;
+        rings.forEach((ring) => ring.updateMatrix());
+        rails.forEach((rail, n) => {
+          const a = (n * Math.PI * 2) / 3;
+          attachment
+            .set(Math.cos(a) * 2.72, Math.sin(a) * 2.72, 0)
+            .applyMatrix4(rings[0].matrix);
+          railEnd
+            .set(Math.cos(a) * 2.72, Math.sin(a) * 2.72, 0)
+            .applyMatrix4(rings[2].matrix);
+          direction.subVectors(railEnd, attachment);
+          rail.position.copy(attachment).add(railEnd).multiplyScalar(0.5);
+          rail.scale.y = direction.length();
+          rail.quaternion.setFromUnitVectors(yAxis, direction.normalize());
+        });
+        railMaterial.opacity =
+          T.MathUtils.smoothstep(j.unfold, 0.65, 0.95) * (1 - j.depart);
+        railMaterial.depthWrite = railMaterial.opacity > 0.995;
+        axles.visible = railMaterial.opacity > 0.001;
         passage.visible = j.p > 0.2;
         gates.forEach((gate, n) => {
           gate.rotation.z = n * 0.13 + time * 0.007 * (n % 2 ? -1 : 1);
+          const distance = camera.position.z - gate.position.z;
+          const visibility =
+            T.MathUtils.smoothstep(distance, 2.8, 7) *
+            T.MathUtils.smoothstep(j.p, 1.12, 1.85) *
+            (1 - j.alignment * 0.82);
+          gate.visible = visibility > 0.001;
+          gateMaterials[n].forEach((material) => {
+            material.opacity = visibility;
+            material.depthWrite = visibility > 0.995;
+          });
         });
-        alignment.visible = j.p > 1.25;
+        const alignmentPresence = T.MathUtils.smoothstep(j.p, 1.25, 1.82);
+        alignment.visible = alignmentPresence > 0.001;
+        alignmentMaterials.forEach((material) => {
+          material.opacity = alignmentPresence;
+          material.depthWrite = alignmentPresence > 0.995;
+        });
+        solarMat.uniforms.uOpacity.value = alignmentPresence;
+        alignment.scale.setScalar(
+          narrow ? 0.6 - j.alignment * 0.12 : 1 - j.alignment * 0.16,
+        );
         alignment.rotation.z = j.alignment * 0.05;
         const offset = (alignmentValue - 50) / 50;
         finalMoon.position.x = offset * 1.9;
@@ -551,7 +742,8 @@ export function Scene(props: Props) {
         ).uniforms.uTime.value = time;
         (
           alignmentCorona.material as Three.ShaderMaterial
-        ).uniforms.uStrength.value = 0.6 + j.alignment * 0.4;
+        ).uniforms.uStrength.value =
+          (0.6 + j.alignment * 0.4) * alignmentPresence;
         orbit.rotation.y = offset * 0.6 + Math.sin(time * 0.12) * 0.07;
         satellite.position.set(
           Math.cos(alignmentValue * 0.055) * 3.2,
