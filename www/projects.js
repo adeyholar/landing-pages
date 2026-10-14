@@ -1,39 +1,6 @@
 /* Live previews follow https://[slug]-lndev.vercel.app. */
 window.PROJECTS = [
   {
-    slug: "umbra",
-    image: "showcase/umbra.jpg",
-    name: "Umbra",
-    url: "https://umbra-lndev.vercel.app",
-    category: "Interactive eclipse observatory",
-    direction: "Celestial mechanics",
-    group: "immersive",
-    description:
-      "Step into an imaginary observatory. Unfold an optical instrument, cross a field of stars and compose a celestial alignment of your own.",
-    short: "A little darkness. A different way to see.",
-    type: "Space Grotesk, Geist Mono",
-    signature:
-      "An eclipse, an optical instrument and a journey through the stars",
-    colors: ["#080D16", "#EDE6D9", "#D8A579", "#AABDD0"],
-    stack: ["Next.js 16", "Tailwind CSS 4", "shadcn/ui", "Three.js"],
-  },
-  {
-    slug: "aero",
-    image: "showcase/aero.jpg",
-    name: "Aéro",
-    url: "https://aero-lndev.vercel.app",
-    category: "Paper flight bureau",
-    direction: "Playful aerodynamics",
-    group: "immersive",
-    description:
-      "A sheet of paper becomes a small adventure. Follow its folds, fly through sculptural air currents and send your own paper plane into the blue.",
-    short: "A little paper. A lot of elsewhere.",
-    type: "Space Grotesk, Manrope",
-    signature: "One sheet folds, takes off and follows your flight settings",
-    colors: ["#F4F1E7", "#2046ED", "#E84B32", "#EFD762"],
-    stack: ["Next.js 16", "Tailwind CSS 4", "shadcn/ui", "Three.js"],
-  },
-  {
     slug: "fallow",
     image: "showcase/fallow.jpg",
     name: "Fallow",
@@ -100,6 +67,22 @@ window.PROJECTS = [
     short: "A quieter corner of the internet.",
   },
   {
+    slug: "aero",
+    image: "showcase/aero.jpg",
+    name: "Aéro",
+    url: "https://aero-lndev.vercel.app",
+    category: "Paper flight bureau",
+    direction: "Playful aerodynamics",
+    group: "immersive",
+    description:
+      "A sheet of paper becomes a small adventure. Follow its folds, fly through sculptural air currents and send your own paper plane into the blue.",
+    short: "A little paper. A lot of elsewhere.",
+    type: "Space Grotesk, Manrope",
+    signature: "One sheet folds, takes off and follows your flight settings",
+    colors: ["#F4F1E7", "#2046ED", "#E84B32", "#EFD762"],
+    stack: ["Next.js 16", "Tailwind CSS 4", "shadcn/ui", "Three.js"],
+  },
+  {
     slug: "passeline",
     image: "showcase/passeline.jpg",
     logo: "media/passeline-logo.svg",
@@ -132,6 +115,23 @@ window.PROJECTS = [
     stack: ["Next.js 16", "Tailwind CSS v4", "shadcn/ui"],
     group: "playful",
     short: "A whole identity, wrapped in kraft paper.",
+  },
+  {
+    slug: "umbra",
+    image: "showcase/umbra.jpg",
+    name: "Umbra",
+    url: "https://umbra-lndev.vercel.app",
+    category: "Interactive eclipse observatory",
+    direction: "Celestial mechanics",
+    group: "immersive",
+    description:
+      "Step into an imaginary observatory. Unfold an optical instrument, cross a field of stars and compose a celestial alignment of your own.",
+    short: "A little darkness. A different way to see.",
+    type: "Space Grotesk, Geist Mono",
+    signature:
+      "An eclipse, an optical instrument and a journey through the stars",
+    colors: ["#080D16", "#EDE6D9", "#D8A579", "#AABDD0"],
+    stack: ["Next.js 16", "Tailwind CSS 4", "shadcn/ui", "Three.js"],
   },
   {
     slug: "aparte",

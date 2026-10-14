@@ -5,3 +5,4 @@ node_modules/
 *.log
 # showcase videos stay local
 www/showcase/**/*.mp4
+www/showcase/videos/

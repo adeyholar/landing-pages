@@ -59,7 +59,7 @@
       type="font/ttf"
       crossorigin
     />
-    <link rel="preload" as="image" href="showcase/umbra.jpg" />
+    <link rel="preload" as="image" href="showcase/fallow.jpg" />
     <link rel="stylesheet" href="styles.css?v=9" />
     <script>
       try {
@@ -97,30 +97,6 @@
                   "position": 1,
                   "item": {
                     "@type": "CreativeWork",
-                    "name": "Umbra",
-                    "url": "https://umbra-lndev.vercel.app",
-                    "description": "Step into an imaginary observatory. Unfold an optical instrument, cross a field of stars and compose a celestial alignment of your own.",
-                    "image": "https://lp.lndev.me/showcase/umbra.jpg",
-                    "license": "https://opensource.org/licenses/MIT"
-                  }
-                },
-                {
-                  "@type": "ListItem",
-                  "position": 2,
-                  "item": {
-                    "@type": "CreativeWork",
-                    "name": "Aéro",
-                    "url": "https://aero-lndev.vercel.app",
-                    "description": "A sheet of paper becomes a small adventure. Follow its folds, fly through sculptural air currents and send your own paper plane into the blue.",
-                    "image": "https://lp.lndev.me/showcase/aero.jpg",
-                    "license": "https://opensource.org/licenses/MIT"
-                  }
-                },
-                {
-                  "@type": "ListItem",
-                  "position": 3,
-                  "item": {
-                    "@type": "CreativeWork",
                     "name": "Fallow",
                     "url": "https://fallow-lndev.vercel.app",
                     "description": "A small world that grows with you. Wake a seed, follow its roots and choose what it becomes across four connected, scroll-driven 3D chapters.",
@@ -130,7 +106,7 @@
                 },
                 {
                   "@type": "ListItem",
-                  "position": 4,
+                  "position": 2,
                   "item": {
                     "@type": "CreativeWork",
                     "name": "Offcut",
@@ -142,7 +118,7 @@
                 },
                 {
                   "@type": "ListItem",
-                  "position": 5,
+                  "position": 3,
                   "item": {
                     "@type": "CreativeWork",
                     "name": "Crux",
@@ -154,7 +130,7 @@
                 },
                 {
                   "@type": "ListItem",
-                  "position": 6,
+                  "position": 4,
                   "item": {
                     "@type": "CreativeWork",
                     "name": "Marée",
@@ -166,7 +142,19 @@
                 },
                 {
                   "@type": "ListItem",
-                  "position": 7,
+                  "position": 5,
+                  "item": {
+                    "@type": "CreativeWork",
+                    "name": "Aéro",
+                    "url": "https://aero-lndev.vercel.app",
+                    "description": "A sheet of paper becomes a small adventure. Follow its folds, fly through sculptural air currents and send your own paper plane into the blue.",
+                    "image": "https://lp.lndev.me/showcase/aero.jpg",
+                    "license": "https://opensource.org/licenses/MIT"
+                  }
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 6,
                   "item": {
                     "@type": "CreativeWork",
                     "name": "Passeline",
@@ -178,13 +166,25 @@
                 },
                 {
                   "@type": "ListItem",
-                  "position": 8,
+                  "position": 7,
                   "item": {
                     "@type": "CreativeWork",
                     "name": "Ficelle",
                     "url": "https://ficelle-lndev.vercel.app",
                     "description": "The whole site is a parcel being packed and opened: kraft paper with generated fibers, shipping labels, teal ink stamps, a gold ribbon and receipts. The delivery picker prints a live receipt as you choose.",
                     "image": "https://lp.lndev.me/showcase/ficelle.jpg",
+                    "license": "https://opensource.org/licenses/MIT"
+                  }
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 8,
+                  "item": {
+                    "@type": "CreativeWork",
+                    "name": "Umbra",
+                    "url": "https://umbra-lndev.vercel.app",
+                    "description": "Step into an imaginary observatory. Unfold an optical instrument, cross a field of stars and compose a celestial alignment of your own.",
+                    "image": "https://lp.lndev.me/showcase/umbra.jpg",
                     "license": "https://opensource.org/licenses/MIT"
                   }
                 },
@@ -286,52 +286,9 @@
           <span class="annotation">a different kind of starting point ↘</span>
           <a
             class="feature-card"
-            href="#umbra"
-            data-feature-position="front"
-            aria-label="Explore Umbra"
-          >
-            <img
-              src="showcase/umbra.jpg"
-              width="1600"
-              height="900"
-              alt="Umbra — interactive eclipse observatory"
-            />
-            <span class="feature-caption"
-              ><span
-                ><small>INTERACTIVE ECLIPSE OBSERVATORY</small
-                ><strong>Umbra</strong></span
-              ><span class="feature-arrow" aria-hidden="true">↗</span></span
-            >
-          </a>
-          <a
-            class="feature-card"
-            href="#aero"
-            data-feature-position="next"
-            aria-label="Explore Aéro"
-            aria-hidden="true"
-            tabindex="-1"
-            inert
-          >
-            <img
-              src="showcase/aero.jpg"
-              width="1600"
-              height="900"
-              alt="Aéro — paper flight bureau"
-            />
-            <span class="feature-caption"
-              ><span
-                ><small>PAPER FLIGHT BUREAU</small><strong>Aéro</strong></span
-              ><span class="feature-arrow" aria-hidden="true">↗</span></span
-            >
-          </a>
-          <a
-            class="feature-card"
             href="#fallow"
-            data-feature-position="back"
+            data-feature-position="front"
             aria-label="Explore Fallow"
-            aria-hidden="true"
-            tabindex="-1"
-            inert
           >
             <img
               src="showcase/fallow.jpg"
@@ -343,6 +300,49 @@
               ><span
                 ><small>INTERACTIVE BOTANICAL STORY</small
                 ><strong>Fallow</strong></span
+              ><span class="feature-arrow" aria-hidden="true">↗</span></span
+            >
+          </a>
+          <a
+            class="feature-card"
+            href="#offcut"
+            data-feature-position="next"
+            aria-label="Explore Offcut"
+            aria-hidden="true"
+            tabindex="-1"
+            inert
+          >
+            <img
+              src="showcase/offcut.jpg"
+              width="1600"
+              height="900"
+              alt="Offcut — furniture atelier"
+            />
+            <span class="feature-caption"
+              ><span
+                ><small>FURNITURE ATELIER</small><strong>Offcut</strong></span
+              ><span class="feature-arrow" aria-hidden="true">↗</span></span
+            >
+          </a>
+          <a
+            class="feature-card"
+            href="#crux"
+            data-feature-position="back"
+            aria-label="Explore Crux"
+            aria-hidden="true"
+            tabindex="-1"
+            inert
+          >
+            <img
+              src="showcase/crux.jpg"
+              width="1600"
+              height="900"
+              alt="Crux — bouldering club"
+            />
+            <span class="feature-caption"
+              ><span
+                ><small>BOULDERING CLUB</small
+                ><strong>Crux</strong></span
               ><span class="feature-arrow" aria-hidden="true">↗</span></span
             >
           </a>
@@ -419,15 +419,6 @@
         <div id="projects" class="projects">
           <noscript
             ><ul class="fallback">
-              <li id="umbra">
-                <a href="https://umbra-lndev.vercel.app">Umbra</a> — A little
-                darkness. A different way to see.
-              </li>
-              <li id="aero">
-                <a href="https://aero-lndev.vercel.app">Aéro</a> — A little
-                paper. A lot of elsewhere.
-              </li>
-
               <li id="fallow">
                 <a href="https://fallow-lndev.vercel.app">Fallow</a>
                 — A little attention. An entirely new world.
@@ -444,6 +435,10 @@
                 <a href="https://maree-lndev.vercel.app">Marée</a> — A quieter
                 corner of the internet.
               </li>
+              <li id="aero">
+                <a href="https://aero-lndev.vercel.app">Aéro</a> — A little
+                paper. A lot of elsewhere.
+              </li>
               <li id="passeline">
                 <a href="https://passeline-lndev.vercel.app">Passeline</a> — A
                 small town with a story to follow.
@@ -451,6 +446,10 @@
               <li id="ficelle">
                 <a href="https://ficelle-lndev.vercel.app">Ficelle</a> — A whole
                 identity, wrapped in kraft paper.
+              </li>
+              <li id="umbra">
+                <a href="https://umbra-lndev.vercel.app">Umbra</a> — A little
+                darkness. A different way to see.
               </li>
               <li id="aparte">
                 <a href="https://aparte-lndev.vercel.app">Aparté</a> — A

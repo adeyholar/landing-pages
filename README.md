@@ -9,14 +9,14 @@ Built with Next.js, Tailwind CSS and fully customized shadcn/ui.
 
 | Preview | Project | Concept |
 | --- | --- | --- |
-| [![Umbra](www/showcase/umbra.jpg)](https://umbra-lndev.vercel.app) | **[Umbra](landing-pages/umbra)** · [Live](https://umbra-lndev.vercel.app) | Interactive 3D eclipse observatory |
-| [![Aéro](www/showcase/aero.jpg)](https://aero-lndev.vercel.app) | **[Aéro](landing-pages/aero)** · [Live](https://aero-lndev.vercel.app) | A paper flight through a sculptural sky |
 | [![Fallow](www/showcase/fallow.jpg)](https://fallow-lndev.vercel.app) | **[Fallow](landing-pages/fallow)** · [Live](https://fallow-lndev.vercel.app) | Interactive 3D botanical story |
 | [![Offcut](www/showcase/offcut.jpg)](https://offcut-lndev.vercel.app) | **[Offcut](landing-pages/offcut)** · [Live](https://offcut-lndev.vercel.app) | Furniture atelier with 3D objects |
 | [![Crux](www/showcase/crux.jpg)](https://crux-lndev.vercel.app) | **[Crux](landing-pages/crux)** · [Live](https://crux-lndev.vercel.app) | Independent bouldering club |
 | [![Marée](www/showcase/maree.jpg)](https://maree-lndev.vercel.app) | **[Marée](landing-pages/maree)** · [Live](https://maree-lndev.vercel.app) | Coastal bath house |
+| [![Aéro](www/showcase/aero.jpg)](https://aero-lndev.vercel.app) | **[Aéro](landing-pages/aero)** · [Live](https://aero-lndev.vercel.app) | A paper flight through a sculptural sky |
 | [![Passeline](www/showcase/passeline.jpg)](https://passeline-lndev.vercel.app) | **[Passeline](landing-pages/passeline)** · [Live](https://passeline-lndev.vercel.app) | Gift delivery through an illustrated town |
 | [![Ficelle](www/showcase/ficelle.jpg)](https://ficelle-lndev.vercel.app) | **[Ficelle](landing-pages/ficelle)** · [Live](https://ficelle-lndev.vercel.app) | Gift delivery inspired by parcels and postage |
+| [![Umbra](www/showcase/umbra.jpg)](https://umbra-lndev.vercel.app) | **[Umbra](landing-pages/umbra)** · [Live](https://umbra-lndev.vercel.app) | Interactive 3D eclipse observatory |
 | [![Aparté](www/showcase/aparte.jpg)](https://aparte-lndev.vercel.app) | **[Aparté](landing-pages/aparte)** · [Live](https://aparte-lndev.vercel.app) | Gift delivery with an editorial layout |
 | [![Écrin](www/showcase/ecrin.jpg)](https://ecrin-lndev.vercel.app) | **[Écrin](landing-pages/ecrin)** · [Live](https://ecrin-lndev.vercel.app) | Gift delivery with an animated 3D gift box |
 
