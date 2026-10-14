@@ -526,6 +526,9 @@ main {
   background: #725e6317;
 }
 .chapter-dock .motion-button {
+  min-width: 132px;
+  flex-shrink: 0;
+  gap: 7px;
   border-left: 1px solid #58474a20;
   border-radius: 0 22px 22px 0;
   padding: 8px 13px;
@@ -805,7 +808,8 @@ main {
     bottom: calc(14px + env(safe-area-inset-bottom));
     gap: 2px;
     padding: 5px;
-    width: calc(100% - 36px);
+    width: calc(100% - 24px);
+    max-width: calc(100% - 24px);
     justify-content: space-between;
   }
   .chapter-dock button {
@@ -816,14 +820,23 @@ main {
     display: none;
   }
   .chapter-dock .active .dock-label {
-    display: inline;
-    font-size: 10px;
+    display: none;
   }
   .chapter-dock button > span:first-child {
     font-size: 10px;
   }
   .chapter-dock .motion-button {
-    padding: 9px;
+    min-width: 100px;
+    padding: 0 7px;
+    gap: 5px;
+    font-size: 10px;
+  }
+  .motion-label {
+    text-align: left;
+    line-height: 1.35;
+  }
+  .motion-label > span {
+    display: block;
   }
   .roots .panel-inside,
   .bloom .panel-inside {

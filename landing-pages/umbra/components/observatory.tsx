@@ -14,8 +14,8 @@ import {
   Check,
   Download,
   Menu,
-  Pause,
-  Play,
+  ToggleLeft,
+  ToggleRight,
   Plus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -583,12 +583,23 @@ export function Observatory() {
             variant="unstyled"
             className="motion-button"
             onClick={() => setPaused((value) => !value)}
-            aria-pressed={paused}
-            aria-label={
-              paused ? "Resume ambient motion" : "Pause ambient motion"
+            aria-pressed={!paused}
+            aria-label="Ambient animations"
+            aria-description="Controls automatic movement only. Scroll to explore at any time."
+            title={
+              paused
+                ? "Enable ambient animations"
+                : "Disable ambient animations"
             }
           >
-            {paused ? <Play size={15} /> : <Pause size={15} />}
+            {paused ? (
+              <ToggleLeft size={20} aria-hidden="true" />
+            ) : (
+              <ToggleRight size={20} aria-hidden="true" />
+            )}
+            <span className="motion-label">
+              Animations <span>{paused ? "off" : "on"}</span>
+            </span>
           </Button>
         </div>
         <footer className="observatory-footer">
@@ -667,16 +678,22 @@ export function Observatory() {
             </p>
             <h3>At your own pace</h3>
             <p>
-              Scroll naturally in either direction. Pause ambient motion for a
-              still view; the chapters and alignment controls remain yours to
-              explore.
+              Scroll naturally in either direction. Turn off ambient animations
+              for a still view; the chapters and alignment controls remain yours
+              to explore.
             </p>
             <Button
               variant="outline"
               onClick={() => setPaused((value) => !value)}
             >
-              {paused ? <Play size={15} /> : <Pause size={15} />}
-              {paused ? "Enable ambient motion" : "Pause ambient motion"}
+              {paused ? (
+                <ToggleLeft size={20} aria-hidden="true" />
+              ) : (
+                <ToggleRight size={20} aria-hidden="true" />
+              )}
+              {paused
+                ? "Enable ambient animations"
+                : "Disable ambient animations"}
             </Button>
             <a className="guide-credit" href="https://lndev.me">
               An experiment by LN <ArrowUpRight size={17} />

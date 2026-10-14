@@ -13,8 +13,8 @@ import {
   ArrowUpRight,
   ArrowRight,
   Download,
-  Pause,
-  Play,
+  ToggleLeft,
+  ToggleRight,
   Plus,
   Wind,
 } from "lucide-react";
@@ -573,13 +573,24 @@ export function Aero() {
           <Button
             variant="unstyled"
             className="motion-button"
-            aria-label={
-              paused ? "Resume ambient motion" : "Pause ambient motion"
+            aria-label="Ambient animations"
+            aria-description="Controls automatic movement only. Scroll to explore at any time."
+            title={
+              paused
+                ? "Enable ambient animations"
+                : "Disable ambient animations"
             }
-            aria-pressed={paused}
+            aria-pressed={!paused}
             onClick={() => setPaused((p) => !p)}
           >
-            {paused ? <Play size={16} /> : <Pause size={16} />}
+            {paused ? (
+              <ToggleLeft size={20} aria-hidden="true" />
+            ) : (
+              <ToggleRight size={20} aria-hidden="true" />
+            )}
+            <span className="motion-label">
+              Animations <span>{paused ? "off" : "on"}</span>
+            </span>
           </Button>
         </nav>
         <footer className="aero-footer">
@@ -642,9 +653,19 @@ export function Aero() {
               three-dimensional airspace. At the end, choose a paper colour and
               change its updraft.
             </p>
+            <p>
+              Turn off ambient animations for a still view. Scrolling and the
+              controls remain active.
+            </p>
             <Button variant="outline" onClick={() => setPaused((v) => !v)}>
-              {paused ? <Play size={16} /> : <Pause size={16} />}{" "}
-              {paused ? "Enable ambient motion" : "Use a still view"}
+              {paused ? (
+                <ToggleLeft size={20} aria-hidden="true" />
+              ) : (
+                <ToggleRight size={20} aria-hidden="true" />
+              )}{" "}
+              {paused
+                ? "Enable ambient animations"
+                : "Disable ambient animations"}
             </Button>
             <p className="notes-small">
               The artwork is original and procedural. Your illustrated flight

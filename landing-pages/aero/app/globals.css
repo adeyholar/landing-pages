@@ -803,8 +803,13 @@ body:has(.preflight) {
   transform: translateX(-50%);
 }
 .motion-button {
-  height: 40px;
-  min-width: 44px;
+  min-height: 44px;
+  min-width: 132px;
+  flex-shrink: 0;
+  gap: 7px;
+  padding: 0 12px;
+  font: 11px var(--font-space);
+  white-space: nowrap;
   border-left: 1px solid var(--line);
   margin-left: 4px;
 }
@@ -1520,8 +1525,21 @@ body:has(.preflight) {
     font-size: 9px;
   }
   .motion-button {
-    min-width: 44px;
+    min-width: 100px;
     margin-left: 0;
+    padding: 0 7px;
+    gap: 5px;
+    font-size: 10px;
+  }
+  .motion-label {
+    text-align: left;
+    line-height: 1.35;
+  }
+  .motion-label > span {
+    display: block;
+  }
+  .nav-track > button[aria-current="step"] .nav-word {
+    display: none;
   }
   .aero-footer {
     padding: 50px 6vw 100px;
@@ -1627,9 +1645,6 @@ body:has(.preflight) {
   }
   .nav-word {
     font-size: 9px;
-  }
-  .motion-button {
-    min-width: 44px;
   }
   .pilot-card {
     padding: 18px;

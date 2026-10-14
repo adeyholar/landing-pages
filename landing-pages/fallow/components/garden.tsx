@@ -5,8 +5,8 @@ import {
   ArrowDown,
   ArrowUpRight,
   Check,
-  Pause,
-  Play,
+  ToggleLeft,
+  ToggleRight,
   Plus,
   Sprout,
 } from "lucide-react";
@@ -440,13 +440,24 @@ export function Garden() {
           <Button
             variant="unstyled"
             className="motion-button"
-            aria-label={
-              paused ? "Resume ambient motion" : "Pause ambient motion"
+            aria-label="Ambient animations"
+            aria-description="Controls automatic movement only. Scroll to explore at any time."
+            title={
+              paused
+                ? "Enable ambient animations"
+                : "Disable ambient animations"
             }
-            aria-pressed={paused}
+            aria-pressed={!paused}
             onClick={() => setPaused((v) => !v)}
           >
-            {paused ? <Play size={14} /> : <Pause size={14} />}
+            {paused ? (
+              <ToggleLeft size={20} aria-hidden="true" />
+            ) : (
+              <ToggleRight size={20} aria-hidden="true" />
+            )}
+            <span className="motion-label">
+              Animations <span>{paused ? "off" : "on"}</span>
+            </span>
           </Button>
         </nav>
         <footer className="garden-footer">
@@ -500,8 +511,19 @@ export function Garden() {
               artwork, created with Three.js. The source is open under MIT.
             </p>
             <p>Fonts: Cormorant Garamond and Manrope, SIL Open Font License.</p>
+            <p>
+              Turn off ambient animations for a still view. Scrolling and the
+              controls remain active.
+            </p>
             <Button variant="outline" onClick={() => setPaused((v) => !v)}>
-              {paused ? "Enable ambient motion" : "Use still view"}
+              {paused ? (
+                <ToggleLeft size={20} aria-hidden="true" />
+              ) : (
+                <ToggleRight size={20} aria-hidden="true" />
+              )}
+              {paused
+                ? "Enable ambient animations"
+                : "Disable ambient animations"}
             </Button>
             <a className="notes-credit" href="https://lndev.me">
               Made by LN <ArrowUpRight size={14} />

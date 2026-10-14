@@ -654,9 +654,16 @@ h2 em {
 }
 .motion-button {
   min-height: 44px;
-  min-width: 44px;
+  min-width: 132px;
+  gap: 7px;
+  padding: 0 12px;
+  font: 11px var(--font-mono);
+  color: var(--paper);
+  white-space: nowrap;
+  background: rgba(8, 13, 22, 0.72);
+  backdrop-filter: blur(10px);
   border: 1px solid var(--line);
-  border-radius: 50%;
+  border-radius: 24px;
   transition: border-color 0.3s;
 }
 .motion-button:hover {
@@ -1303,13 +1310,20 @@ h2 em {
     gap: 9px;
   }
   .motion-controls > span {
-    font-size: 6px;
-    letter-spacing: 0.03em;
+    display: none;
   }
   .motion-button {
-    width: 40px;
-    height: 44px;
-    border-radius: 50%;
+    min-width: 100px;
+    padding: 0 7px;
+    gap: 5px;
+    font-size: 10px;
+  }
+  .motion-label {
+    text-align: left;
+    line-height: 1.35;
+  }
+  .motion-label > span {
+    display: block;
   }
   .observatory-footer {
     padding: 55px 7% 105px;
