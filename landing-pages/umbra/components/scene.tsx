@@ -181,13 +181,16 @@ export function Scene(props: Props) {
       );
       const glass = own(
         new T.MeshPhysicalMaterial({
-          color: 0x779999,
-          metalness: 0.1,
-          roughness: 0.11,
-          transparent: true,
-          opacity: 0.14,
-          transmission: 0,
-          side: T.DoubleSide,
+          color: 0xe1eeee,
+          metalness: 0,
+          roughness: 0.055,
+          transmission: 0.94,
+          thickness: 0.24,
+          ior: 1.48,
+          attenuationColor: 0x8cbbbd,
+          attenuationDistance: 2.4,
+          clearcoat: 1,
+          clearcoatRoughness: 0.07,
           depthWrite: false,
         }),
       );
@@ -259,10 +262,10 @@ export function Scene(props: Props) {
       assembly.add(instrument);
       const rings: Three.Group[] = [];
       const ringGeo = own(
-        new T.TorusGeometry(2.72, 0.075, 12, mobile ? 96 : 144),
+        new T.TorusGeometry(2.72, 0.075, mobile ? 16 : 24, mobile ? 128 : 192),
       );
       const fineGeo = own(
-        new T.TorusGeometry(2.84, 0.018, 6, mobile ? 96 : 144),
+        new T.TorusGeometry(2.84, 0.018, 12, mobile ? 128 : 192),
       );
       const tickGeo = own(new T.BoxGeometry(0.015, 0.09, 0.015));
       const dummy = new T.Object3D();
@@ -285,9 +288,11 @@ export function Scene(props: Props) {
         rings.push(group);
       }
       const lens = new T.Mesh(
-        own(new T.CircleGeometry(2.55, mobile ? 72 : 112)),
+        own(new T.SphereGeometry(2.55, mobile ? 64 : 96, mobile ? 32 : 48)),
         glass,
       );
+      // A convex optical body catches reflections along its rounded perimeter.
+      lens.scale.z = 0.047;
       instrument.add(lens);
       const iris = new T.Group();
       instrument.add(iris);
@@ -300,11 +305,11 @@ export function Scene(props: Props) {
         new T.ExtrudeGeometry(bladeShape, {
           depth: 0.035,
           bevelEnabled: true,
-          bevelSegments: 2,
+          bevelSegments: 4,
           steps: 1,
           bevelSize: 0.012,
           bevelThickness: 0.01,
-          curveSegments: 18,
+          curveSegments: 28,
         }),
       );
       const blades: Three.Mesh[] = [];
@@ -315,7 +320,7 @@ export function Scene(props: Props) {
         iris.add(blade);
         blades.push(blade);
       }
-      const axisGeo = own(new T.CylinderGeometry(0.018, 0.018, 6.8, 8));
+      const axisGeo = own(new T.CylinderGeometry(0.018, 0.018, 6.8, 16));
       const axles = new T.Group();
       instrument.add(axles);
       for (let i = 0; i < 3; i++) {
@@ -358,9 +363,9 @@ export function Scene(props: Props) {
       const passage = new T.Group();
       scene.add(passage);
       const gateGeo = own(
-        new T.TorusGeometry(4.1, 0.055, 10, mobile ? 96 : 144),
+        new T.TorusGeometry(4.1, 0.055, 16, mobile ? 128 : 192),
       );
-      const gateTrim = own(new T.TorusGeometry(4.24, 0.012, 5, 128));
+      const gateTrim = own(new T.TorusGeometry(4.24, 0.012, 10, 160));
       const gates: Three.Group[] = [];
       for (let i = 0; i < 8; i++) {
         const gate = new T.Group();
@@ -398,7 +403,7 @@ export function Scene(props: Props) {
       finalMoon.position.z = 0.35;
       alignment.add(finalMoon);
       const orbit = new T.Mesh(
-        own(new T.TorusGeometry(3.2, 0.022, 8, 144)),
+        own(new T.TorusGeometry(3.2, 0.022, 16, 192)),
         copper,
       );
       orbit.rotation.x = 0.45;
@@ -461,7 +466,7 @@ export function Scene(props: Props) {
           dt = Math.min((ms - last) / 1000, 0.045) || 0.016;
         last = ms;
         if (!paused) time += dt;
-        const ease = 1 - Math.exp(-5 * dt);
+        const ease = 1 - Math.exp(-9 * dt);
         progress = paused
           ? state.current.progress.current
           : progress + (state.current.progress.current - progress) * ease;
@@ -690,12 +695,12 @@ export function Scene(props: Props) {
       const observer = new ResizeObserver(resize);
       observer.observe(element!);
       addEventListener("pointermove", pointer, { passive: true });
-      addEventListener("scroll", queue, { passive: true });
+      addEventListener("umbra:progress", queue);
       document.addEventListener("visibilitychange", visibility);
       callbacks.push(() => {
         observer.disconnect();
         removeEventListener("pointermove", pointer);
-        removeEventListener("scroll", queue);
+        removeEventListener("umbra:progress", queue);
         document.removeEventListener("visibilitychange", visibility);
       });
       request.current = queue;

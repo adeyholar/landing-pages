@@ -724,6 +724,13 @@ h2 em {
   justify-content: center;
   overflow: hidden;
 }
+.loading-screen {
+  opacity: 1;
+  transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.loading-screen[data-leaving="true"] {
+  opacity: 0;
+}
 .loading-meta {
   position: absolute;
   top: 30px;

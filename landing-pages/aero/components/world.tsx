@@ -178,10 +178,40 @@ export function World(props: Props) {
         map.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 8);
         return map;
       };
+      // An unprinted height map gives the fibres relief under moving light.
+      // It is shared by every livery; the printed logo stays flat on the paper.
+      const grainCanvas = document.createElement("canvas");
+      grainCanvas.width = grainCanvas.height = 512;
+      const grainContext = grainCanvas.getContext("2d");
+      if (!grainContext) throw new Error("Paper grain unavailable");
+      grainContext.fillStyle = "#808080";
+      grainContext.fillRect(0, 0, 512, 512);
+      let grainSeed = 27183;
+      const grainRandom = () => {
+        grainSeed = (grainSeed * 16807) % 2147483647;
+        return (grainSeed - 1) / 2147483646;
+      };
+      for (let i = 0; i < 28000; i++) {
+        const shade = Math.round(112 + grainRandom() * 32);
+        grainContext.fillStyle = `rgb(${shade},${shade},${shade})`;
+        grainContext.fillRect(
+          grainRandom() * 512,
+          grainRandom() * 512,
+          1.6,
+          0.5,
+        );
+      }
+      const paperGrain = own(new T.CanvasTexture(grainCanvas));
+      paperGrain.anisotropy = Math.min(
+        renderer.capabilities.getMaxAnisotropy(),
+        8,
+      );
       const papers = LIVERIES.map((_, i) => [
         own(
           new T.MeshPhysicalMaterial({
             map: texture(i),
+            bumpMap: paperGrain,
+            bumpScale: 0.008,
             roughness: 0.91,
             metalness: 0,
             sheen: 0.12,
@@ -192,6 +222,8 @@ export function World(props: Props) {
         own(
           new T.MeshStandardMaterial({
             map: texture(i, true),
+            bumpMap: paperGrain,
+            bumpScale: 0.006,
             roughness: 0.96,
           }),
         ),
@@ -366,7 +398,14 @@ export function World(props: Props) {
       );
       for (let i = 0; i < 7; i++) {
         const arch = new T.Mesh(
-          own(new T.TorusGeometry(3.65 + (i % 2) * 0.5, 0.105, 16, 140)),
+          own(
+            new T.TorusGeometry(
+              3.65 + (i % 2) * 0.5,
+              0.105,
+              mobile() ? 16 : 24,
+              180,
+            ),
+          ),
           ringMaterials[i % 3],
         );
         arch.position.set(
@@ -404,7 +443,7 @@ export function World(props: Props) {
           ),
         );
         const line = new T.Mesh(
-          own(new T.TubeGeometry(curve, 140, 0.028, 6, false)),
+          own(new T.TubeGeometry(curve, 160, 0.028, 12, false)),
           ringMaterials[i % 3],
         );
         arches.add(line);
@@ -431,7 +470,12 @@ export function World(props: Props) {
         previousLaunch = current.current.launch,
         throwAt = -100,
         rendered = false,
-        lastKind = -1;
+        lastKind = -1,
+        flightProgress = Math.min(
+          3,
+          Math.max(0, current.current.scroll.current),
+        ),
+        windValue = current.current.wind;
       let pointerX = 0,
         pointerY = 0,
         easedX = 0,
@@ -494,7 +538,7 @@ export function World(props: Props) {
           cam: [0, 5.9, -22.5],
           look: [0, 0, -34.5],
           rotation: [-0.03, 2.48, -0.14],
-          target: [-0.43, -0.25],
+          target: [-0.43, -0.63],
         },
       ];
       const render = (now: number) => {
@@ -505,7 +549,15 @@ export function World(props: Props) {
         lastTime = now;
         const moving = !state.paused && state.inView.current;
         if (moving) time += dt;
-        const p = Math.min(3, Math.max(0, state.scroll.current));
+        const targetProgress = Math.min(3, Math.max(0, state.scroll.current));
+        flightProgress =
+          moving && rendered
+            ? T.MathUtils.damp(flightProgress, targetProgress, 18, dt)
+            : targetProgress;
+        windValue = moving
+          ? T.MathUtils.damp(windValue, state.wind, 14, dt)
+          : state.wind;
+        const p = flightProgress;
         let before = keys[0],
           after = keys[keys.length - 1];
         for (let i = 0; i < keys.length - 1; i++)
@@ -538,7 +590,9 @@ export function World(props: Props) {
         );
         const fold = foldAt(p);
         plane.scale.setScalar(
-          mobile() ? 0.59 + 0.28 * fold : 0.79 + 0.21 * fold,
+          mobile()
+            ? 0.59 + 0.28 * fold
+            : (0.79 + 0.21 * fold) * (1 - 0.13 * smooth(2.8, 3, p)),
         );
         for (const panel of panels) {
           const { sign, pivot } = panel;
@@ -583,7 +637,7 @@ export function World(props: Props) {
           throwAt = time;
         }
         const personal = smooth(2.8, 3, p);
-        anchor.y += ((state.wind - 45) / 70) * personal;
+        anchor.y += ((windValue - 45) / 70) * personal;
         if (moving) {
           const thrown = Math.max(0, Math.min(1, (time - throwAt) / 2.3));
           const arc = Math.sin(thrown * Math.PI);
@@ -597,8 +651,8 @@ export function World(props: Props) {
         } else if (state.launch > 0) {
           plane.rotation.z += (state.launch % 2 ? 0.1 : -0.1) * personal;
         }
-        easedX = T.MathUtils.damp(easedX, moving ? pointerX : 0, 4, dt);
-        easedY = T.MathUtils.damp(easedY, moving ? pointerY : 0, 4, dt);
+        easedX = T.MathUtils.damp(easedX, moving ? pointerX : 0, 10, dt);
+        easedY = T.MathUtils.damp(easedY, moving ? pointerY : 0, 10, dt);
         plane.rotation.y += easedX * 0.065;
         plane.rotation.x += easedY * 0.035;
         plane.position.copy(anchor);
@@ -776,6 +830,7 @@ export function World(props: Props) {
         renderer.domElement.remove();
       };
       update(86, "Finding the light on the first fold");
+      renderer.initTexture(paperGrain);
       for (const materials of papers)
         for (const material of materials)
           if (material.map) renderer.initTexture(material.map);
@@ -817,6 +872,22 @@ export function World(props: Props) {
             fail();
             return;
           }
+          // Upload every chapter's geometry before revealing the first frame.
+          // Off-camera flight gates would otherwise upload during the journey.
+          update(92, "Preparing the whole journey");
+          const culling: [Three.Object3D, boolean][] = [];
+          scene.traverse((object) => {
+            culling.push([object, object.frustumCulled]);
+            object.frustumCulled = false;
+          });
+          try {
+            renderer.render(scene, camera);
+          } finally {
+            culling.forEach(([object, culled]) => {
+              object.frustumCulled = culled;
+            });
+          }
+          if (failed) return;
           compiled = true;
           request();
         } catch {

@@ -73,6 +73,7 @@ export function Observatory() {
   const [load, setLoad] = useState(initialLoad),
     [fonts, setFonts] = useState(false),
     [entered, setEntered] = useState(false),
+    [revealing, setRevealing] = useState(false),
     [still, setStill] = useState(false),
     [slow, setSlow] = useState(false),
     [paused, setPaused] = useState(false),
@@ -121,8 +122,11 @@ export function Observatory() {
     };
   }, []);
   useEffect(() => {
-    if (load.status !== "loading" && fonts) setEntered(true);
-  }, [load.status, fonts]);
+    if (load.status === "loading" || !fonts) return;
+    setRevealing(true);
+    const timer = setTimeout(() => setEntered(true), paused ? 0 : 800);
+    return () => clearTimeout(timer);
+  }, [load.status, fonts, paused]);
   useEffect(() => {
     if (entered) return;
     const previous = document.documentElement.style.overflow;
@@ -165,6 +169,7 @@ export function Observatory() {
         );
       });
       progress.current = Math.min(3, value);
+      window.dispatchEvent(new Event("umbra:progress"));
       const next = Math.min(3, Math.floor(value + 0.001));
       if (lastChapter.current !== next) {
         setChapter(next);
@@ -242,6 +247,7 @@ export function Observatory() {
       {!entered && (
         <div
           className="loading-screen"
+          data-leaving={revealing}
           role="status"
           aria-live="polite"
           aria-label="Preparing the observatory"
@@ -287,7 +293,11 @@ export function Observatory() {
           )}
         </div>
       )}
-      <div className="observatory-content" data-entered={entered}>
+      <div
+        className="observatory-content"
+        data-entered={entered || revealing}
+        inert={revealing && !entered}
+      >
         <header className="observatory-header">
           <a
             className="wordmark"
