@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const display = localFont({
   src: "./fonts/SpaceGrotesk-Variable.ttf",
@@ -61,6 +62,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           Skip to the observatory
         </a>
         {children}
+        <Toaster theme="dark" />
       </body>
     </html>
   );

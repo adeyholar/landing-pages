@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 const space = localFont({
   src: "./fonts/SpaceGrotesk.ttf",
   weight: "300 700",
@@ -42,6 +43,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           Skip to the journey
         </a>
         {children}
+        <Toaster theme="light" />
       </body>
     </html>
   );

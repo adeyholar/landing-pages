@@ -9,6 +9,7 @@ import {
   type CSSProperties,
 } from "react";
 import dynamic from "next/dynamic";
+import { toast } from "sonner";
 import {
   ArrowDown,
   ArrowUpRight,
@@ -189,6 +190,15 @@ export function Aero() {
       observer.disconnect();
     };
   }, []);
+  const toggleMotion = () => {
+    const nextPaused = !paused;
+    setPaused(nextPaused);
+    toast(nextPaused ? "Animations disabled" : "Animations enabled", {
+      id: "ambient-motion",
+      description: "Scroll to explore at your own pace.",
+      icon: nextPaused ? <ToggleLeft size={20} /> : <ToggleRight size={20} />,
+    });
+  };
   const go = (n: number) =>
     document
       .getElementById(`flight-${n}`)
@@ -585,16 +595,13 @@ export function Aero() {
                 : "Disable ambient animations"
             }
             aria-pressed={!paused}
-            onClick={() => setPaused((p) => !p)}
+            onClick={toggleMotion}
           >
             {paused ? (
               <ToggleLeft size={20} aria-hidden="true" />
             ) : (
               <ToggleRight size={20} aria-hidden="true" />
             )}
-            <span className="motion-label">
-              Animations <span>{paused ? "off" : "on"}</span>
-            </span>
           </Button>
         </nav>
         <footer className="aero-footer">
@@ -661,7 +668,7 @@ export function Aero() {
               Turn off ambient animations for a still view. Scrolling and the
               controls remain active.
             </p>
-            <Button variant="outline" onClick={() => setPaused((v) => !v)}>
+            <Button variant="outline" onClick={toggleMotion}>
               {paused ? (
                 <ToggleLeft size={20} aria-hidden="true" />
               ) : (

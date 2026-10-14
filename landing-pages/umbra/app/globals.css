@@ -695,17 +695,18 @@ h2 em {
   color: #829188;
 }
 .motion-button {
+  width: 44px;
   min-height: 44px;
-  min-width: 132px;
+  min-width: 44px;
   gap: 7px;
-  padding: 0 12px;
+  padding: 0;
   font: 11px var(--font-mono);
   color: var(--paper);
   white-space: nowrap;
   background: rgba(8, 13, 22, 0.72);
   backdrop-filter: blur(10px);
   border: 1px solid var(--line);
-  border-radius: 24px;
+  border-radius: 50%;
   transition: border-color 0.3s;
 }
 .motion-button:hover {
@@ -1359,17 +1360,10 @@ h2 em {
     display: none;
   }
   .motion-button {
-    min-width: 100px;
+    min-width: 44px;
     padding: 0 7px;
     gap: 5px;
     font-size: 10px;
-  }
-  .motion-label {
-    text-align: left;
-    line-height: 1.35;
-  }
-  .motion-label > span {
-    display: block;
   }
   .observatory-footer {
     padding: 55px 7% 105px;
@@ -1568,4 +1562,40 @@ html[data-motion="paused"] {
 
 html[data-motion="paused"] .chapter-track * {
   transition-duration: 0s;
+}
+
+/* The shadcn Sonner confirmation follows the site's visual language. */
+[data-sonner-toaster] .motion-toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 18px;
+  border: 1px solid rgba(198, 151, 104, 0.38);
+  border-radius: 14px;
+  background: #101720;
+  color: var(--paper);
+  box-shadow: 0 12px 40px #0005;
+  font-family: var(--font-display);
+}
+.motion-toast-title {
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+.motion-toast-description {
+  margin-top: 3px;
+  font-size: 11px;
+  line-height: 1.5;
+  opacity: 0.72;
+}
+[data-sonner-toast] .motion-toast-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  border-radius: 50%;
+  background: rgba(198, 151, 104, 0.12);
 }

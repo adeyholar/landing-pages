@@ -7,6 +7,7 @@ import {
   type CSSProperties,
 } from "react";
 import dynamic from "next/dynamic";
+import { toast } from "sonner";
 import {
   ArrowDown,
   ArrowUpRight,
@@ -195,6 +196,15 @@ export function Garden() {
       removeEventListener("resize", queue);
     };
   }, []);
+  const toggleMotion = () => {
+    const nextPaused = !paused;
+    setPaused(nextPaused);
+    toast(nextPaused ? "Animations disabled" : "Animations enabled", {
+      id: "ambient-motion",
+      description: "Scroll to explore at your own pace.",
+      icon: nextPaused ? <ToggleLeft size={20} /> : <ToggleRight size={20} />,
+    });
+  };
   const go = (i: number) => {
     document
       .getElementById(`chapter-${i}`)
@@ -459,16 +469,13 @@ export function Garden() {
                 : "Disable ambient animations"
             }
             aria-pressed={!paused}
-            onClick={() => setPaused((v) => !v)}
+            onClick={toggleMotion}
           >
             {paused ? (
               <ToggleLeft size={20} aria-hidden="true" />
             ) : (
               <ToggleRight size={20} aria-hidden="true" />
             )}
-            <span className="motion-label">
-              Animations <span>{paused ? "off" : "on"}</span>
-            </span>
           </Button>
         </nav>
         <footer className="garden-footer">
@@ -526,7 +533,7 @@ export function Garden() {
               Turn off ambient animations for a still view. Scrolling and the
               controls remain active.
             </p>
-            <Button variant="outline" onClick={() => setPaused((v) => !v)}>
+            <Button variant="outline" onClick={toggleMotion}>
               {paused ? (
                 <ToggleLeft size={20} aria-hidden="true" />
               ) : (

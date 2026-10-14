@@ -9,6 +9,7 @@ import {
   type CSSProperties,
 } from "react";
 import dynamic from "next/dynamic";
+import { toast } from "sonner";
 import {
   ArrowDown,
   ArrowUpRight,
@@ -189,6 +190,15 @@ export function Observatory() {
       removeEventListener("resize", queue);
     };
   }, []);
+  const toggleMotion = () => {
+    const nextPaused = !paused;
+    setPaused(nextPaused);
+    toast(nextPaused ? "Animations disabled" : "Animations enabled", {
+      id: "ambient-motion",
+      description: "Scroll to explore at your own pace.",
+      icon: nextPaused ? <ToggleLeft size={20} /> : <ToggleRight size={20} />,
+    });
+  };
   const go = (index: number) => {
     setNotes(false);
     document
@@ -589,7 +599,7 @@ export function Observatory() {
           <Button
             variant="unstyled"
             className="motion-button"
-            onClick={() => setPaused((value) => !value)}
+            onClick={toggleMotion}
             aria-pressed={!paused}
             aria-label="Ambient animations"
             aria-description="Controls automatic movement only. Scroll to explore at any time."
@@ -604,9 +614,6 @@ export function Observatory() {
             ) : (
               <ToggleRight size={20} aria-hidden="true" />
             )}
-            <span className="motion-label">
-              Animations <span>{paused ? "off" : "on"}</span>
-            </span>
           </Button>
         </div>
         <footer className="observatory-footer">
@@ -689,10 +696,7 @@ export function Observatory() {
               for a still view; the chapters and alignment controls remain yours
               to explore.
             </p>
-            <Button
-              variant="outline"
-              onClick={() => setPaused((value) => !value)}
-            >
+            <Button variant="outline" onClick={toggleMotion}>
               {paused ? (
                 <ToggleLeft size={20} aria-hidden="true" />
               ) : (
