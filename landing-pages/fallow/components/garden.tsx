@@ -199,11 +199,16 @@ export function Garden() {
   const toggleMotion = () => {
     const nextPaused = !paused;
     setPaused(nextPaused);
-    toast(nextPaused ? "Animations disabled" : "Animations enabled", {
-      id: "ambient-motion",
-      description: "Scroll to explore at your own pace.",
-      icon: nextPaused ? <ToggleLeft size={20} /> : <ToggleRight size={20} />,
-    });
+    toast(
+      <span key={String(nextPaused)} className="motion-toast-message">
+        {nextPaused ? "Animations disabled" : "Animations enabled"}
+      </span>,
+      {
+        id: "ambient-motion",
+        description: "Scroll to explore at your own pace.",
+        icon: nextPaused ? <ToggleLeft size={20} /> : <ToggleRight size={20} />,
+      },
+    );
   };
   const go = (i: number) => {
     document
