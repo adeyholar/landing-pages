@@ -59,7 +59,7 @@
       type="font/ttf"
       crossorigin
     />
-    <link rel="preload" as="image" href="showcase/fallow.jpg" />
+    <link rel="preload" as="image" href="showcase/umbra.jpg" />
     <link rel="stylesheet" href="styles.css?v=9" />
     <script>
       try {
@@ -90,11 +90,35 @@
             "url": "https://lp.lndev.me/",
             "mainEntity": {
               "@type": "ItemList",
-              "numberOfItems": 8,
+              "numberOfItems": 10,
               "itemListElement": [
                 {
                   "@type": "ListItem",
                   "position": 1,
+                  "item": {
+                    "@type": "CreativeWork",
+                    "name": "Umbra",
+                    "url": "https://umbra-lndev.vercel.app",
+                    "description": "Step into an imaginary observatory. Unfold an optical instrument, cross a field of stars and compose a celestial alignment of your own.",
+                    "image": "https://lp.lndev.me/showcase/umbra.jpg",
+                    "license": "https://opensource.org/licenses/MIT"
+                  }
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "item": {
+                    "@type": "CreativeWork",
+                    "name": "Aéro",
+                    "url": "https://aero-lndev.vercel.app",
+                    "description": "A sheet of paper becomes a small adventure. Follow its folds, fly through sculptural air currents and send your own paper plane into the blue.",
+                    "image": "https://lp.lndev.me/showcase/aero.jpg",
+                    "license": "https://opensource.org/licenses/MIT"
+                  }
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
                   "item": {
                     "@type": "CreativeWork",
                     "name": "Fallow",
@@ -106,7 +130,7 @@
                 },
                 {
                   "@type": "ListItem",
-                  "position": 2,
+                  "position": 4,
                   "item": {
                     "@type": "CreativeWork",
                     "name": "Offcut",
@@ -118,7 +142,7 @@
                 },
                 {
                   "@type": "ListItem",
-                  "position": 3,
+                  "position": 5,
                   "item": {
                     "@type": "CreativeWork",
                     "name": "Crux",
@@ -130,7 +154,7 @@
                 },
                 {
                   "@type": "ListItem",
-                  "position": 4,
+                  "position": 6,
                   "item": {
                     "@type": "CreativeWork",
                     "name": "Marée",
@@ -142,7 +166,7 @@
                 },
                 {
                   "@type": "ListItem",
-                  "position": 5,
+                  "position": 7,
                   "item": {
                     "@type": "CreativeWork",
                     "name": "Passeline",
@@ -154,7 +178,7 @@
                 },
                 {
                   "@type": "ListItem",
-                  "position": 6,
+                  "position": 8,
                   "item": {
                     "@type": "CreativeWork",
                     "name": "Ficelle",
@@ -166,7 +190,7 @@
                 },
                 {
                   "@type": "ListItem",
-                  "position": 7,
+                  "position": 9,
                   "item": {
                     "@type": "CreativeWork",
                     "name": "Aparté",
@@ -178,7 +202,7 @@
                 },
                 {
                   "@type": "ListItem",
-                  "position": 8,
+                  "position": 10,
                   "item": {
                     "@type": "CreativeWork",
                     "name": "Écrin",
@@ -206,7 +230,7 @@
           ></a
         >
         <nav class="nav__center" aria-label="Main">
-          <a href="#work">Collection <sup>08</sup></a
+          <a href="#work">Collection <sup>10</sup></a
           ><a href="#approach">The idea</a>
         </nav>
         <div class="nav__end">
@@ -253,7 +277,7 @@
             <a class="button" href="#work"
               >Explore the collection <span aria-hidden="true">↓</span></a
             ><span class="hero__license"
-              >Eight worlds to explore.<br />One MIT license.</span
+              >Ten worlds to explore.<br />One MIT license.</span
             >
           </div>
         </div>
@@ -262,59 +286,66 @@
           <span class="annotation">a different kind of starting point ↘</span>
           <a
             class="feature-card"
-            href="#fallow"
+            href="#umbra"
             data-feature-position="front"
+            aria-label="Explore Umbra"
+          >
+            <img
+              src="showcase/umbra.jpg"
+              width="1600"
+              height="900"
+              alt="Umbra — interactive eclipse observatory"
+            />
+            <span class="feature-caption"
+              ><span
+                ><small>INTERACTIVE ECLIPSE OBSERVATORY</small
+                ><strong>Umbra</strong></span
+              ><span class="feature-arrow" aria-hidden="true">↗</span></span
+            >
+          </a>
+          <a
+            class="feature-card"
+            href="#aero"
+            data-feature-position="next"
+            aria-label="Explore Aéro"
+            aria-hidden="true"
+            tabindex="-1"
+            inert
+          >
+            <img
+              src="showcase/aero.jpg"
+              width="1600"
+              height="900"
+              alt="Aéro — paper flight bureau"
+            />
+            <span class="feature-caption"
+              ><span
+                ><small>PAPER FLIGHT BUREAU</small><strong>Aéro</strong></span
+              ><span class="feature-arrow" aria-hidden="true">↗</span></span
+            >
+          </a>
+          <a
+            class="feature-card"
+            href="#fallow"
+            data-feature-position="back"
             aria-label="Explore Fallow"
-            ><img
+            aria-hidden="true"
+            tabindex="-1"
+            inert
+          >
+            <img
               src="showcase/fallow.jpg"
               width="1600"
               height="900"
               alt="Fallow — interactive botanical story"
-            /><span class="feature-caption"
+            />
+            <span class="feature-caption"
               ><span
                 ><small>INTERACTIVE BOTANICAL STORY</small
                 ><strong>Fallow</strong></span
               ><span class="feature-arrow" aria-hidden="true">↗</span></span
-            ></a
-          >
-          <a
-            class="feature-card"
-            href="#offcut"
-            data-feature-position="next"
-            aria-label="Explore Offcut"
-            aria-hidden="true"
-            tabindex="-1"
-            inert
-            ><img
-              src="showcase/offcut.jpg"
-              width="1600"
-              height="900"
-              alt="Offcut — furniture atelier"
-            /><span class="feature-caption"
-              ><span
-                ><small>FURNITURE ATELIER</small><strong>Offcut</strong></span
-              ><span class="feature-arrow" aria-hidden="true">↗</span></span
-            ></a
-          >
-          <a
-            class="feature-card"
-            href="#crux"
-            data-feature-position="back"
-            aria-label="Explore Crux"
-            aria-hidden="true"
-            tabindex="-1"
-            inert
-            ><img
-              src="showcase/crux.jpg"
-              width="1600"
-              height="900"
-              alt="Crux — bouldering club"
-            /><span class="feature-caption"
-              ><span
-                ><small>BOULDERING CLUB</small><strong>Crux</strong></span
-              ><span class="feature-arrow" aria-hidden="true">↗</span></span
-            ></a
-          >
+            >
+          </a>
         </div>
       </section>
       <div class="hero__foot wrap">
@@ -371,9 +402,9 @@
             aria-label="Filter by art direction"
           >
             <button type="button" data-filter="all" aria-pressed="true">
-              All <span>08</span></button
+              All <span>10</span></button
             ><button type="button" data-filter="immersive" aria-pressed="false">
-              Immersive <span>02</span></button
+              Immersive <span>04</span></button
             ><button type="button" data-filter="editorial" aria-pressed="false">
               Editorial <span>03</span></button
             ><button type="button" data-filter="playful" aria-pressed="false">
@@ -384,10 +415,19 @@
             <span aria-hidden="true">☷</span> Index view
           </button>
         </div>
-        <p id="filter-status" class="sr-only" role="status">8 projects</p>
+        <p id="filter-status" class="sr-only" role="status">10 projects</p>
         <div id="projects" class="projects">
           <noscript
             ><ul class="fallback">
+              <li id="umbra">
+                <a href="https://umbra-lndev.vercel.app">Umbra</a> — A little
+                darkness. A different way to see.
+              </li>
+              <li id="aero">
+                <a href="https://aero-lndev.vercel.app">Aéro</a> — A little
+                paper. A lot of elsewhere.
+              </li>
+
               <li id="fallow">
                 <a href="https://fallow-lndev.vercel.app">Fallow</a>
                 — A little attention. An entirely new world.
@@ -569,7 +609,7 @@ pnpm dev</code></pre>
       </div>
     </footer>
     <script src="/analytics.js" defer></script>
-    <script src="projects.js?v=9" defer></script>
+    <script src="projects.js?v=10" defer></script>
     <script src="script.js?v=9" defer></script>
   </body>
 </html>

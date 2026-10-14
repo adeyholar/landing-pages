@@ -9,6 +9,8 @@ Built with Next.js, Tailwind CSS and fully customized shadcn/ui.
 
 | Preview | Project | Concept |
 | --- | --- | --- |
+| [![Umbra](www/showcase/umbra.jpg)](https://umbra-lndev.vercel.app) | **[Umbra](landing-pages/umbra)** · [Live](https://umbra-lndev.vercel.app) | Interactive 3D eclipse observatory |
+| [![Aéro](www/showcase/aero.jpg)](https://aero-lndev.vercel.app) | **[Aéro](landing-pages/aero)** · [Live](https://aero-lndev.vercel.app) | A paper flight through a sculptural sky |
 | [![Fallow](www/showcase/fallow.jpg)](https://fallow-lndev.vercel.app) | **[Fallow](landing-pages/fallow)** · [Live](https://fallow-lndev.vercel.app) | Interactive 3D botanical story |
 | [![Offcut](www/showcase/offcut.jpg)](https://offcut-lndev.vercel.app) | **[Offcut](landing-pages/offcut)** · [Live](https://offcut-lndev.vercel.app) | Furniture atelier with 3D objects |
 | [![Crux](www/showcase/crux.jpg)](https://crux-lndev.vercel.app) | **[Crux](landing-pages/crux)** · [Live](https://crux-lndev.vercel.app) | Independent bouldering club |
