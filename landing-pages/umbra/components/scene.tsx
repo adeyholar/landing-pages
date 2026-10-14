@@ -662,32 +662,30 @@ export function Scene(props: Props) {
             material !== lensMaterial && material.opacity > 0.995;
         });
         lensMaterial.opacity =
-          T.MathUtils.smoothstep(j.unfold, 0.35, 0.8) *
-          (1 - T.MathUtils.smoothstep(j.p, 1.08, 1.35));
+          j.optics * (1 - T.MathUtils.smoothstep(j.p, 1.08, 1.35));
         assembly.position.x = 0.75 * (1 - j.unfold);
         assembly.rotation.y = -j.unfold * 0.45;
         assembly.rotation.x = j.unfold * 0.24;
         assembly.visible = j.depart < 1;
-        moon.position.x = -j.unfold * 4.2;
-        moon.position.y = j.unfold * 1.1;
-        moon.scale.setScalar(1 - j.unfold * 0.68);
+        // The sphere contracts within the clear central opening. A lateral
+        // exit intersected the rotating rings and, later, the iris blades.
+        const eclipseScale = 1 - j.eclipseRelease;
+        moon.visible = eclipseScale > 0;
+        moon.scale.setScalar(Math.max(0.0001, eclipseScale));
         moon.rotation.y = time * 0.018;
         coronaMat.uniforms.uTime.value = time;
-        coronaMat.uniforms.uStrength.value =
-          (1 - j.unfold * 0.88) * (1 - j.depart);
-        corona.scale.setScalar(1 - j.unfold * 0.68);
-        corona.position.x = moon.position.x;
-        corona.position.y = moon.position.y;
+        coronaMat.uniforms.uStrength.value = eclipseScale * (1 - j.depart);
+        corona.visible = moon.visible;
+        corona.scale.setScalar(Math.max(0.0001, eclipseScale));
         rings.forEach((ring, n) => {
           ring.position.z = (n - 1) * (0.16 + j.unfold * 2.9);
           ring.rotation.x = (1 - j.unfold) * (0.7 + n * 0.38);
           ring.rotation.y = (1 - j.unfold) * (0.22 + n * 0.28);
           ring.rotation.z = time * 0.012 * (n % 2 ? -1 : 1) * (1 - j.unfold);
         });
-        iris.visible = j.unfold > 0.15;
+        iris.visible = j.optics > 0;
         irisMaterials.forEach((material) => {
-          material.opacity =
-            T.MathUtils.smoothstep(j.unfold, 0.35, 0.85) * (1 - j.depart);
+          material.opacity = j.optics * (1 - j.depart);
           material.depthWrite = material.opacity > 0.995;
         });
         lens.visible = lensMaterial.opacity > 0.001;

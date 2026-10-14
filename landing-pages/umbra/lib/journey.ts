@@ -9,6 +9,10 @@ export function journeyAt(progress: number) {
   return {
     p,
     unfold: smooth((p - 0.12) / 0.76),
+    // Resolve the eclipse inside the opening before revealing solid optics.
+    // Both phases use the scroll clock, so reversing retraces the same path.
+    eclipseRelease: smooth((p - 0.08) / 0.44),
+    optics: smooth((p - 0.56) / 0.32),
     depart: smooth((p - 1.12) / 0.56),
     passage: smooth((p - 1.12) / 0.88),
     alignment: smooth(p - 2),
