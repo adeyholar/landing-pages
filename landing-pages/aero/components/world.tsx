@@ -1,7 +1,15 @@
 "use client";
 
 import { useEffect, useRef, type RefObject } from "react";
-import { LIVERIES, foldAt, smooth, type LoadState } from "@/lib/flight";
+import {
+  LIVERIES,
+  foldAt,
+  smooth,
+  flightPoseAt,
+  throwPoseAt,
+  THROW_DURATION,
+  type LoadState,
+} from "@/lib/flight";
 import type * as Three from "three";
 import {
   createPaperPanels,
@@ -67,7 +75,12 @@ export function World(props: Props) {
       if (disposed) return;
       const mobile = () => innerWidth < 760;
       let width = innerWidth,
-        height = innerHeight;
+        height = innerHeight,
+        pilotTop = Infinity;
+      const pilotCard = shell?.querySelector<HTMLElement>(".pilot-card");
+      const measurePilot = () => {
+        pilotTop = pilotCard?.getBoundingClientRect().top ?? Infinity;
+      };
       const renderer = new T.WebGLRenderer({
         antialias: true,
         alpha: false,
@@ -128,6 +141,7 @@ export function World(props: Props) {
       scene.add(plane);
       update(28, "Giving the paper a little substance");
 
+      const paperPanels = createPaperPanels();
       const texture = (index: number, back = false) => {
         const canvas = document.createElement("canvas");
         canvas.width = canvas.height = 1024;
@@ -200,6 +214,43 @@ export function World(props: Props) {
           1.6,
           0.5,
         );
+      }
+      // Pressed creases belong to the sheet, so their relief stays attached
+      // to the same UV coordinates while the layered folds open and close.
+      const creaseEdges = new Set<string>();
+      for (const sign of [-1, 1]) {
+        for (const panel of paperPanels) {
+          for (let i = 0; i < panel.points.length; i++) {
+            const a = panel.points[i],
+              b = panel.points[(i + 1) % panel.points.length];
+            if (
+              (a[0] === 1.7 && b[0] === 1.7) ||
+              (a[1] === b[1] && (a[1] === 0 || a[1] === 5.4))
+            )
+              continue;
+            const points = [a, b].map(([x, z]) => [
+              ((x * sign + 1.7) / 3.4) * 512,
+              (z / 5.4) * 512,
+            ]);
+            const edge = points
+              .map(([x, y]) => `${x.toFixed(4)},${y.toFixed(4)}`)
+              .sort()
+              .join("/");
+            if (creaseEdges.has(edge)) continue;
+            creaseEdges.add(edge);
+            for (const [width, shade] of [
+              [2.4, 137],
+              [0.8, 117],
+            ]) {
+              grainContext.lineWidth = width;
+              grainContext.strokeStyle = `rgb(${shade},${shade},${shade})`;
+              grainContext.beginPath();
+              grainContext.moveTo(points[0][0], points[0][1]);
+              grainContext.lineTo(points[1][0], points[1][1]);
+              grainContext.stroke();
+            }
+          }
+        }
       }
       const paperGrain = own(new T.CanvasTexture(grainCanvas));
       paperGrain.anisotropy = Math.min(
@@ -318,7 +369,6 @@ export function World(props: Props) {
         wing: boolean;
         sign: number;
       }[] = [];
-      const paperPanels = createPaperPanels();
       for (const sign of [-1, 1]) {
         for (const panel of paperPanels) {
           const pivot = new T.Group();
@@ -393,10 +443,17 @@ export function World(props: Props) {
             metalness: 0.06,
             transparent: true,
             opacity: 0,
+            depthWrite: false,
           }),
         ),
       );
+      const gates: {
+        mesh: Three.Mesh;
+        material: Three.MeshStandardMaterial;
+      }[] = [];
       for (let i = 0; i < 7; i++) {
+        const material = own(ringMaterials[i % 3].clone());
+        material.depthWrite = false;
         const arch = new T.Mesh(
           own(
             new T.TorusGeometry(
@@ -406,8 +463,9 @@ export function World(props: Props) {
               180,
             ),
           ),
-          ringMaterials[i % 3],
+          material,
         );
+        gates.push({ mesh: arch, material });
         arch.position.set(
           Math.sin(i * 0.9) * 0.65,
           1.1 + Math.cos(i) * 0.25,
@@ -419,7 +477,7 @@ export function World(props: Props) {
         if (i % 2 === 0) {
           const label = new T.Mesh(
             own(new T.BoxGeometry(0.09, 0.55, 0.09)),
-            ringMaterials[i % 3],
+            material,
           );
           label.position.set(
             arch.position.x - 3.68,
@@ -491,56 +549,6 @@ export function World(props: Props) {
       const anchor = new T.Vector3(),
         look = new T.Vector3(),
         projection = new T.Vector3();
-      const keys = [
-        {
-          p: 0,
-          position: [0, 0.05, 0],
-          cam: [0, 5.9, 11.2],
-          look: [0, 0, -0.1],
-          rotation: [-0.04, 2.48, -0.12],
-          target: [0.43, -0.02],
-        },
-        {
-          p: 1.04,
-          position: [0, 0.1, 0],
-          cam: [0, 10.5, 8.1],
-          look: [0, 0, 0],
-          rotation: [0, -0.26, -0.12],
-          target: [0.43, 0.17],
-        },
-        {
-          p: 1.8,
-          position: [0, 0.45, -1],
-          cam: [0, 4.5, 9.2],
-          look: [0, 0.3, -1.8],
-          rotation: [0, -0.15, -0.06],
-          target: [0.4, -0.05],
-        },
-        {
-          p: 2.1,
-          position: [0, 0.65, -6],
-          cam: [0, 3.8, 3.2],
-          look: [0, 0.6, -7],
-          rotation: [0.04, -0.04, 0.03],
-          target: [0.27, -0.09],
-        },
-        {
-          p: 2.62,
-          position: [0.2, 1.2, -23],
-          cam: [-0.8, 4.8, -14],
-          look: [0.2, 0.7, -24],
-          rotation: [0.02, 0.22, -0.2],
-          target: [0.22, -0.09],
-        },
-        {
-          p: 3,
-          position: [0, 0.15, -34],
-          cam: [0, 5.9, -22.5],
-          look: [0, 0, -34.5],
-          rotation: [-0.03, 2.48, -0.14],
-          target: [-0.43, -0.63],
-        },
-      ];
       const render = (now: number) => {
         frame = 0;
         if (disposed || failed || document.hidden) return;
@@ -558,41 +566,21 @@ export function World(props: Props) {
           ? T.MathUtils.damp(windValue, state.wind, 14, dt)
           : state.wind;
         const p = flightProgress;
-        let before = keys[0],
-          after = keys[keys.length - 1];
-        for (let i = 0; i < keys.length - 1; i++)
-          if (p >= keys[i].p && p <= keys[i + 1].p) {
-            before = keys[i];
-            after = keys[i + 1];
-            break;
-          }
-        const t = smooth(before.p, after.p, p);
-        const mix = (a: number, b: number) => T.MathUtils.lerp(a, b, t);
-        anchor.set(
-          mix(before.position[0], after.position[0]),
-          mix(before.position[1], after.position[1]),
-          mix(before.position[2], after.position[2]),
-        );
-        camera.position.set(
-          mix(before.cam[0], after.cam[0]),
-          mix(before.cam[1], after.cam[1]),
-          mix(before.cam[2], after.cam[2]),
-        );
-        look.set(
-          mix(before.look[0], after.look[0]),
-          mix(before.look[1], after.look[1]),
-          mix(before.look[2], after.look[2]),
-        );
-        plane.rotation.set(
-          mix(before.rotation[0], after.rotation[0]),
-          mix(before.rotation[1], after.rotation[1]),
-          mix(before.rotation[2], after.rotation[2]),
-        );
+        const pose = flightPoseAt(p);
+        anchor.fromArray(pose.position);
+        camera.position.fromArray(pose.cam);
+        look.fromArray(pose.look);
+        plane.rotation.set(...pose.rotation);
         const fold = foldAt(p);
+        const mobileControls = mobile()
+          ? smooth(410, 260, pilotTop) * smooth(2.8, 3, p)
+          : 0;
         plane.scale.setScalar(
           mobile()
-            ? 0.59 + 0.28 * fold
-            : (0.79 + 0.21 * fold) * (1 - 0.13 * smooth(2.8, 3, p)),
+            ? ((height < 801 ? 0.53 : 0.59) +
+                (height < 801 ? 0.34 : 0.28) * fold) *
+                (1 - mobileControls * 0.22)
+            : (0.73 + 0.27 * fold) * (1 - 0.13 * smooth(2.8, 3, p)),
         );
         for (const panel of panels) {
           const { sign, pivot } = panel;
@@ -632,38 +620,52 @@ export function World(props: Props) {
           });
           lastKind = state.kind;
         }
-        if (state.launch !== previousLaunch) {
+        // Finish the current loop before accepting another throw. Repeated
+        // clicks never teleport the plane back to its departure position.
+        if (
+          state.launch !== previousLaunch &&
+          (time - throwAt >= THROW_DURATION || state.paused)
+        ) {
           previousLaunch = state.launch;
-          throwAt = time;
+          if (moving) throwAt = time;
         }
         const personal = smooth(2.8, 3, p);
-        anchor.y += ((windValue - 45) / 70) * personal;
+        anchor.y += ((windValue - 45) / 95) * personal * (mobile() ? 0.7 : 1);
+        const thrown = throwPoseAt(time - throwAt);
+        anchor.x += thrown.x * personal;
+        anchor.y += thrown.y * personal * (mobile() ? 0.22 : 1);
+        anchor.z += thrown.z * personal * (mobile() ? 0.12 : 1);
+        plane.rotation.z += thrown.bank * personal;
+        plane.rotation.x += thrown.pitch * personal;
+        // Pausing freezes the shared clock and its complete pose, including
+        // a throw already in flight. Resume continues from the same point.
+        anchor.y += Math.sin(time * 0.7) * 0.065;
+        plane.rotation.z += Math.sin(time * 0.47) * 0.018;
         if (moving) {
-          const thrown = Math.max(0, Math.min(1, (time - throwAt) / 2.3));
-          const arc = Math.sin(thrown * Math.PI);
-          anchor.y += arc * 2.2 * personal;
-          anchor.z -= arc * 7 * personal;
-          anchor.x += Math.sin(thrown * Math.PI * 2) * 1.5 * personal;
-          plane.rotation.z += Math.sin(thrown * Math.PI * 2) * 0.3 * personal;
-          plane.rotation.x -= arc * 0.18 * personal;
-          anchor.y += Math.sin(time * 0.7) * 0.065;
-          plane.rotation.z += Math.sin(time * 0.47) * 0.018;
-        } else if (state.launch > 0) {
-          plane.rotation.z += (state.launch % 2 ? 0.1 : -0.1) * personal;
+          easedX = T.MathUtils.damp(easedX, pointerX, 10, dt);
+          easedY = T.MathUtils.damp(easedY, pointerY, 10, dt);
         }
-        easedX = T.MathUtils.damp(easedX, moving ? pointerX : 0, 10, dt);
-        easedY = T.MathUtils.damp(easedY, moving ? pointerY : 0, 10, dt);
         plane.rotation.y += easedX * 0.065;
         plane.rotation.x += easedY * 0.035;
         plane.position.copy(anchor);
-        let targetX = mix(before.target[0], after.target[0]);
-        let targetY = mix(before.target[1], after.target[1]);
+        let [targetX, targetY] = pose.target;
         if (mobile()) {
           const personalStage = smooth(2.7, 3, p);
           targetX = 0;
           targetY = T.MathUtils.lerp(
             T.MathUtils.lerp(-0.14, -0.4, fold),
             0.07,
+            personalStage,
+          );
+          // Keep the plane above the controls as the mobile card scrolls up.
+          // The card then sticks in place with the whole preview still visible.
+          const previewCenter = Math.min(
+            height * 0.465,
+            Math.max(125, pilotTop - 125),
+          );
+          targetY = T.MathUtils.lerp(
+            targetY,
+            1 - (previewCenter / height) * 2,
             personalStage,
           );
           camera.position.z += 5.3;
@@ -673,13 +675,7 @@ export function World(props: Props) {
         camera.lookAt(look);
         camera.updateMatrixWorld();
         // Position the *resting* anchor, so the updraft and throw remain visible.
-        projection
-          .set(
-            mix(before.position[0], after.position[0]),
-            mix(before.position[1], after.position[1]),
-            mix(before.position[2], after.position[2]),
-          )
-          .project(camera);
+        projection.fromArray(pose.position).project(camera);
         camera.setViewOffset(
           width,
           height,
@@ -719,15 +715,28 @@ export function World(props: Props) {
         ground.position.z = anchor.z;
         ground.position.y = -2.6 - smooth(1.75, 2.1, p) * 1.5;
         contact.position.set(anchor.x, ground.position.y + 0.025, anchor.z);
-        shadowMaterial.opacity = 1 - smooth(1.75, 2.1, p) * 0.6;
+        const altitude = Math.max(0, anchor.y - pose.position[1]);
+        contact.scale.setScalar(1 + altitude * 0.22);
+        shadowMaterial.opacity =
+          (1 - smooth(1.75, 2.1, p) * 0.6) / (1 + altitude * 0.6);
         key.position.set(anchor.x - 5, anchor.y + 9, anchor.z + 6);
         key.target.position.copy(anchor);
         key.target.updateMatrixWorld();
         heroArcMaterial.opacity = 0.65 * (1 - smooth(0.25, 1, p));
+        const airspacePresence =
+          smooth(1.72, 2.02, p) * (1 - smooth(2.72, 3, p) * 0.92);
         ringMaterials.forEach((material) => {
-          material.opacity =
-            smooth(1.72, 2.02, p) * (1 - smooth(2.72, 3, p) * 0.88);
+          material.opacity = airspacePresence * 0.65;
         });
+        for (const gate of gates) {
+          projection
+            .copy(gate.mesh.position)
+            .applyMatrix4(camera.matrixWorldInverse);
+          // Fade a gate before the camera crosses it, rather than letting the
+          // near plane slice a large, solid hoop across the narrative.
+          gate.material.opacity =
+            airspacePresence * smooth(2.4, 8, -projection.z);
+        }
         arches.visible = p > 1.71;
         try {
           renderer.render(scene, camera);
@@ -789,7 +798,12 @@ export function World(props: Props) {
           frame = requestAnimationFrame(render);
       };
       wake.current = request;
+      const progress = () => {
+        measurePilot();
+        request();
+      };
       const resize = () => {
+        measurePilot();
         width = innerWidth;
         height = innerHeight;
         camera.aspect = width / height;
@@ -812,14 +826,14 @@ export function World(props: Props) {
         request();
       };
       addEventListener("resize", resize);
-      addEventListener("aero:progress", request);
+      addEventListener("aero:progress", progress);
       addEventListener("pointermove", pointer, { passive: true });
       document.addEventListener("visibilitychange", visibility);
       const cleanRenderer = cleanup;
       cleanup = () => {
         cleanRenderer();
         removeEventListener("resize", resize);
-        removeEventListener("aero:progress", request);
+        removeEventListener("aero:progress", progress);
         removeEventListener("pointermove", pointer);
         document.removeEventListener("visibilitychange", visibility);
         renderer.domElement.removeEventListener(
@@ -889,6 +903,7 @@ export function World(props: Props) {
           }
           if (failed) return;
           compiled = true;
+          measurePilot();
           request();
         } catch {
           fail();

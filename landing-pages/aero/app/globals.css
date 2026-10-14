@@ -1375,6 +1375,30 @@ body:has(.preflight) {
   }
   .passage .chapter-inner {
     padding-top: 38px;
+    isolation: isolate;
+  }
+  .passage .chapter-inner::before,
+  .passage .chapter-inner::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .passage .chapter-inner::before {
+    top: 0;
+    height: 350px;
+    background: linear-gradient(
+      var(--cream) 12%,
+      rgb(244 241 231 / 0.9) 65%,
+      transparent
+    );
+  }
+  .passage .chapter-inner::after {
+    bottom: 65px;
+    height: 135px;
+    background: linear-gradient(transparent, rgb(244 241 231 / 0.9) 65%);
   }
   .passage h2 {
     font-size: clamp(61px, 14vw, 109px);
@@ -1414,11 +1438,11 @@ body:has(.preflight) {
     width: 30px;
   }
   .cockpit {
-    min-height: 1300px;
+    min-height: 1550px;
   }
   .cockpit .chapter-inner {
     height: auto;
-    min-height: 1250px;
+    min-height: 1500px;
     position: relative;
     padding-top: 38px;
     padding-bottom: 115px;
@@ -1431,8 +1455,8 @@ body:has(.preflight) {
     max-width: 100%;
   }
   .pilot-card {
-    position: relative;
-    top: auto;
+    position: sticky;
+    top: clamp(210px, 27svh, 260px);
     right: auto;
     width: 100%;
     margin-top: 285px;
@@ -1440,8 +1464,8 @@ body:has(.preflight) {
     transform: rotate(0);
   }
   .pilot-card-head {
-    margin-bottom: 20px;
-    padding-bottom: 17px;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
   }
   .pilot-card-head > span {
     font-size: 8px;
@@ -1450,7 +1474,21 @@ body:has(.preflight) {
     font-size: 22px;
   }
   .livery {
-    min-height: 89px;
+    min-height: 68px;
+    gap: 7px;
+  }
+  .pilot-card legend {
+    margin-bottom: 10px;
+  }
+  .pilot-card .ui-slider {
+    margin-top: 18px;
+  }
+  .pilot-card .launch-button {
+    margin-top: 14px;
+  }
+  .pilot-card .flight-status {
+    min-height: 44px;
+    padding-top: 10px;
   }
   .pilot-footnote {
     font-size: 7px;
@@ -1686,5 +1724,16 @@ html[data-motion="paused"] *:after {
     height: auto;
     max-width: none;
     font-size: 8px;
+  }
+}
+
+@media (max-width: 759px) and (max-height: 800px) {
+  .plane-label {
+    top: 400px;
+    font-size: 6px;
+    gap: 7px;
+  }
+  .folding h2 {
+    font-size: clamp(56px, 13vw, 76px);
   }
 }

@@ -51,6 +51,7 @@ export function FlightLoader({
           <p role="status">{stage}</p>
         </div>
         <Progress
+          locale="en-US"
           value={progress}
           aria-label="Preparing your departure"
           aria-valuetext={`${progress}% — ${stage}`}
