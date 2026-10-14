@@ -506,22 +506,6 @@ export function World(props: Props) {
         );
         arches.add(line);
       }
-      // A quiet, oversized arc is the hero's first hint of the airspace ahead.
-      const heroArcMaterial = own(
-        new T.MeshStandardMaterial({
-          color: "#2046ed",
-          roughness: 0.7,
-          transparent: true,
-          opacity: 0.75,
-        }),
-      );
-      const heroArc = new T.Mesh(
-        own(new T.TorusGeometry(4.1, 0.022, 8, 140, Math.PI * 1.58)),
-        heroArcMaterial,
-      );
-      heroArc.position.set(2.5, 0.5, -3.8);
-      heroArc.rotation.z = -0.7;
-      scene.add(heroArc);
       update(69, "Checking a few entirely imaginary currents");
       let lastTime = 0,
         time = 0,
@@ -722,7 +706,6 @@ export function World(props: Props) {
         key.position.set(anchor.x - 5, anchor.y + 9, anchor.z + 6);
         key.target.position.copy(anchor);
         key.target.updateMatrixWorld();
-        heroArcMaterial.opacity = 0.65 * (1 - smooth(0.25, 1, p));
         const airspacePresence =
           smooth(1.72, 2.02, p) * (1 - smooth(2.72, 3, p) * 0.92);
         ringMaterials.forEach((material) => {
