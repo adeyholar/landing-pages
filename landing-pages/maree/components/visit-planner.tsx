@@ -271,7 +271,7 @@ export function VisitPlanner({ initialOffer }: { initialOffer?: string }) {
               )}
               <Button type="submit">
                 {step === 2 ? "Create my sample plan" : "Continue"}
-                <span aria-hidden="true">↗</span>
+                <span aria-hidden="true">↗︎</span>
               </Button>
             </div>
           </form>

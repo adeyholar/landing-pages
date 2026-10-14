@@ -48,7 +48,7 @@ export function FaqSearch() {
           onChange={(e) => search(e.target.value)}
           placeholder="Try ‘first visit’ or ‘price’"
         />
-        <span aria-hidden="true">↗</span>
+        <span aria-hidden="true">↗︎</span>
       </div>
       <ToggleGroup
         className="filter-row"

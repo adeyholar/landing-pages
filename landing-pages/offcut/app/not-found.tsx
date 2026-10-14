@@ -11,7 +11,7 @@ export default function NotFound() {
       </h1>
       <p>This page doesn’t exist. Let’s take you back.</p>
       <Button render={<Link href="/" />} nativeButton={false}>
-        Back to the beginning ↗
+        Back to the beginning ↗︎
       </Button>
     </section>
   );

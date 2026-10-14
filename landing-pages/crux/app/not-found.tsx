@@ -12,7 +12,7 @@ export default function NotFound() {
       </h1>
       <p>This page isn’t here. Let’s take you back to somewhere familiar.</p>
       <Button nativeButton={false} render={<Link href="/" />}>
-        Back to the beginning <span aria-hidden="true">↗</span>
+        Back to the beginning <span aria-hidden="true">↗︎</span>
       </Button>
     </section>
   );

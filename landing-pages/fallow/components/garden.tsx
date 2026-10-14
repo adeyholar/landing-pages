@@ -271,7 +271,7 @@ export function Garden() {
             className="wordmark"
             aria-label="Fallow, beginning"
           >
-            fallow<span>®</span>
+            fallow<span>®︎</span>
           </a>
           <span className="header-caption">An exercise in becoming.</span>
           <Button
@@ -309,7 +309,7 @@ export function Garden() {
                   onClick={() => setAwake((v) => !v)}
                   aria-pressed={awake}
                 >
-                  <span className="seed-glyph">✳</span>
+                  <span className="seed-glyph">✳︎</span>
                   {awake ? "The seed is awake" : "Wake the seed"}
                   <span className="wake-plus">{awake ? "−" : "+"}</span>
                 </Button>
@@ -485,18 +485,18 @@ export function Garden() {
         </nav>
         <footer className="garden-footer">
           <a className="wordmark" href="#chapter-0">
-            fallow<span>®</span>
+            fallow<span>®︎</span>
           </a>
           <p>A fictional garden. A real invitation to slow down.</p>
           <div>
             <span>
-              Developed by <a href="https://lndev.me">LN ↗</a>
+              Developed by <a href="https://lndev.me">LN ↗︎</a>
             </span>
             <a href="https://github.com/ln-dev7/landing-pages">
-              Open source · MIT ↗
+              Open source · MIT ↗︎
             </a>
             <a href="https://lndev.mychariow.shop/prd_3cu1s0">
-              Support the project ↗
+              Support the project ↗︎
             </a>
             <Button variant="unstyled" onClick={() => setJournal(true)}>
               About this garden
@@ -517,7 +517,7 @@ export function Garden() {
               beginnings.
             </SheetDescription>
             <div className="notes-specimen">
-              <span>✳</span>
+              <span>✳︎</span>
               <em>{species[kind].name}</em>
               <p>{species[kind].note}</p>
             </div>

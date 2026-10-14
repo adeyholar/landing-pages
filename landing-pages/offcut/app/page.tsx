@@ -19,7 +19,7 @@ export default function Home() {
             <br />
             <em>New moods.</em>
             <span className="hero-star" aria-hidden="true">
-              ✳
+              ✳︎
             </span>
           </h1>
           <div className="hero-bottom-copy">
@@ -77,8 +77,8 @@ export default function Home() {
             <div className="marquee-group" key={group}>
               {[0, 1].map((repeat) => (
                 <span className="marquee-phrase" key={repeat}>
-                  GOOD BONES <i>✳</i> LITTLE QUIRKS <i>✳</i> LONG STORIES{" "}
-                  <i>✳</i>
+                  GOOD BONES <i>✳︎</i> LITTLE QUIRKS <i>✳︎</i> LONG STORIES{" "}
+                  <i>✳︎</i>
                 </span>
               ))}
             </div>
@@ -93,7 +93,7 @@ export default function Home() {
             STILL
             <br />
             <em>good.</em>
-            <span>LOOK AGAIN ↗</span>
+            <span>LOOK AGAIN ↗︎</span>
           </div>
           <span className="eyebrow">A DIFFERENT WAY TO SEE WHAT’S LEFT.</span>
         </div>
@@ -143,7 +143,7 @@ export default function Home() {
               n: "03",
               name: "Let life happen.",
               text: "The best finish is a life well lived. Coffee, conversation and a few stories of your own.",
-              glyph: "✳",
+              glyph: "✳︎",
             },
           ].map((x) => (
             <article key={x.n} data-reveal data-scroll>
@@ -194,7 +194,7 @@ export default function Home() {
             <em>like to know?</em>
           </h2>
           <Link href="/faq" className="text-link">
-            More good questions ↗
+            More good questions ↗︎
           </Link>
         </div>
         <Faq />
@@ -207,10 +207,10 @@ export default function Home() {
           Find your
           <br />
           <em>kind of odd.</em>
-          <span aria-hidden="true">↗</span>
+          <span aria-hidden="true">↗︎</span>
         </Link>
         <span className="final-flower" aria-hidden="true" data-scroll>
-          ✳
+          ✳︎
         </span>
       </section>
     </>

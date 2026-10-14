@@ -96,7 +96,7 @@ export function WallExplorer() {
           nativeButton={false}
           render={<Link href="/visit" />}
         >
-          Find your first hold <span aria-hidden="true">↗</span>
+          Find your first hold <span aria-hidden="true">↗︎</span>
         </Button>
       </div>
       <div className="wall-canvas">
@@ -191,7 +191,7 @@ export function WallExplorer() {
             Same good feeling.
           </span>
           <span className="wall-arrow" aria-hidden="true">
-            ↗
+            ↗︎
           </span>
         </div>
         <p className="micro">Illustrative route map · not a safety guide</p>

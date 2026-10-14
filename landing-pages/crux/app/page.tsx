@@ -32,7 +32,7 @@ export default function Home() {
               Find your way up at CRUX.
             </p>
             <Button nativeButton={false} render={<Link href="/visit" />}>
-              Make your first move <span aria-hidden="true">↗</span>
+              Make your first move <span aria-hidden="true">↗︎</span>
             </Button>
           </div>
           <div className="hero-coordinates">
@@ -56,7 +56,7 @@ export default function Home() {
               <br />
               JUST GO.
             </span>
-            <span aria-hidden="true">↗</span>
+            <span aria-hidden="true">↗︎</span>
           </div>
           <div className="hero-sticker">
             <strong>
@@ -73,7 +73,7 @@ export default function Home() {
               href="/visit?experience=first"
               aria-label="Explore your first-time session"
             >
-              ↗
+              ↗︎
             </Link>
           </div>
           <div className="vertical-note">
@@ -83,7 +83,7 @@ export default function Home() {
       </section>
       <Marquee
         className="club-strip"
-        separator="✳"
+        separator="✳︎"
         items={[
           "COME AS YOU ARE",
           "FALL. LAUGH. TRY AGAIN.",
@@ -107,7 +107,7 @@ export default function Home() {
             yourself. That’s our idea of a good time.
           </p>
           <span className="asterisk" aria-hidden="true">
-            ✳
+            ✳︎
           </span>
         </div>
       </section>
@@ -142,7 +142,7 @@ export default function Home() {
                       ? "DO YOUR THING"
                       : "FIND YOUR EDGE"}
                 </span>
-                <span aria-hidden="true">↗</span>
+                <span aria-hidden="true">↗︎</span>
               </div>
               <h3>{o.name}</h3>
               <p>{o.description}</p>
@@ -164,7 +164,7 @@ export default function Home() {
                   : i === 1
                     ? "Grab a day pass"
                     : "Find your flow"}
-                <span aria-hidden="true">↗</span>
+                <span aria-hidden="true">↗︎</span>
               </Button>
             </Card>
           ))}
@@ -224,7 +224,7 @@ export default function Home() {
             loudly.
           </p>
           <Button nativeButton={false} render={<Link href="/groups" />}>
-            Plan a group climb <span aria-hidden="true">↗</span>
+            Plan a group climb <span aria-hidden="true">↗︎</span>
           </Button>
           <span className="micro">6–20 PEOPLE / NO EXPERIENCE NECESSARY</span>
         </div>
@@ -244,7 +244,7 @@ export default function Home() {
           nativeButton={false}
           render={<Link href="/visit" aria-label="Plan your visit" />}
         >
-          <span aria-hidden="true">↗</span>
+          <span aria-hidden="true">↗︎</span>
         </Button>
         <div className="final-details">
           <span>

@@ -269,7 +269,7 @@ export function Observatory() {
           aria-label="Preparing the observatory"
         >
           <div className="loading-meta">
-            <span>UMBRA®</span>
+            <span>UMBRA®︎</span>
             <span>OBSERVATORY / 001</span>
           </div>
           <div className="loader-aperture" aria-hidden="true">
@@ -324,7 +324,7 @@ export function Observatory() {
             href="#chapter-0"
             aria-label="Umbra, beginning"
           >
-            <span className="brand-eclipse" /> UMBRA<sup>®</sup>
+            <span className="brand-eclipse" /> UMBRA<sup>®︎</sup>
           </a>
           <span className="header-center">
             <i /> AN OBSERVATORY OF THE UNSEEN
@@ -634,7 +634,7 @@ export function Observatory() {
           </div>
           <div className="footer-bottom">
             <a className="wordmark" href="#chapter-0">
-              UMBRA<sup>®</sup>
+              UMBRA<sup>®︎</sup>
             </a>
             <p>
               An imaginary observatory.
@@ -644,7 +644,7 @@ export function Observatory() {
               <span>
                 Developed by{" "}
                 <a href="https://lndev.me" target="_blank" rel="noreferrer">
-                  LN ↗
+                  LN ↗︎
                 </a>
               </span>
               <a
@@ -652,14 +652,14 @@ export function Observatory() {
                 target="_blank"
                 rel="noreferrer"
               >
-                Open source · MIT ↗
+                Open source · MIT ↗︎
               </a>
               <a
                 href="https://lndev.mychariow.shop/prd_3cu1s0"
                 target="_blank"
                 rel="noreferrer"
               >
-                Support the project ↗
+                Support the project ↗︎
               </a>
             </div>
           </div>

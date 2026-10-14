@@ -1784,3 +1784,18 @@ html[data-motion="still"] .reveal {
   inset: 25px 15%;
   transform: rotate(-18deg);
 }
+
+/* SVG symbols keep the same monochrome appearance on iOS and desktop. */
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+  vertical-align: -0.125em;
+}
+.hero__asterisk .icon,
+.brand__mark > span .icon,
+.footer__brand > span .icon,
+.outline-star .icon {
+  display: block;
+}

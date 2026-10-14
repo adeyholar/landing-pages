@@ -27,7 +27,7 @@ export default function Groups() {
             rush. No one else’s agenda.
           </p>
           <Button nativeButton={false} render={<a href="#enquiry" />}>
-            Imagine your gathering<span aria-hidden="true">↗</span>
+            Imagine your gathering<span aria-hidden="true">↗︎</span>
           </Button>
         </div>
         <div className="group-photo">

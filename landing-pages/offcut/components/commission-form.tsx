@@ -168,7 +168,7 @@ export function CommissionForm({
               </FieldDescription>
             </Field>
           </div>
-          <Button type="submit">Bring the idea together ↗</Button>
+          <Button type="submit">Bring the idea together ↗︎</Button>
         </form>
       </div>
       <aside className="commission-preview">

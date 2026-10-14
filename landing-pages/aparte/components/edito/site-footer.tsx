@@ -117,7 +117,7 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <p className="mt-16 text-[0.8125rem] text-mist">© 2026 Aparté, Inc.</p>
+        <p className="mt-16 text-[0.8125rem] text-mist">©︎ 2026 Aparté, Inc.</p>
         <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-gold-light/40 pt-6 text-[0.8125rem] text-cream/85">
           <p>
             Developed by{" "}
@@ -139,7 +139,7 @@ export function SiteFooter() {
             href="https://lndev.mychariow.shop/prd_3cu1s0"
             className="underline decoration-current/40 underline-offset-4 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-4"
           >
-            Support the project <span aria-hidden="true">↗</span>
+            Support the project <span aria-hidden="true">↗︎</span>
           </a>
         </div>
       </Container>

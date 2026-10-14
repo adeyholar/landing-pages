@@ -250,7 +250,7 @@ export function SiteFooter({
               href="https://lndev.mychariow.shop/prd_3cu1s0"
               className="underline decoration-current/40 underline-offset-4 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-4"
             >
-              Support the project <span aria-hidden="true">↗</span>
+              Support the project <span aria-hidden="true">↗︎</span>
             </a>
           </div>
         </div>

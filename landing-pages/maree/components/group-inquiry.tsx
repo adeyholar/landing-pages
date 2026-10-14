@@ -58,7 +58,7 @@ export function GroupInquiry() {
             No request has been sent. This is an interactive design concept.
           </p>
           <Button onClick={edit}>
-            Edit enquiry <span aria-hidden="true">↗</span>
+            Edit enquiry <span aria-hidden="true">↗︎</span>
           </Button>
         </div>
       ) : (
@@ -158,7 +158,7 @@ export function GroupInquiry() {
             </span>
           </Label>
           <Button type="submit">
-            Preview enquiry<span aria-hidden="true">↗</span>
+            Preview enquiry<span aria-hidden="true">↗︎</span>
           </Button>
         </form>
       )}

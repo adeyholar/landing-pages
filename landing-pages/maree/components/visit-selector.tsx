@@ -35,7 +35,7 @@ export function VisitSelector() {
             </span>
             <span className="visit-choice-price">£{item.price}</span>
             <span className="visit-indicator" aria-hidden="true">
-              ↗
+              ↗︎
             </span>
           </ToggleGroupItem>
         ))}
@@ -60,7 +60,7 @@ export function VisitSelector() {
           nativeButton={false}
           render={<Link href={`/book?experience=${o.id}`} />}
         >
-          Make time for this <span aria-hidden="true">↗</span>
+          Make time for this <span aria-hidden="true">↗︎</span>
         </Button>
         <span className="micro">
           £{o.price} per person · example experience

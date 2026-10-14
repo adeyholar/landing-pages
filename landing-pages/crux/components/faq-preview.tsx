@@ -22,7 +22,7 @@ export function FaqPreview() {
           nativeButton={false}
           render={<Link href="/faq" />}
         >
-          All your questions <span aria-hidden="true">↗</span>
+          All your questions <span aria-hidden="true">↗︎</span>
         </Button>
       </div>
       <Accordion className="faq-list" multiple>

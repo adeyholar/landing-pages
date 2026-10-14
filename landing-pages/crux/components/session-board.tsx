@@ -85,7 +85,7 @@ export function SessionBoard() {
             </span>
             <span className="session-tag">{s.tag}</span>
             <span className="row-arrow" aria-hidden="true">
-              ↗
+              ↗︎
             </span>
           </Link>
         ))}

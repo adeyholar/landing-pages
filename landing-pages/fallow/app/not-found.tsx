@@ -24,7 +24,7 @@ export default function NotFound() {
           textDecoration: "underline",
         }}
       >
-        Back to the beginning ↗
+        Back to the beginning ↗︎
       </Link>
     </main>
   );

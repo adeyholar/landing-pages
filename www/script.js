@@ -22,9 +22,9 @@
     const source = p.source || repo + p.slug;
     const destination = p.url || `https://${p.slug}-lndev.vercel.app`;
     return `<article class="project reveal" id="${esc(p.slug)}" data-group="${esc(p.group)}">
-      <a class="project__media" href="${esc(destination)}" ${ext} aria-label="Visit ${esc(p.name)}"><img src="${esc(p.image)}" alt="${esc(p.name)} homepage — ${esc(p.direction)}" width="1600" height="900" loading="lazy" decoding="async"><span class="media__cta">Visit site ↗</span></a>
+      <a class="project__media" href="${esc(destination)}" ${ext} aria-label="Visit ${esc(p.name)}"><img src="${esc(p.image)}" alt="${esc(p.name)} homepage — ${esc(p.direction)}" width="1600" height="900" loading="lazy" decoding="async"><span class="media__cta">Visit site <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a>
       <div class="project__body"><div class="project__top"><h3><span class="project__num">${pad(i + 1)}</span>${esc(p.name)}</h3><span class="project__category">${esc(p.category)}</span></div><p class="project__desc">${esc(p.short)}</p></div>
-      <div class="project__links"><a href="${esc(destination)}" ${ext}>Live preview <span aria-hidden="true">↗</span></a><a href="${esc(source)}" ${ext} aria-label="${esc(p.name)} source code">Source code <span aria-hidden="true">↗</span></a></div>
+      <div class="project__links"><a href="${esc(destination)}" ${ext}>Live preview <span aria-hidden="true"><svg class="icon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a><a href="${esc(source)}" ${ext} aria-label="${esc(p.name)} source code">Source code <span aria-hidden="true"><svg class="icon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a></div>
       <details><summary>Behind the design</summary><div class="project__details"><p>${esc(p.description)}</p><dl><div><dt>Type</dt><dd>${esc(p.type)}</dd></div><div><dt>Stack</dt><dd>${esc(p.stack.join(" · "))}</dd></div><div><dt>Palette</dt><dd class="swatches" aria-label="Color palette">${p.colors.map((c) => `<i style="--c:${esc(c)}" title="${esc(c)}"></i>`).join("")}</dd></div></dl></div></details></article>`;
   });
   document.querySelector("#projects").innerHTML = cards.join("");
@@ -289,7 +289,7 @@
       await navigator.clipboard.writeText(
         "git clone https://github.com/ln-dev7/landing-pages.git\ncd landing-pages\ncd landing-pages/fallow\npnpm install\npnpm dev",
       );
-      copy.textContent = "Copied ✓";
+      copy.innerHTML = `Copied <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4 12 5 5L20 6"/></svg>`;
       document.querySelector("#copy-status").textContent = "Commands copied";
     } catch {
       document.querySelector("#copy-status").textContent =
@@ -297,7 +297,7 @@
     }
     clearTimeout(copyTimer);
     copyTimer = setTimeout(() => {
-      copy.textContent = "Copy ↗";
+      copy.innerHTML = `Copy <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 19 19 5M5 5h14v14"/></svg>`;
       document.querySelector("#copy-status").textContent = "";
     }, 3000);
   });

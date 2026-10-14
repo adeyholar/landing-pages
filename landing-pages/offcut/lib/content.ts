@@ -1,6 +1,6 @@
 export const brand = {
   name: "offcut",
-  mark: "✳",
+  mark: "✳︎",
   tagline: "Good wood. New moods.",
   description:
     "An imagined furniture atelier turning overlooked wood into objects with a little more character. Explore the collection and make a piece your own.",

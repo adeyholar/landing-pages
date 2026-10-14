@@ -79,7 +79,7 @@ export function GardenLoader({
       <div className="loader-grain" aria-hidden="true" />
       <div className="loader-topline">
         <span className="wordmark">
-          fallow<span>®</span>
+          fallow<span>®︎</span>
         </span>
         <span className="loader-edition">
           A small world, waiting.
@@ -188,7 +188,7 @@ export function GardenLoader({
           <div className="loader-slow">
             <span>A slower connection? The quiet garden is ready.</span>
             <Button variant="unstyled" onClick={onQuiet}>
-              Enter without 3D <span aria-hidden="true">↗</span>
+              Enter without 3D <span aria-hidden="true">↗︎</span>
             </Button>
           </div>
         )}

@@ -38,7 +38,7 @@ export function Footer() {
           ))}
         </nav>
         <Button variant="ghost" onClick={toggle} aria-pressed={paused}>
-          {paused ? "Resume motion ↗" : "Pause motion Ⅱ"}
+          {paused ? "Resume motion ↗︎" : "Pause motion Ⅱ"}
         </Button>
       </div>
       <div className="footer-credit">
@@ -53,7 +53,7 @@ export function Footer() {
           target="_blank"
           rel="noopener"
         >
-          Open-source code · MIT ↗
+          Open-source code · MIT ↗︎
         </a>
         <a
           href="https://lndev.mychariow.shop/prd_3cu1s0"

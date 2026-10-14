@@ -22,7 +22,7 @@ export function FlightLoader({
     <div className="preflight" data-leaving={leaving}>
       <div className="preflight-top">
         <span className="brand">
-          AÉRO<span>®</span>
+          AÉRO<span>®︎</span>
         </span>
         <span className="micro">
           DEPARTURE CONTROL
@@ -58,7 +58,7 @@ export function FlightLoader({
         />
         {slow && (
           <Button variant="ghost" className="preflight-quiet" onClick={onQuiet}>
-            Continue with the illustrated flight ↗
+            Continue with the illustrated flight ↗︎
           </Button>
         )}
       </div>

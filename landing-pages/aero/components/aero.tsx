@@ -211,7 +211,7 @@ export function Aero() {
   const download = () => {
     const l = LIVERIES[kind];
     const code = `AE-${l.code}-${String(wind).padStart(3, "0")}`;
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700"><rect width="1200" height="700" fill="#f4f1e7"/><path d="M880 0v700" stroke="#2046ed" stroke-width="2" stroke-dasharray="9 9"/><rect x="32" y="32" width="1136" height="636" rx="16" fill="none" stroke="#2046ed" stroke-width="2"/><g fill="#2046ed" font-family="Arial,sans-serif"><text x="70" y="130" font-size="72" font-weight="700">AÉRO®</text><text x="70" y="200" font-size="20" letter-spacing="4">BUREAU OF PAPER FLIGHTS</text><text x="70" y="340" font-size="78" font-weight="700">HERE → ELSEWHERE</text><text x="70" y="410" font-size="25">${l.name} / Updraft ${wind}% / Flight ${code}</text><text x="70" y="550" font-size="23">A little paper. A lot of elsewhere.</text><text x="70" y="610" font-size="17">A fictional flight. A real daydream. Developed by LN / lndev.me</text><text x="930" y="535" font-size="24" transform="rotate(-90 930 535)">KEEP YOUR HEAD IN THE CLOUDS</text></g><path d="m942 240 180-115-87 195-23-89Z" fill="${l.color === "#f4f1e7" ? "#2046ed" : l.color}"/><path d="m1012 231 110-106-96 139Z" fill="#efd762"/><g stroke="#2046ed" stroke-width="3">${Array.from({ length: 40 }, (_, i) => `<path d="M${925 + i * 5} 570v${i % 3 === 0 ? 55 : 40}"/>`).join("")}</g></svg>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700"><rect width="1200" height="700" fill="#f4f1e7"/><path d="M880 0v700" stroke="#2046ed" stroke-width="2" stroke-dasharray="9 9"/><rect x="32" y="32" width="1136" height="636" rx="16" fill="none" stroke="#2046ed" stroke-width="2"/><g fill="#2046ed" font-family="Arial,sans-serif"><text x="70" y="130" font-size="72" font-weight="700">AÉRO®︎</text><text x="70" y="200" font-size="20" letter-spacing="4">BUREAU OF PAPER FLIGHTS</text><text x="70" y="340" font-size="78" font-weight="700">HERE → ELSEWHERE</text><text x="70" y="410" font-size="25">${l.name} / Updraft ${wind}% / Flight ${code}</text><text x="70" y="550" font-size="23">A little paper. A lot of elsewhere.</text><text x="70" y="610" font-size="17">A fictional flight. A real daydream. Developed by LN / lndev.me</text><text x="930" y="535" font-size="24" transform="rotate(-90 930 535)">KEEP YOUR HEAD IN THE CLOUDS</text></g><path d="m942 240 180-115-87 195-23-89Z" fill="${l.color === "#f4f1e7" ? "#2046ed" : l.color}"/><path d="m1012 231 110-106-96 139Z" fill="#efd762"/><g stroke="#2046ed" stroke-width="3">${Array.from({ length: 40 }, (_, i) => `<path d="M${925 + i * 5} 570v${i % 3 === 0 ? 55 : 40}"/>`).join("")}</g></svg>`;
     const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
     const a = document.createElement("a");
     a.href = url;
@@ -302,7 +302,7 @@ export function Aero() {
       >
         <header className="aero-header">
           <a href="#flight-0" className="brand" aria-label="Aéro, beginning">
-            AÉRO<span>®</span>
+            AÉRO<span>®︎</span>
           </a>
           <span className="header-center micro">
             BUREAU OF PAPER FLIGHTS
@@ -612,7 +612,7 @@ export function Aero() {
         <footer className="aero-footer">
           <div className="footer-top">
             <span className="brand">
-              AÉRO<span>®</span>
+              AÉRO<span>®︎</span>
             </span>
             <p>
               Keep your head
@@ -625,12 +625,12 @@ export function Aero() {
           </div>
           <div className="footer-bottom">
             <span>A fictional flight bureau. A real little escape.</span>
-            <a href="https://lndev.me">Developed by LN ↗</a>
+            <a href="https://lndev.me">Developed by LN ↗︎</a>
             <a href="https://github.com/ln-dev7/landing-pages">
-              Open source · MIT ↗
+              Open source · MIT ↗︎
             </a>
             <a href="https://lndev.mychariow.shop/prd_3cu1s0">
-              Support the project ↗
+              Support the project ↗︎
             </a>
           </div>
         </footer>

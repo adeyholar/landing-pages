@@ -41,7 +41,7 @@ export default function Home() {
             nativeButton={false}
             render={<Link href="/book" />}
           >
-            Find your quiet hour <span aria-hidden="true">↗</span>
+            Find your quiet hour <span aria-hidden="true">↗︎</span>
           </Button>
         </div>
         <div className="hero-bottom">
@@ -96,7 +96,7 @@ export default function Home() {
             nativeButton={false}
             render={<Link href="/book" />}
           >
-            Step out of your day <span aria-hidden="true">↗</span>
+            Step out of your day <span aria-hidden="true">↗︎</span>
           </Button>
         </div>
       </section>
@@ -176,7 +176,7 @@ export default function Home() {
             simply your favourite people, together somewhere a little different.
           </p>
           <Button nativeButton={false} render={<Link href="/groups" />}>
-            Gather by the water <span aria-hidden="true">↗</span>
+            Gather by the water <span aria-hidden="true">↗︎</span>
           </Button>
           <span className="micro">PRIVATE RITUALS FOR 6–12 PEOPLE</span>
         </div>
@@ -208,7 +208,7 @@ export default function Home() {
           <em>take yours.</em>
         </h2>
         <Button nativeButton={false} render={<Link href="/book" />}>
-          Make a little room <span aria-hidden="true">↗</span>
+          Make a little room <span aria-hidden="true">↗︎</span>
         </Button>
         <p className="micro">
           STILLWATER COVE · AN IMAGINED PLACE ON THE CORNISH COAST

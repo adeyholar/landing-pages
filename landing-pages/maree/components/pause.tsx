@@ -40,7 +40,7 @@ export function Pause() {
           }}
         >
           {running ? "End the pause" : "Find a slower rhythm"}{" "}
-          <span aria-hidden="true">{running ? "Ⅱ" : "↗"}</span>
+          <span aria-hidden="true">{running ? "Ⅱ" : "↗︎"}</span>
         </Toggle>
         <span className="sr-only" role="status">
           {running

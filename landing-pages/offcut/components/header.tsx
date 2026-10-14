@@ -29,7 +29,7 @@ export function Header() {
           </svg>
         </span>
         {brand.name}
-        <sup>®</sup>
+        <sup>®︎</sup>
       </Link>
       <nav className="desktop-nav" aria-label="Main navigation">
         {nav.map(([name, url]) => (

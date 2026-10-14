@@ -110,7 +110,7 @@ export function SiteFooter() {
             FICELLE
           </p>
           <p className="mt-6 flex flex-wrap justify-between gap-2 text-[0.875rem] text-ink">
-            <span>© 2026 {company.legalName} Made in Bellmere, Oregon.</span>
+            <span>©︎ 2026 {company.legalName} Made in Bellmere, Oregon.</span>
             <span>This side up.</span>
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-ink/25 pt-5 font-mono text-[0.8125rem] text-ink">
@@ -134,7 +134,7 @@ export function SiteFooter() {
               href="https://lndev.mychariow.shop/prd_3cu1s0"
               className="underline decoration-current/40 underline-offset-4 transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-4"
             >
-              Support the project <span aria-hidden="true">↗</span>
+              Support the project <span aria-hidden="true">↗︎</span>
             </a>
           </div>
         </div>

@@ -6,7 +6,7 @@ export function Footer() {
       <div className="footer-top">
         <Link className="footer-wordmark" href="/">
           {brand.name}
-          <span aria-hidden="true">↗</span>
+          <span aria-hidden="true">↗︎</span>
         </Link>
         <p>
           {brand.tagline}
@@ -22,7 +22,7 @@ export function Footer() {
         </div>
       </div>
       <div className="footer-bottom">
-        <p>© 2026 {brand.name} · A fictional brand, thoughtfully imagined.</p>
+        <p>©︎ 2026 {brand.name} · A fictional brand, thoughtfully imagined.</p>
         <nav aria-label="Information">
           <Link href="/privacy">Privacy</Link>
           <Link href="/terms">Terms</Link>
@@ -38,7 +38,7 @@ export function Footer() {
           Open-source code · MIT License
         </a>
         <a href="https://lndev.mychariow.shop/prd_3cu1s0">
-          Support the project <span aria-hidden="true">↗</span>
+          Support the project <span aria-hidden="true">↗︎</span>
         </a>
       </div>
     </footer>

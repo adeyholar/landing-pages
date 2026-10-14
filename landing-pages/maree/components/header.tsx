@@ -51,7 +51,7 @@ export function Header() {
             render={<Link href={brand.bookingPath} />}
           >
             {brand.slug === "crux" ? "Let’s climb" : "Book a ritual"}
-            <span aria-hidden="true">↗</span>
+            <span aria-hidden="true">↗︎</span>
           </Button>
           <SheetTrigger
             render={
@@ -83,7 +83,7 @@ export function Header() {
                 <Link href={n.href} key={n.href} onClick={() => setOpen(false)}>
                   <small>0{i + 1}</small>
                   {n.label}
-                  <span aria-hidden="true">↗</span>
+                  <span aria-hidden="true">↗︎</span>
                 </Link>
               ),
             )}
@@ -94,7 +94,7 @@ export function Header() {
             onClick={() => setOpen(false)}
           >
             {brand.bookingLabel}
-            <span aria-hidden="true">↗</span>
+            <span aria-hidden="true">↗︎</span>
           </Button>
           <SheetDescription className="micro">
             {brand.location}

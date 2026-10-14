@@ -25,7 +25,7 @@ export default function Groups() {
             and ends with a lot to talk about.
           </p>
           <Button nativeButton={false} render={<a href="#enquiry" />}>
-            Make a crew plan<span aria-hidden="true">↗</span>
+            Make a crew plan<span aria-hidden="true">↗︎</span>
           </Button>
         </div>
         <div className="group-photo">
