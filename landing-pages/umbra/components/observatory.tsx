@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
   type ReactNode,
+  type CSSProperties,
 } from "react";
 import dynamic from "next/dynamic";
 import {
@@ -558,22 +559,28 @@ export function Observatory() {
           </section>
         </main>
         <nav className="chapter-navigation" aria-label="Observatory chapters">
-          {chapters.map((name, index) => (
-            <Button
-              key={name}
-              variant="unstyled"
-              className={
-                chapter === index ? "chapter-dot active" : "chapter-dot"
-              }
-              aria-label={`${index + 1}. ${name}`}
-              aria-current={chapter === index ? "step" : undefined}
-              onClick={() => go(index)}
-            >
-              <span>0{index + 1}</span>
-              <i />
-              <span className="chapter-label">{name}</span>
-            </Button>
-          ))}
+          <div
+            className="chapter-track"
+            style={{ "--active-step": chapter } as CSSProperties}
+          >
+            <span className="chapter-indicator" aria-hidden="true" />
+            {chapters.map((name, index) => (
+              <Button
+                key={name}
+                variant="unstyled"
+                className={
+                  chapter === index ? "chapter-dot active" : "chapter-dot"
+                }
+                aria-label={`${index + 1}. ${name}`}
+                aria-current={chapter === index ? "step" : undefined}
+                onClick={() => go(index)}
+              >
+                <span>0{index + 1}</span>
+                <i />
+                <span className="chapter-label">{name}</span>
+              </Button>
+            ))}
+          </div>
         </nav>
         <div className="motion-controls">
           <span>

@@ -1,5 +1,11 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import dynamic from "next/dynamic";
 import {
   ArrowDown,
@@ -423,20 +429,25 @@ export function Garden() {
           </section>
         </main>
         <nav className="chapter-dock" aria-label="Story chapters">
-          {chapters.map((c, i) => (
-            <Button
-              variant="unstyled"
-              key={c}
-              className={chapter === i ? "active" : ""}
-              aria-current={chapter === i ? "step" : undefined}
-              aria-label={`${i + 1}. ${c}`}
-              onClick={() => go(i)}
-            >
-              <span>0{i + 1}</span>
-              <span className="dock-label">{c}</span>
-              <i />
-            </Button>
-          ))}
+          <div
+            className="dock-track"
+            style={{ "--active-step": chapter } as CSSProperties}
+          >
+            <span className="dock-indicator" aria-hidden="true" />
+            {chapters.map((c, i) => (
+              <Button
+                variant="unstyled"
+                key={c}
+                className={chapter === i ? "active" : ""}
+                aria-current={chapter === i ? "step" : undefined}
+                aria-label={`${i + 1}. ${c}`}
+                onClick={() => go(i)}
+              >
+                <span>0{i + 1}</span>
+                <span className="dock-label">{c}</span>
+              </Button>
+            ))}
+          </div>
           <Button
             variant="unstyled"
             className="motion-button"

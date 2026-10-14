@@ -609,8 +609,30 @@ h2 em {
   z-index: 40;
   gap: 2px;
 }
+.chapter-track {
+  --step-width: 60px;
+  --label-width: 120px;
+  --step-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  width: calc(4 * var(--step-width) + var(--label-width));
+}
+.chapter-indicator {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--step-width) + var(--label-width));
+  background: rgba(198, 151, 104, 0.065);
+  box-shadow: inset 0 -1px var(--copper);
+  transform: translateX(calc(var(--active-step) * var(--step-width)));
+  transition: transform 600ms var(--step-ease);
+  pointer-events: none;
+}
 .chapter-dot {
+  position: relative;
   min-width: 44px;
+  width: var(--step-width);
+  flex: 0 0 auto;
   min-height: 44px;
   display: flex;
   gap: 9px;
@@ -618,15 +640,24 @@ h2 em {
   padding: 0 9px;
   color: #737e78;
   font: 9px var(--font-mono);
-  transition: color 0.3s;
+  transition:
+    width 600ms var(--step-ease),
+    color 360ms;
+}
+.chapter-dot > span:first-child {
+  flex-shrink: 0;
 }
 .chapter-dot > i {
+  flex-shrink: 0;
   width: 15px;
   height: 1px;
   background: currentColor;
-  transition: width 0.5s var(--ease);
+  transition:
+    width 600ms var(--step-ease),
+    background 360ms;
 }
 .chapter-dot.active {
+  width: calc(var(--step-width) + var(--label-width));
   color: var(--paper);
 }
 .chapter-dot.active > i {
@@ -634,11 +665,22 @@ h2 em {
   background: var(--copper);
 }
 .chapter-label {
-  display: none;
+  display: block;
+  min-width: 0;
+  width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition:
+    width 600ms var(--step-ease),
+    opacity 320ms,
+    transform 600ms var(--step-ease);
 }
 .chapter-dot.active > .chapter-label {
-  display: inline;
-  margin-right: 11px;
+  width: var(--label-width);
+  opacity: 1;
+  transform: translateX(0);
 }
 .motion-controls {
   position: fixed;
@@ -1289,6 +1331,10 @@ h2 em {
     left: 4%;
     gap: 0;
   }
+  .chapter-track {
+    --step-width: 44px;
+    --label-width: 0px;
+  }
   .chapter-dot {
     padding: 0 7px;
     min-width: 44px;
@@ -1301,7 +1347,7 @@ h2 em {
   .chapter-dot.active > i {
     width: 12px;
   }
-  .chapter-dot.active > .chapter-label {
+  .chapter-label {
     display: none;
   }
   .motion-controls {
@@ -1518,4 +1564,8 @@ html[data-motion="paused"] *::after {
 }
 html[data-motion="paused"] {
   scroll-behavior: auto;
+}
+
+html[data-motion="paused"] .chapter-track * {
+  transition-duration: 0s;
 }

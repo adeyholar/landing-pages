@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
   type ReactNode,
+  type CSSProperties,
 } from "react";
 import dynamic from "next/dynamic";
 import {
@@ -555,7 +556,11 @@ export function Aero() {
           </section>
         </main>
         <nav className="flight-nav" aria-label="Journey chapters">
-          <div className="nav-track">
+          <div
+            className="nav-track"
+            style={{ "--active-step": chapter } as CSSProperties}
+          >
+            <span className="nav-indicator" aria-hidden="true" />
             {CHAPTERS.map((name, i) => (
               <Button
                 variant="unstyled"
@@ -566,7 +571,6 @@ export function Aero() {
               >
                 <span className="nav-digit">0{i + 1}</span>
                 <span className="nav-word">{name}</span>
-                <i />
               </Button>
             ))}
           </div>

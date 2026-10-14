@@ -758,19 +758,52 @@ body:has(.preflight) {
   color: var(--cobalt);
 }
 .nav-track {
+  --step-width: 44px;
+  --label-width: 100px;
+  --step-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  isolation: isolate;
   display: flex;
   align-items: center;
+  width: calc(4 * var(--step-width) + var(--label-width));
+  flex-shrink: 0;
+}
+.nav-indicator {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--step-width) + var(--label-width));
+  background: rgb(32 70 237 / 0.055);
+  transform: translateX(calc(var(--active-step) * var(--step-width)));
+  transition: transform 560ms var(--step-ease);
+  pointer-events: none;
+}
+.nav-indicator::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--red);
+  transform: translateX(-50%);
 }
 .nav-track > button {
   position: relative;
   min-width: 44px;
+  width: var(--step-width);
+  flex: 0 0 auto;
   min-height: 44px;
-  gap: 8px;
+  gap: 0;
   display: flex;
   align-items: center;
-  padding: 0 13px;
+  padding: 0 12px;
   font-family: var(--font-space);
   font-size: 11px;
+  transition:
+    width 560ms var(--step-ease),
+    background 240ms,
+    color 240ms;
 }
 .nav-track > button:hover {
   background: rgb(32 70 237 / 0.06);
@@ -778,29 +811,35 @@ body:has(.preflight) {
 .nav-digit {
   opacity: 0.5;
   font-size: 10px;
+  flex-shrink: 0;
+  transition: opacity 360ms;
 }
 .nav-word {
-  display: none;
+  display: block;
+  min-width: 0;
+  width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  margin-left: 0;
+  transform: translateX(-4px);
+  transition:
+    width 560ms var(--step-ease),
+    margin-left 560ms var(--step-ease),
+    opacity 300ms,
+    transform 560ms var(--step-ease);
+}
+.nav-track > button[aria-current="step"] {
+  width: calc(var(--step-width) + var(--label-width));
 }
 .nav-track > button[aria-current="step"] .nav-word {
-  display: block;
+  width: var(--label-width);
+  margin-left: 8px;
+  opacity: 1;
+  transform: translateX(0);
 }
 .nav-track > button[aria-current="step"] .nav-digit {
   opacity: 1;
-}
-.nav-track > button i {
-  display: none;
-}
-.nav-track > button[aria-current="step"] i {
-  display: block;
-  position: absolute;
-  bottom: 4px;
-  width: 4px;
-  height: 4px;
-  background: var(--red);
-  border-radius: 50%;
-  left: 50%;
-  transform: translateX(-50%);
 }
 .motion-button {
   min-height: 44px;
@@ -1513,10 +1552,11 @@ body:has(.preflight) {
     width: max-content;
     max-width: 94vw;
   }
+  .nav-track {
+    --label-width: 0px;
+  }
   .nav-track > button {
     padding: 0 9px;
-    min-width: 44px;
-    gap: 7px;
   }
   .nav-word {
     font-size: 10px;
@@ -1539,7 +1579,7 @@ body:has(.preflight) {
     display: block;
   }
   .nav-track > button[aria-current="step"] .nav-word {
-    display: none;
+    margin-left: 0;
   }
   .aero-footer {
     padding: 50px 6vw 100px;
